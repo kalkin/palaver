@@ -11,6 +11,7 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.util.EntityWithId;
 
 import de.xsrc.palaver.Storage;
@@ -36,11 +37,20 @@ public class Utils {
 	}
 
 	public static Stage getDialog(Flow f) throws FlowException {
-		ResourceBundle b = ResourceBundle
-				.getBundle("i18n.Palaver_en");
+		return getDialog(f, null);
+	}
+
+	public static Stage getDialog(Flow f, ViewFlowContext context)
+			throws FlowException {
+		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 		DefaultFlowContainer container = new DefaultFlowContainer();
-		FlowHandler flowHandler = f.createHandler();
-		flowHandler.getViewConfiguration().setResources(b);
+		FlowHandler flowHandler;
+		if (context != null) {
+			flowHandler = f.createHandler(context);
+		} else {
+			flowHandler = f.createHandler();
+		}
+		// flowHandler.getViewConfiguration().setResources(b);
 		flowHandler.start(container);
 		Scene scene = new Scene(container.getView());
 		Stage stage = new Stage();
