@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
 
-@FXMLController("../view/AddPalaverView.fxml")
+@FXMLController("/fxml/AddPalaverView.fxml")
 public class AddPalaverController {
 
 	@FXML

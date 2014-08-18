@@ -8,7 +8,7 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 
-@FXMLController("../view/AccountView.fxml")
+@FXMLController("/fxml/AccountView.fxml")
 public class AccountController {
 	@FXML
 	@BackAction

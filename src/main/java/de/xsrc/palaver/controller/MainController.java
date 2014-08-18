@@ -8,7 +8,7 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
 
-@FXMLController("../view/MainView.fxml")
+@FXMLController("/fxml/MainView.fxml")
 public class MainController {
 
 	@FXML

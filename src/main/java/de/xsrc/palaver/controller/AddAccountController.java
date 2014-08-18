@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
 
-@FXMLController("../view/AddAccountView.fxml")
+@FXMLController("/fxml/AddAccountView.fxml")
 public class AddAccountController {
 
 	@FXML
