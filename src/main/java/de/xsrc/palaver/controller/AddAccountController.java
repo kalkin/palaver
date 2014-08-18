@@ -33,7 +33,7 @@ public class AddAccountController {
 	public void saveAccount() {
 		Account account = new Account(jidField.getText(), passwordField.getText());
 		try {
-			Utils.getStorage().save(account);
+			Utils.getStorage(Account.class).save(account);
 			close();
 		} catch (CrudException e) {
 			// TODO Auto-generated catch block

@@ -10,8 +10,23 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
+import org.datafx.util.EntityWithId;
+
+import de.xsrc.palaver.Storage;
 
 public class Utils {
+
+	//private static final CrudService<EntityWithId.T>, CrudService.T> storage;
+	
+	private static Storage<EntityWithId<String>, String> storage;
+
+	public static synchronized Storage getStorage(Class clazz){
+		if (Utils.storage == null){
+			Utils.storage = new Storage(clazz);
+		}
+		return Utils.storage;
+	}
+
 	public static Stage getDialog(Flow f) throws FlowException {
 		ResourceBundle b = ResourceBundle
 				.getBundle("de.xsrc.palaver.i18n.Palaver_en");

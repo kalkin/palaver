@@ -14,14 +14,14 @@ import org.datafx.util.QueryParameter;
 public class Storage<S extends EntityWithId<String>, String> implements
 		CrudService<S, String> {
 
-	private Class clazz;
+	private Class<S> clazz;
 
 	public void delete(S entity) throws CrudException {
 		// TODO Auto-generated method stub
 
 	}
 	
-	public Storage(Class clazz){
+	public Storage(Class<S> clazz){
 		super();
 		this.clazz = clazz;
 	}
@@ -32,7 +32,8 @@ public class Storage<S extends EntityWithId<String>, String> implements
 
 	public List<S> getAll() throws CrudException {
 		try {
-			AppDataSource<S> cs = new AppDataSource(clazz);
+			@SuppressWarnings("unchecked")
+			AppDataSource<S> cs = new AppDataSource<S>(clazz);
 			ObservableList<S> result = FXCollections.observableArrayList();
 			result.add(cs.get());
 			while (cs.next()){

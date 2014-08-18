@@ -1,70 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.xsrc</groupId>
-    <artifactId>palaver</artifactId>
-    <name>palaver</name>
+	<groupId>de.xsrc</groupId>
+	<artifactId>palaver</artifactId>
+	<name>palaver</name>
 
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
-    
-    <organization>
-        <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Xsrc</name>
-    </organization>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <slf4j.version>1.6.1</slf4j.version>
-    </properties>
+	<organization>
+		<!-- Used as the 'Vendor' for JNLP generation -->
+		<name>Xsrc</name>
+	</organization>
 
-    <build>
+	<properties>
+		<slf4j.version>1.6.1</slf4j.version>
+	</properties>
 
-        <finalName>palaver</finalName>
+	<build>
 
-        <plugins>
+		<finalName>palaver</finalName>
 
-            <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
+		<plugins>
 
-			<mainClass>de.xsrc.palaver.Main</mainClass>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
 
-                    <!-- only required if signing the jar file -->
-                    <keyStoreAlias>example-user</keyStoreAlias>
-                    <keyStorePassword>example-password</keyStorePassword>
-                    <allPermissions>true</allPermissions>
+					<mainClass>de.xsrc.palaver.Main</mainClass>
 
-                </configuration>
-            <dependencies>
-                <dependency>
-                    <groupId>org.twdata.maven</groupId>
-                    <artifactId>mojo-executor</artifactId>
-                    <version>2.1.0</version>
-                </dependency>
-            </dependencies>
-            </plugin>
+					<!-- only required if signing the jar file -->
+					<keyStoreAlias>example-user</keyStoreAlias>
+					<keyStorePassword>example-password</keyStorePassword>
+					<allPermissions>true</allPermissions>
 
-        </plugins>
-    </build>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.twdata.maven</groupId>
+						<artifactId>mojo-executor</artifactId>
+						<version>2.1.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+		</plugins>
+	</build>
 
 
-    <dependencies>
-    
-	<dependency>
-		<groupId>org.javafxdata</groupId>
-		<artifactId>datafx-flow</artifactId>
-		<version>8.0b5</version>
-	</dependency>
-	<dependency>
-		<groupId>org.controlsfx</groupId>
-		<artifactId>controlsfx</artifactId>
-		<version>8.0.6</version>
-	</dependency>
+	<dependencies>
 
-    </dependencies>
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-flow</artifactId>
+			<version>8.0b5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-datareader</artifactId>
+			<version>8.0b5</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+	</dependencies>
 
 </project>
