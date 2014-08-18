@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<GridPane>
+			<children>
+				<Label text="%jid" />
+				<Label text="%password" GridPane.rowIndex="1" />
+				<TextField GridPane.columnIndex="1" />
+				<PasswordField GridPane.columnIndex="1"
+					GridPane.rowIndex="1" />
+			</children>
+		</GridPane>
+	</center>
+	<bottom>
+		<ButtonBar>
+			<buttons>
+				<Button fx:id="back" onAction="#close" text="%back_button" />
+				<Button text="%add_account" />
+			</buttons>
+		</ButtonBar>
+	</bottom>
+</BorderPane>

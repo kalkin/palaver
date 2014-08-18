@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import org.controlsfx.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1">
+	<top>
+		<ButtonBar>
+			<buttons>
+				<Button fx:id="back" text="%back_button" />
+				<Button onAction="#addAccount" text="%add_account" />
+			</buttons>
+		</ButtonBar>
+	</top>
+	<center>
+		<ListView fx:id="palaverList" />
+	</center>
+</BorderPane>
+

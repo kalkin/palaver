@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import org.controlsfx.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
+	prefHeight="480">
+	<top>
+		<ButtonBar>
+			<buttons>
+				<Button fx:id="addPalaverButton" onAction="#addPalaver" text="%add_palaver" />
+
+				<Button fx:id="showAccountsButton" text="%account_managment" />
+			</buttons>
+		</ButtonBar>
+	</top>
+	<left>
+		<ListView fx:id="palaverList" />
+	</left>
+	<center>
+		<BorderPane>
+			<center>
+				<ScrollPane fx:id="history" />
+			</center>
+			<bottom>
+				<TextField fx:id="chatInput" />
+			</bottom>
+		</BorderPane>
+	</center>
+
+</BorderPane>
+
