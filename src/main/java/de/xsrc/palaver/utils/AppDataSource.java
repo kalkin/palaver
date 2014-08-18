@@ -1,10 +1,9 @@
-package de.xsrc.palaver;
+package de.xsrc.palaver.utils;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.datafx.reader.FileSource;
-import org.datafx.util.AppDataConverter;
 
 public class AppDataSource<T> extends FileSource<T> {
 
@@ -20,7 +19,7 @@ public class AppDataSource<T> extends FileSource<T> {
 	 * @return
 	 * @throws IOException
 	 */
-	private static File getFile(@SuppressWarnings("rawtypes") Class c) throws IOException {
+	public static File getFile(@SuppressWarnings("rawtypes") Class c) throws IOException {
 
 		File file = new File(workingDirectory() + "/" + c.getSimpleName() + "s"); // Make
 
