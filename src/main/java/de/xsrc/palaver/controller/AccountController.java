@@ -1,5 +1,8 @@
 package de.xsrc.palaver.controller;
 
+import java.util.List;
+
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -25,7 +28,8 @@ public class AccountController {
 	@FXML
 	public void initialize() throws CrudException {
 		Storage s = new Storage(Account.class);
-		palaverList.getItems().addAll(s.getAll());
+		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
+		palaverList.setItems(all);
 	}
 
 	@FXML

@@ -1,5 +1,6 @@
 package de.xsrc.palaver.controller;
 
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.scene.Scene;
@@ -16,15 +17,22 @@ import de.xsrc.palaver.Storage;
 
 public class Utils {
 
-	//private static final CrudService<EntityWithId.T>, CrudService.T> storage;
-	
-	private static Storage<EntityWithId<String>, String> storage;
+	// private static final CrudService<EntityWithId.T>, CrudService.T> storage;
 
-	public static synchronized Storage getStorage(Class clazz){
-		if (Utils.storage == null){
-			Utils.storage = new Storage(clazz);
+	private static HashMap<Class, Storage> storage;
+
+	public static synchronized Storage getStorage(Class clazz) {
+		if (Utils.storage == null) {
+			Utils.storage = new HashMap<Class, Storage>();
 		}
-		return Utils.storage;
+		
+		Storage result = storage.get(clazz);
+		if (result == null){
+			result = new Storage<EntityWithId<String>, String>(clazz);
+			storage.put(clazz, result);
+		}
+		return result;
+
 	}
 
 	public static Stage getDialog(Flow f) throws FlowException {
