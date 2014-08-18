@@ -1,5 +1,7 @@
 package de.xsrc.palaver.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -10,6 +12,7 @@ import org.datafx.util.EntityWithId;
  * @author kalkin
  *
  */
+@XmlRootElement(name="account")
 public class Account implements EntityWithId<String> {
 
 	private static final long serialVersionUID = 1L;
@@ -17,6 +20,9 @@ public class Account implements EntityWithId<String> {
 	private StringProperty jid;
 	
 	private StringProperty password;
+	public Account() {
+		this(null,null);		
+	}
 	
 	public Account(String jid, String password) {
 		this.jid = new SimpleStringProperty(jid);

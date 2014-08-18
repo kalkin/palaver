@@ -12,9 +12,9 @@
 			<children>
 				<Label text="%jid" />
 				<Label text="%password" GridPane.rowIndex="1" />
-				<TextField GridPane.columnIndex="1" />
+				<TextField GridPane.columnIndex="1" fx:id="jidField"/>
 				<PasswordField GridPane.columnIndex="1"
-					GridPane.rowIndex="1" />
+					GridPane.rowIndex="1" fx:id="passwordField" />
 			</children>
 		</GridPane>
 	</center>
@@ -22,7 +22,7 @@
 		<ButtonBar>
 			<buttons>
 				<Button fx:id="back" onAction="#close" text="%back_button" />
-				<Button text="%add_account" />
+				<Button text="%add_account" onAction="#saveAccount" />
 			</buttons>
 		</ButtonBar>
 	</bottom>
