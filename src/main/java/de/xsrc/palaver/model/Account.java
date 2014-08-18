@@ -49,4 +49,7 @@ public class Account implements EntityWithId<String> {
 		return jid.get();
 	}
 
+	public String toString(){
+		return jid.get();
+	}
 }
