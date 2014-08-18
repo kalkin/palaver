@@ -37,7 +37,7 @@ public class Utils {
 
 	public static Stage getDialog(Flow f) throws FlowException {
 		ResourceBundle b = ResourceBundle
-				.getBundle("de.xsrc.palaver.i18n.Palaver_en");
+				.getBundle("i18n.Palaver_en");
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		FlowHandler flowHandler = f.createHandler();
 		flowHandler.getViewConfiguration().setResources(b);
