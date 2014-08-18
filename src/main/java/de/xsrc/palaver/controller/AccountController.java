@@ -11,6 +11,8 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
+import org.datafx.controller.flow.context.FXMLViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.Storage;
@@ -30,6 +32,7 @@ public class AccountController {
 		Storage s = new Storage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
+
 	}
 
 	@FXML
@@ -42,5 +45,18 @@ public class AccountController {
 			e.printStackTrace();
 		}
 
+	}
+
+	@FXML
+	private void editAction() {
+		Account acc = palaverList.getSelectionModel().getSelectedItem();
+		Flow f = new Flow(AddAccountController.class);
+		ViewFlowContext context = new ViewFlowContext();
+		context.register("account", acc);
+		try {
+			Utils.getDialog(f, context).show();
+		} catch (FlowException e) {
+			e.printStackTrace();
+		}
 	}
 }
