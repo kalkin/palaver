@@ -71,9 +71,11 @@ public class Storage<S extends EntityWithId<String>, String> implements
 								+ c.getTo());
 					} else {
 						if (c.getRemovedSize() > 0)
-							logger.finest("Added: " + c.getRemovedSize());
+							logger.finest("Added: " + c.getRemovedSize() + " "
+									+ clazz.getSimpleName());
 						if (c.getAddedSize() > 0)
-							logger.finest("Removed: " + c.getAddedSize());
+							logger.finest("Removed: " + c.getAddedSize() + " "
+									+ clazz.getSimpleName());
 					}
 				}
 				saveModel();

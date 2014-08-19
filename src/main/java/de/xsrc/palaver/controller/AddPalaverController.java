@@ -36,7 +36,7 @@ public class AddPalaverController {
 		try {
 			ObservableList<Account> accounts = Utils.getStorage(Account.class)
 					.getAll();
-			// accountChoice.getItems().addAll(accounts);
+			 accountChoice.getItems().addAll(accounts);
 			if (accounts.size() > 0) {
 				accountChoice.getSelectionModel().select(0);
 			}
