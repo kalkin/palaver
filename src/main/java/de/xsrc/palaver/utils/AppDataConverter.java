@@ -28,7 +28,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			.getName());
 
 	public AppDataConverter(Class<T> clazz) {
-		this.tag = clazz.getSimpleName().toLowerCase();
+		this.tag = clazz.getSimpleName().toLowerCase() + "s";
 		this.clazz = clazz;
 	}
 
