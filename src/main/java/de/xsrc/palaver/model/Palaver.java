@@ -68,4 +68,8 @@ public class Palaver implements EntityWithId<String> {
 		account.set(a.getId());
 		
 	}
+	
+	public String toString(){
+		return getId();
+	}
 }
