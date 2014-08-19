@@ -63,4 +63,9 @@ public class Palaver implements EntityWithId<String> {
 	public void setHistory(List<String> s) {
 		history.setAll(s);
 	}
+
+	public void setAccount(Account a) {
+		account.set(a.getId());
+		
+	}
 }
