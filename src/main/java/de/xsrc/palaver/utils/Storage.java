@@ -16,6 +16,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -24,14 +25,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.datafx.crud.CrudException;
-import org.datafx.crud.CrudService;
 import org.datafx.util.EntityWithId;
 import org.datafx.util.QueryParameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Storage<S extends EntityWithId<String>, String> implements
-		CrudService<S, String> {
+public class Storage<S extends EntityWithId<String>, String> {
 
 	private Class<S> clazz;
 	private static final Logger logger = Logger.getLogger(Storage.class
@@ -53,7 +52,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		return null;
 	}
 
-	public ObservableList<S> getAll() throws CrudException {
+	public ObservableList<S> getAll() {
 		if (cacheList == null) {
 			logger.finer("Initializing cache for model "
 					+ this.clazz.getSimpleName());
@@ -139,10 +138,12 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			DOMSource source = new DOMSource(doc);
 			File file = AppDataSource.getFile(clazz);
 			StreamResult result = new StreamResult(file);
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 			transformer.transform(source, result);
 			logger.finer("Saved model " + this.clazz.getSimpleName());
 
-		} catch (ParserConfigurationException | JAXBException | CrudException
+		} catch (ParserConfigurationException | JAXBException
 				| TransformerConfigurationException e) {
 			e.printStackTrace();
 			logger.severe("This should not happen :-/");
