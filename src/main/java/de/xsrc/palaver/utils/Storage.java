@@ -28,6 +28,11 @@ import org.datafx.util.EntityWithId;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.model.History;
+import de.xsrc.palaver.model.Palaver;
+
 public class Storage<S extends EntityWithId<String>, String> {
 
 	private Class<S> clazz;
@@ -115,7 +120,7 @@ public class Storage<S extends EntityWithId<String>, String> {
 					.toLowerCase() + "s");
 			doc.appendChild(rootElement);
 
-			JAXBContext jc = JAXBContext.newInstance(clazz);
+			JAXBContext jc = JAXBContext.newInstance(Account.class, Entry.class, Palaver.class, History.class);
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(
 					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,

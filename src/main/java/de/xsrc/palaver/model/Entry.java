@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.datafx.util.EntityWithId;
 
-@XmlRootElement(name = "history-entry")
-public class HistoryEntry implements EntityWithId<String> {
+@XmlRootElement(name = "entry")
+public class Entry implements EntityWithId<String> {
 
 	/**
 	 * 
@@ -20,13 +20,13 @@ public class HistoryEntry implements EntityWithId<String> {
 	private StringProperty body;
 	private StringProperty from;
 
-	public HistoryEntry() {
+	public Entry() {
 		this(null, null);
 
 	}
 
-	public HistoryEntry(String from, String body) {
-		receivedAt = new SimpleLongProperty(System.currentTimeMillis());
+	public Entry(String from, String body) {
+		this.receivedAt = new SimpleLongProperty(System.currentTimeMillis());
 		this.from = new SimpleStringProperty(from);
 		this.body = new SimpleStringProperty(body);
 

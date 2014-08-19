@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 
 import org.datafx.controller.FXMLController;
 
-import de.xsrc.palaver.model.HistoryEntry;
+import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
@@ -24,16 +24,16 @@ public class HistoryController {
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
 	@FXML
-	private ListView<HistoryEntry> history;
+	private ListView<Entry> history;
 
 	private Palaver palaver;
 
 	public void setPalaver(Palaver p) {
-		List<HistoryEntry> f = p.getHistory();
+		List<Entry> f = p.history.getEntryList();
 		this.palaver = p;
-		ObservableList<HistoryEntry> historyList;
+		ObservableList<Entry> historyList;
 		if (f == null) {
-			historyList = FXCollections.observableList(new LinkedList<HistoryEntry>());
+			historyList = FXCollections.observableList(new LinkedList<Entry>());
 		} else {
 			historyList = FXCollections.observableList(f);
 		}
@@ -43,11 +43,10 @@ public class HistoryController {
 
 	@FXML
 	private void sendMsgAction() {
-		HistoryEntry h = new HistoryEntry(palaver.getAccount(), chatInput.getText());
-		ObservableList<HistoryEntry> hList = history.getItems();
-		hList.add(h);
-		palaver.setHistory(hList);
-		logger.warning(history.toString());
+		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
+		this.palaver.history.addEntry(e);
+		this.history.getItems().add(e);
+		logger.finer(history.toString());
 		Utils.getStorage(Palaver.class).save(palaver);
 		chatInput.clear();
 	}

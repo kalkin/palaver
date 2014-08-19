@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 
 public class AppDataConverter<T> extends InputStreamConverter<T> {
 
-	private String tag;
 	private NodeList dataList;
 	private int currentIndex = 0;
 	private Class<T> clazz;
@@ -28,7 +27,6 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			.getName());
 
 	public AppDataConverter(Class<T> clazz) {
-		this.tag = clazz.getSimpleName().toLowerCase() + "s";
 		this.clazz = clazz;
 	}
 
@@ -45,7 +43,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(inputStream);
-			dataList = doc.getElementsByTagName(this.tag);
+			dataList = doc.getElementsByTagName(this.clazz.getSimpleName().toLowerCase());
 		} catch (ParserConfigurationException | SAXException e) {
 			String errorMsg = "Could not read/parse the AppData Config";
 			logger.warning(errorMsg);
