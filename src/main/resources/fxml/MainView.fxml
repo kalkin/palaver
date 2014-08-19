@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Button?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
-	prefHeight="480">
+	prefHeight="480" fx:id="borderPane">
 	<top>
 		<ButtonBar>
 			<buttons>
@@ -21,16 +21,5 @@
 	<left>
 		<ListView fx:id="palaverList" />
 	</left>
-	<center>
-		<BorderPane>
-			<center>
-				<ScrollPane fx:id="history" />
-			</center>
-			<bottom>
-				<TextField fx:id="chatInput" />
-			</bottom>
-		</BorderPane>
-	</center>
-
 </BorderPane>
 

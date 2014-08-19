@@ -6,7 +6,9 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.datafx.util.EntityWithId;
@@ -27,13 +29,13 @@ public class Palaver implements EntityWithId<String> {
 	 */
 	private StringProperty account;
 	
-	
-	private ListProperty<String> history;
+	@XmlElement(name = "history-entry", type = HistoryEntry.class)
+	private ListProperty<HistoryEntry> history;
 
 	public Palaver() {
 		this.recipient = new SimpleStringProperty();
 		this.account = new SimpleStringProperty();
-		this.history = new SimpleListProperty<String>();
+		this.history = new SimpleListProperty<HistoryEntry>();
 	}
 
 	public String getId() {
@@ -47,10 +49,11 @@ public class Palaver implements EntityWithId<String> {
 	public String getAccount() {
 		return account.get();
 	}
-
-	public List<String> getHistory() {
+	
+	public List<HistoryEntry> getHistory(){
 		return history.get();
 	}
+
 
 	public void setRecipient(String s) {
 		recipient.set(s);
@@ -60,8 +63,8 @@ public class Palaver implements EntityWithId<String> {
 		account.set(s);
 	}
 
-	public void setHistory(List<String> s) {
-		history.setAll(s);
+	public void setHistory(ObservableList<HistoryEntry> s) {
+		history.set(s);
 	}
 
 	public void setAccount(Account a) {
