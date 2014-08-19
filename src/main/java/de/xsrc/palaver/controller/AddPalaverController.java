@@ -14,6 +14,7 @@ import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AddPalaverView.fxml")
 public class AddPalaverController {

@@ -19,6 +19,7 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
 
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {

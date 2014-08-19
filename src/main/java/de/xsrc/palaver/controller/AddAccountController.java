@@ -12,6 +12,7 @@ import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AddAccountView.fxml")
 public class AddAccountController {

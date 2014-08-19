@@ -15,6 +15,7 @@ import org.datafx.controller.FXMLController;
 import de.xsrc.palaver.model.HistoryEntry;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Storage;
+import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/HistoryView.fxml")
 public class HistoryController {

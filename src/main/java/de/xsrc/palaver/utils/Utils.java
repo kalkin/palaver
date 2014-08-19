@@ -1,4 +1,4 @@
-package de.xsrc.palaver.controller;
+package de.xsrc.palaver.utils;
 
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -14,8 +14,6 @@ import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.util.EntityWithId;
-
-import de.xsrc.palaver.utils.Storage;
 
 public class Utils {
 
