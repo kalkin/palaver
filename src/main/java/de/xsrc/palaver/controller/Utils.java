@@ -25,16 +25,16 @@ public class Utils {
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
 
-	public static synchronized Storage getStorage(Class clazz) {
+	public static synchronized <T extends EntityWithId<String>> Storage<T, String> getStorage(Class<T> clazz) {
 		if (Utils.storage == null) {
 			logger.finer("Initializing");
 			Utils.storage = new HashMap<Class, Storage>();
 		}
 
 		logger.finest("Getting Storage for model " + clazz.getSimpleName());
-		Storage result = storage.get(clazz);
+		Storage<T, String> result = storage.get(clazz);
 		if (result == null) {
-			result = new Storage<EntityWithId<String>, String>(clazz);
+			result = new Storage<T, String>(clazz);
 			storage.put(clazz, result);
 		}
 		return result;
