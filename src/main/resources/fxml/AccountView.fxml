@@ -22,7 +22,7 @@
 				<ContextMenu>
 					<items>
 						<MenuItem text="%edit" onAction="#editAction" />
-						<MenuItem text="%remove" />
+						<MenuItem text="%remove" onAction="#removeAction" />
 					</items>
 				</ContextMenu>
 			</contextMenu>

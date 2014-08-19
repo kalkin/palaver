@@ -74,4 +74,10 @@ public class AccountController {
 			e.printStackTrace();
 		}
 	}
+
+	@FXML
+	private void removeAction(){
+		Account acc = palaverList.getSelectionModel().getSelectedItem();
+		palaverList.getItems().remove(acc);
+	}
 }
