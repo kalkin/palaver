@@ -3,6 +3,7 @@ package de.xsrc.palaver;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -35,7 +36,8 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		CrudService<S, String> {
 
 	private Class<S> clazz;
-
+	private static final Logger logger = Logger
+			.getLogger(Storage.class.getName());
 	private static ObservableList cacheList;
 
 	public void delete(S entity) throws CrudException {
@@ -55,6 +57,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 
 	public ObservableList<S> getAll() throws CrudException {
 		if (cacheList == null) {
+			logger.finer("Initializing cache for model " + this.clazz.getSimpleName());
 			try {
 				@SuppressWarnings("unchecked")
 				AppDataSource<S> cs = new AppDataSource<S>(clazz);
@@ -62,10 +65,13 @@ public class Storage<S extends EntityWithId<String>, String> implements
 				while (cs.next()) {
 					cacheList.add(cs.get());
 				}
+				logger.finest("Read " + cacheList.size() + " records from Model " + clazz.getSimpleName() );
+				
 				cacheList.addListener(new ListChangeListener() {
 					// TODO rework this ugly spaghety save code
 					public void onChanged(Change c) {
 						try {
+							logger.finer("Model " + clazz.getSimpleName() + " has changed");
 							saveModel();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -94,6 +100,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 	private void saveModel() throws TransformerFactoryConfigurationError,
 			IOException {
 		try {
+			logger.finest("Trying to save model: " + this.clazz.getSimpleName());
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -140,7 +147,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("CHange");
+		logger.finer("Saved model" + this.clazz.getSimpleName());
 	}
 
 }

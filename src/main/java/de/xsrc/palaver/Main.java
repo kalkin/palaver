@@ -32,8 +32,7 @@ public class Main extends Application {
 	}
 
 	private Scene handleI18n(Flow f) throws FlowException {
-		ResourceBundle b = ResourceBundle
-				.getBundle("i18n.Palaver_en");
+		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		FlowHandler flowHandler = f.createHandler();
 		flowHandler.getViewConfiguration().setResources(b);
