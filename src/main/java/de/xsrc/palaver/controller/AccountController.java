@@ -36,7 +36,7 @@ public class AccountController {
 
 	@FXML
 	public void initialize() throws CrudException {
-		Storage s = Utils.getStorage(Account.class);
+		Storage<Account,String> s = Utils.getStorage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
 	}

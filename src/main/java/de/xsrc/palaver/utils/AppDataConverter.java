@@ -28,7 +28,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			.getName());
 
 	public AppDataConverter(Class<T> clazz) {
-		this.tag = clazz.getSimpleName().toLowerCase() + "s";
+		this.tag = clazz.getSimpleName().toLowerCase();
 		this.clazz = clazz;
 	}
 
@@ -45,7 +45,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(inputStream);
-			dataList = doc.getElementsByTagName(this.clazz.getSimpleName().toLowerCase());
+			dataList = doc.getElementsByTagName(this.tag);
 		} catch (ParserConfigurationException | SAXException e) {
 			String errorMsg = "Could not read/parse the AppData Config";
 			logger.warning(errorMsg);

@@ -10,7 +10,6 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.model.Account;
 
@@ -45,19 +44,13 @@ public class AddAccountController {
 	@FXML
 	public void saveAccount() {
 		if (account == null) {
-			account = new Account(jidField.getText(),
-					passwordField.getText());
+			account = new Account(jidField.getText(), passwordField.getText());
 		} else {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());
 		}
-		try {
-			Utils.getStorage(Account.class).save(account);
-			close();
-		} catch (CrudException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Utils.getStorage(Account.class).save(account);
+		close();
 
 	}
 
