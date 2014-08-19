@@ -9,10 +9,14 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
@@ -54,11 +58,11 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			try {
 				@SuppressWarnings("unchecked")
 				AppDataSource<S> cs = new AppDataSource<S>(clazz);
-				ObservableList<S> result = FXCollections.observableArrayList();
+				cacheList = FXCollections.observableArrayList();
 				while (cs.next()) {
-					result.add(cs.get());
+					cacheList.add(cs.get());
 				}
-				result.addListener(new ListChangeListener() {
+				cacheList.addListener(new ListChangeListener() {
 					// TODO rework this ugly spaghety save code
 					public void onChanged(Change c) {
 						try {
@@ -68,7 +72,6 @@ public class Storage<S extends EntityWithId<String>, String> implements
 						}
 					}
 				});
-				cacheList = result;
 			} catch (IOException e) {
 				throw new CrudException("Could not get all "
 						+ clazz.getSimpleName());
@@ -118,9 +121,24 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			File file = AppDataSource.getFile(clazz);
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			throw new IOException("Could not read storage");
+			throw new IOException("Could not write storage");
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CrudException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		System.out.println("CHange");
 	}
