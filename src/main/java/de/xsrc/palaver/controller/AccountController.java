@@ -19,7 +19,6 @@ import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
-import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.Storage;
@@ -37,7 +36,7 @@ public class AccountController {
 
 	@FXML
 	public void initialize() throws CrudException {
-		Storage s = new Storage(Account.class);
+		Storage s = Utils.getStorage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
 	}
