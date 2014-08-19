@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javax.xml.bind.JAXBContext;
@@ -20,7 +20,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -39,7 +38,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 	private Class<S> clazz;
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
-	private static ObservableList cacheList;
+	private ObservableList<S> cacheList;
 
 	public void delete(S entity) throws CrudException {
 		// TODO Auto-generated method stub
@@ -62,13 +61,22 @@ public class Storage<S extends EntityWithId<String>, String> implements
 					+ this.clazz.getSimpleName());
 			cacheList = initialize();
 
-			cacheList.addListener(new ListChangeListener() {
-				// TODO rework this ugly spaghety save code
-				public void onChanged(Change c) {
-					logger.finer("Model " + clazz.getSimpleName()
-							+ " has changed");
-					saveModel();
+			cacheList.addListener((Change<? extends S> c) -> {
+				while (c.next()) {
+					if (c.wasPermutated()) {
+						logger.finest("Permutated: " + c.getFrom() + " => "
+								+ c.getTo());
+					} else if (c.wasUpdated()) {
+						logger.finest("Updated: " + c.getFrom() + " => "
+								+ c.getTo());
+					} else {
+						if (c.getRemovedSize() > 0)
+							logger.finest("Added: " + c.getRemovedSize());
+						if (c.getAddedSize() > 0)
+							logger.finest("Removed: " + c.getAddedSize());
+					}
 				}
+				saveModel();
 			});
 		}
 		return cacheList;
@@ -80,8 +88,8 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		try {
 			cs = new AppDataSource<S>(clazz);
 			while (cs.next()) {
-				S tmp = cs.<S> get();
-				result.<S> add(tmp);
+				S tmp = cs.get();
+				result.add(tmp);
 			}
 			logger.finest("Read " + result.size() + " records from Model "
 					+ clazz.getSimpleName());
@@ -104,7 +112,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		return null;
 	}
 
-	private void saveModel(){
+	private void saveModel() {
 		logger.finest("Trying to save model: " + this.clazz.getSimpleName());
 		try {
 			DocumentBuilder docBuilder;
@@ -117,7 +125,8 @@ public class Storage<S extends EntityWithId<String>, String> implements
 
 			JAXBContext jc = JAXBContext.newInstance(clazz);
 			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+			marshaller.setProperty(
+					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
 					Boolean.TRUE);
 			ObservableList<S> list = getAll();
 			for (S s : list) {
@@ -133,17 +142,21 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			transformer.transform(source, result);
 			logger.finer("Saved model " + this.clazz.getSimpleName());
 
-		} catch (ParserConfigurationException | JAXBException | CrudException | TransformerConfigurationException e) {
+		} catch (ParserConfigurationException | JAXBException | CrudException
+				| TransformerConfigurationException e) {
 			e.printStackTrace();
 			logger.severe("This should not happen :-/");
 			Platform.exit();
 		} catch (TransformerException e) {
 			e.printStackTrace();
-			logger.severe("Could not transform XML for model " + clazz.getSimpleName() + ". Model data broken?");
+			logger.severe("Could not transform XML for model "
+					+ clazz.getSimpleName() + ". Model data broken?");
 			Platform.exit();
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.severe("Could not write storage file for  model " + clazz.getSimpleName() + " to disk. Check disk space and access rights");
+			logger.severe("Could not write storage file for  model "
+					+ clazz.getSimpleName()
+					+ " to disk. Check disk space and access rights");
 
 		}
 
