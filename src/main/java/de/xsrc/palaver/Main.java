@@ -3,7 +3,6 @@ package de.xsrc.palaver;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -17,17 +16,10 @@ import de.xsrc.palaver.controller.MainController;
 public class Main extends Application {
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws FlowException {
 		Flow flow = new Flow(MainController.class);
-
-		try {
-			Scene scene = handleI18n(flow);
-			primaryStage.setScene(scene);
-		} catch (FlowException e) {
-			e.printStackTrace();
-			Platform.exit();
-		}
-
+		Scene scene = handleI18n(flow);
+		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
