@@ -44,7 +44,6 @@ public class HistoryController {
 	@FXML
 	private void sendMsgAction() {
 		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
-		this.palaver.history.addEntry(e);
 		this.history.getItems().add(e);
 		logger.finer(history.toString());
 		Utils.getStorage(Palaver.class).save(palaver);
