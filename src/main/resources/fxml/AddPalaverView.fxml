@@ -11,7 +11,7 @@
 		<GridPane>
 			<children>
 				<Label text="%jid" />
-				<TextField GridPane.columnIndex="1" />
+				<TextField GridPane.columnIndex="1" fx:id="jid"/>
 			</children>
 		</GridPane>
 	</center>
@@ -19,7 +19,7 @@
 		<ButtonBar>
 			<buttons>
 				<Button fx:id="back" onAction="#close" text="%back_button" />
-				<Button text="%add_palaver" />
+				<Button text="%add_palaver" onAction="#addPalaverAction" />
 			</buttons>
 		</ButtonBar>
 	</bottom>
