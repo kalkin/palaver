@@ -1,17 +1,24 @@
 package de.xsrc.palaver.controller;
 
-import java.util.List;
+import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.FxmlLoadException;
+import org.datafx.controller.ViewConfiguration;
+import org.datafx.controller.ViewFactory;
+import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
-import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.crud.CrudException;
 
@@ -23,6 +30,7 @@ public class AccountController {
 	@FXML
 	@BackAction
 	private Button back;
+	
 
 	@FXML
 	private ListView<Account> palaverList;
@@ -32,7 +40,6 @@ public class AccountController {
 		Storage s = new Storage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
-
 	}
 
 	@FXML
@@ -50,12 +57,20 @@ public class AccountController {
 	@FXML
 	private void editAction() {
 		Account acc = palaverList.getSelectionModel().getSelectedItem();
-		Flow f = new Flow(AddAccountController.class);
-		ViewFlowContext context = new ViewFlowContext();
-		context.register("account", acc);
 		try {
-			Utils.getDialog(f, context).show();
-		} catch (FlowException e) {
+			ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+			ViewConfiguration config = new ViewConfiguration();
+			config.setResources(b);
+			ViewContext<AddAccountController> context = ViewFactory.getInstance().createByController(AddAccountController.class, null, config);
+			context.register("account", acc);
+			context.getController().setContext(context);
+			Scene scene = new Scene((Parent) context.getRootNode());
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.show();
+		} catch (FxmlLoadException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

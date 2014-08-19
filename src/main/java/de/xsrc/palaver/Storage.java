@@ -9,15 +9,12 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -52,7 +49,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		return null;
 	}
 
-	public List<S> getAll() throws CrudException {
+	public ObservableList<S> getAll() throws CrudException {
 		if (cacheList == null) {
 			try {
 				@SuppressWarnings("unchecked")
@@ -65,52 +62,11 @@ public class Storage<S extends EntityWithId<String>, String> implements
 					// TODO rework this ugly spaghety save code
 					public void onChanged(Change c) {
 						try {
-							DocumentBuilderFactory docFactory = DocumentBuilderFactory
-									.newInstance();
-							DocumentBuilder docBuilder = docFactory
-									.newDocumentBuilder();
-
-							// root elements
-							Document doc = docBuilder.newDocument();
-							Element rootElement = doc.createElement(clazz
-									.getSimpleName().toLowerCase() + "s");
-							doc.appendChild(rootElement);
-
-							JAXBContext jc = JAXBContext.newInstance(clazz);
-							Marshaller marshaller = jc.createMarshaller();
-				            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-							ObservableList<S> list = c.getList();
-							for (S s : list) {
-								marshaller.marshal(s, doc.getFirstChild());
-							}
-
-							TransformerFactory transformerFactory = TransformerFactory
-									.newInstance();
-							Transformer transformer = transformerFactory
-									.newTransformer();
-							DOMSource source = new DOMSource(doc);
-							File file = AppDataSource.getFile(clazz);
-							StreamResult result = new StreamResult(file);
-							transformer.transform(source, result);
-						} catch (JAXBException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ParserConfigurationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (TransformerConfigurationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (TransformerException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							saveModel();
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						System.out.println("CHange");
 					}
-
 				});
 				cacheList = result;
 			} catch (IOException e) {
@@ -130,6 +86,43 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			throws CrudException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	private void saveModel() throws TransformerFactoryConfigurationError,
+			IOException {
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			// root elements
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement(clazz.getSimpleName()
+					.toLowerCase() + "s");
+			doc.appendChild(rootElement);
+
+			JAXBContext jc = JAXBContext.newInstance(clazz);
+			Marshaller marshaller = jc.createMarshaller();
+			marshaller.setProperty(
+					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+					Boolean.TRUE);
+			ObservableList<S> list = getAll();
+			for (S s : list) {
+				marshaller.marshal(s, doc.getFirstChild());
+			}
+
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			File file = AppDataSource.getFile(clazz);
+			StreamResult result = new StreamResult(file);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IOException("Could not read storage");
+		}
+		System.out.println("CHange");
 	}
 
 }
