@@ -2,15 +2,12 @@ package de.xsrc.palaver.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,7 +45,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(inputStream);
-			dataList = doc.getElementsByTagName("account");
+			dataList = doc.getElementsByTagName(this.clazz.getSimpleName().toLowerCase());
 		} catch (ParserConfigurationException | SAXException e) {
 			String errorMsg = "Could not read/parse the AppData Config";
 			logger.warning(errorMsg);
