@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -36,8 +37,8 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		CrudService<S, String> {
 
 	private Class<S> clazz;
-	private static final Logger logger = Logger
-			.getLogger(Storage.class.getName());
+	private static final Logger logger = Logger.getLogger(Storage.class
+			.getName());
 	private static ObservableList cacheList;
 
 	public void delete(S entity) throws CrudException {
@@ -57,33 +58,39 @@ public class Storage<S extends EntityWithId<String>, String> implements
 
 	public ObservableList<S> getAll() throws CrudException {
 		if (cacheList == null) {
-			logger.finer("Initializing cache for model " + this.clazz.getSimpleName());
-			try {
-				@SuppressWarnings("unchecked")
-				AppDataSource<S> cs = new AppDataSource<S>(clazz);
-				cacheList = FXCollections.observableArrayList();
-				while (cs.next()) {
-					cacheList.add(cs.get());
+			logger.finer("Initializing cache for model "
+					+ this.clazz.getSimpleName());
+			cacheList = initialize();
+
+			cacheList.addListener(new ListChangeListener() {
+				// TODO rework this ugly spaghety save code
+				public void onChanged(Change c) {
+					logger.finer("Model " + clazz.getSimpleName()
+							+ " has changed");
+					saveModel();
 				}
-				logger.finest("Read " + cacheList.size() + " records from Model " + clazz.getSimpleName() );
-				
-				cacheList.addListener(new ListChangeListener() {
-					// TODO rework this ugly spaghety save code
-					public void onChanged(Change c) {
-						try {
-							logger.finer("Model " + clazz.getSimpleName() + " has changed");
-							saveModel();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			} catch (IOException e) {
-				throw new CrudException("Could not get all "
-						+ clazz.getSimpleName());
-			}
+			});
 		}
 		return cacheList;
+	}
+
+	private ObservableList<S> initialize() {
+		ObservableList<S> result = FXCollections.observableArrayList();
+		AppDataSource<S> cs;
+		try {
+			cs = new AppDataSource<S>(clazz);
+			while (cs.next()) {
+				S tmp = cs.<S> get();
+				result.<S> add(tmp);
+			}
+			logger.finest("Read " + result.size() + " records from Model "
+					+ clazz.getSimpleName());
+
+		} catch (IOException e) {
+			logger.warning("Reading data for model " + clazz.getSimpleName()
+					+ " failed. First run?");
+		}
+		return result;
 	}
 
 	public S getById(String id) throws CrudException {
@@ -97,15 +104,12 @@ public class Storage<S extends EntityWithId<String>, String> implements
 		return null;
 	}
 
-	private void saveModel() throws TransformerFactoryConfigurationError,
-			IOException {
+	private void saveModel(){
+		logger.finest("Trying to save model: " + this.clazz.getSimpleName());
 		try {
-			logger.finest("Trying to save model: " + this.clazz.getSimpleName());
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-			// root elements
+			DocumentBuilder docBuilder;
+			docBuilder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement(clazz.getSimpleName()
 					.toLowerCase() + "s");
@@ -113,8 +117,7 @@ public class Storage<S extends EntityWithId<String>, String> implements
 
 			JAXBContext jc = JAXBContext.newInstance(clazz);
 			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(
-					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+			marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
 					Boolean.TRUE);
 			ObservableList<S> list = getAll();
 			for (S s : list) {
@@ -128,26 +131,21 @@ public class Storage<S extends EntityWithId<String>, String> implements
 			File file = AppDataSource.getFile(clazz);
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
+			logger.finer("Saved model " + this.clazz.getSimpleName());
+
+		} catch (ParserConfigurationException | JAXBException | CrudException | TransformerConfigurationException e) {
+			e.printStackTrace();
+			logger.severe("This should not happen :-/");
+			Platform.exit();
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			logger.severe("Could not transform XML for model " + clazz.getSimpleName() + ". Model data broken?");
+			Platform.exit();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new IOException("Could not write storage");
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CrudException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logger.finer("Saved model" + this.clazz.getSimpleName());
-	}
+			logger.severe("Could not write storage file for  model " + clazz.getSimpleName() + " to disk. Check disk space and access rights");
 
+		}
+
+	}
 }

@@ -3,6 +3,7 @@ package de.xsrc.palaver.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -19,6 +20,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.xsrc.palaver.Storage;
+
 public class AppDataConverter<T> extends InputStreamConverter<T> {
 
 	private String tag;
@@ -26,6 +29,8 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 	private int currentIndex = 0;
 	private Class<T> clazz;
 	private InputStream inputStream;
+	private static final Logger logger = Logger.getLogger(Storage.class
+			.getName());
 
 	public AppDataConverter(Class<T> clazz) {
 		this.tag = clazz.getSimpleName().toLowerCase() + "s";
@@ -38,7 +43,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 		return false;
 	}
 
-	public synchronized void initialize(InputStream is) {
+	public synchronized void initialize(InputStream is) throws IOException {
 		this.inputStream = is;
 
 		try {
@@ -46,15 +51,12 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(inputStream);
 			dataList = doc.getElementsByTagName("account");
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ParserConfigurationException | SAXException e) {
+			String errorMsg = "Could not read/parse the AppData Config";
+			logger.warning(errorMsg);
+			IOException exception = new IOException(errorMsg);
+			exception.setStackTrace(e.getStackTrace());	
+			throw exception;
 		}
 
 	}
