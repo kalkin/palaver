@@ -16,12 +16,19 @@
 		<name>Xsrc</name>
 	</organization>
 
-
 	<build>
 
 		<finalName>palaver</finalName>
 
 		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>com.zenjava</groupId>
@@ -45,10 +52,8 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-
 		</plugins>
 	</build>
-
 
 	<dependencies>
 

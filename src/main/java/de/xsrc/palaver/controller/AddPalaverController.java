@@ -1,5 +1,7 @@
 package de.xsrc.palaver.controller;
 
+import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -13,6 +15,9 @@ import de.xsrc.palaver.model.Palaver;
 @FXMLController("/fxml/AddPalaverView.fxml")
 public class AddPalaverController {
 
+	private static final Logger logger = Logger
+			.getLogger(AddPalaverController.class.getName());
+
 	@FXML
 	private Button back;
 
@@ -21,6 +26,7 @@ public class AddPalaverController {
 
 	@FXML
 	private void addPalaverAction() throws CrudException {
+		logger.warning("Called addPalaverAction");
 		Palaver p = new Palaver();
 		p.setRecipient(jid.getText());
 		p.setAccount("adolf@xsrc.de");
