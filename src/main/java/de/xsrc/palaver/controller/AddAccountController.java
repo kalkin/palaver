@@ -34,12 +34,10 @@ public class AddAccountController {
 
 	@FXML
 	private void initialize() {
-		System.out.println(account);
 	}
 
 	@FXML
 	private void close() {
-		System.out.println(account);
 		Stage stage = (Stage) back.getScene().getWindow();
 		stage.close();
 	}
@@ -47,7 +45,7 @@ public class AddAccountController {
 	@FXML
 	public void saveAccount() {
 		if (account == null) {
-			Account account = new Account(jidField.getText(),
+			account = new Account(jidField.getText(),
 					passwordField.getText());
 		} else {
 			account.setJid(jidField.getText());

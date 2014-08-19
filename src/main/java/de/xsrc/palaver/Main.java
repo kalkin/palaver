@@ -11,14 +11,13 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
-import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.controller.MainController;
 
 public class Main extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws CrudException {
+	public void start(Stage primaryStage) {
 		Flow flow = new Flow(MainController.class);
 
 		try {
