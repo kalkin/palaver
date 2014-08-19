@@ -2,7 +2,6 @@ package de.xsrc.palaver.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
@@ -26,7 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.datafx.crud.CrudException;
 import org.datafx.util.EntityWithId;
-import org.datafx.util.QueryParameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -47,9 +45,15 @@ public class Storage<S extends EntityWithId<String>, String> {
 		this.clazz = clazz;
 	}
 
-	public S save(S entity) throws CrudException {
-		getAll().add(entity);
-		return null;
+	public void save(S entity) {
+		ObservableList<S> list = getAll();
+		if (list.contains(entity)) {
+			logger.finest("Entity " + entity + " from model "
+					+ clazz.getSimpleName() + " is already in the list");
+			saveModel();
+		} else {
+			list.add(entity);
+		}
 	}
 
 	public ObservableList<S> getAll() {
@@ -100,17 +104,6 @@ public class Storage<S extends EntityWithId<String>, String> {
 		return result;
 	}
 
-	public S getById(String id) throws CrudException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<S> query(java.lang.String name, QueryParameter... params)
-			throws CrudException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private void saveModel() {
 		logger.finest("Trying to save model: " + this.clazz.getSimpleName());
 		try {
@@ -139,7 +132,8 @@ public class Storage<S extends EntityWithId<String>, String> {
 			File file = AppDataSource.getFile(clazz);
 			StreamResult result = new StreamResult(file);
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			transformer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "2");
 			transformer.transform(source, result);
 			logger.finer("Saved model " + this.clazz.getSimpleName());
 
