@@ -1,4 +1,4 @@
-package de.xsrc.palaver;
+package de.xsrc.palaver.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +29,6 @@ import org.datafx.util.EntityWithId;
 import org.datafx.util.QueryParameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import de.xsrc.palaver.utils.AppDataSource;
 
 public class Storage<S extends EntityWithId<String>, String> implements
 		CrudService<S, String> {

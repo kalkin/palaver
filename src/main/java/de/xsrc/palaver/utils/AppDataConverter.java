@@ -20,8 +20,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import de.xsrc.palaver.Storage;
-
 public class AppDataConverter<T> extends InputStreamConverter<T> {
 
 	private String tag;

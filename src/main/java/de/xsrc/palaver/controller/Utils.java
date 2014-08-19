@@ -15,7 +15,7 @@ import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.util.EntityWithId;
 
-import de.xsrc.palaver.Storage;
+import de.xsrc.palaver.utils.Storage;
 
 public class Utils {
 

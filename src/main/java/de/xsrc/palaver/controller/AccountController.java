@@ -21,8 +21,8 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.crud.CrudException;
 
-import de.xsrc.palaver.Storage;
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.Storage;
 
 @FXMLController("/fxml/AccountView.fxml")
 public class AccountController {
