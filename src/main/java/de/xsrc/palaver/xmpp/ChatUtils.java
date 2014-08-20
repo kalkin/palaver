@@ -29,7 +29,7 @@ public class ChatUtils {
 	private static ConcurrentHashMap<Palaver, Chat> chatMap;
 	private static ConcurrentHashMap<String, XMPPConnection> conMap;
 
-	public static synchronized ConcurrentHashMap<Palaver, Chat> getChatMap() {
+	private static synchronized ConcurrentHashMap<Palaver, Chat> getChatMap() {
 		if (chatMap == null) {
 			chatMap = new ConcurrentHashMap<Palaver, Chat>();
 		}
@@ -43,7 +43,19 @@ public class ChatUtils {
 		return conMap;
 	}
 
-	public static XMPPConnection connectAccount(Account a)
+	public synchronized static XMPPConnection getConnection(Account account) {
+		XMPPConnection connection = getConMap().get(account);
+		if (connection == null) {
+			try {
+				connection = connectAccount(account);
+			} catch (SmackException | IOException | XMPPException e) {
+				e.printStackTrace();
+			}
+		}
+		return connection;
+	}
+
+	private static XMPPConnection connectAccount(Account a)
 			throws SmackException, IOException, XMPPException {
 		logger.finer("Connecting to account " + a);
 		String jid = a.getJid();
@@ -73,7 +85,7 @@ public class ChatUtils {
 		return config;
 	}
 
-	private synchronized static Chat getChat(Palaver palaver) {
+	public synchronized static Chat getChat(Palaver palaver) {
 		Chat chat = getChatMap().get(palaver);
 		if (chat == null) {
 			chat = createChat(palaver);

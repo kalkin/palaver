@@ -33,7 +33,7 @@ public class ChatListener implements ChatManagerListener {
 				// if a new chat this should fail
 				Palaver p = Utils.getStorage(Palaver.class).getById(id);
 				chat.addMessageListener(new MsgListener(account.getJid()));
-				ChatUtils.getChatMap().put(p, chat);
+				ChatUtils.getChat(p);
 				logger.finest("Retrieved palaver: " + p);
 			} catch (Exception e) {
 				String recipent = StringUtils.parseBareAddress(chat

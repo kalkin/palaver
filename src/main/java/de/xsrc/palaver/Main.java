@@ -50,14 +50,8 @@ public class Main extends Application {
 				.observableHashMap();
 		for (Account account : accountList) {
 			logger.fine("Connection account " + account);
-			try {
-				XMPPConnection c = ChatUtils.connectAccount(account);
-				logger.info("Connected account: " + account);
-				conMap.put(account, c);
-			} catch (SmackException | IOException | XMPPException e) {
-				logger.warning("Can not connect to server for " + account);
-				e.printStackTrace();
-			}
+			ChatUtils.getConnection(account);
+			logger.info("Connected account: " + account);
 		}
 		return conMap;
 	}
