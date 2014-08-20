@@ -7,7 +7,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
 	<center>
-		<ScrollPane fx:id="scrollPane" fitToWidth="true">
+		<ScrollPane styleClass="history"  fx:id="scrollPane" fitToWidth="true">
 			<content>
 				<VBox fx:id="historyBox" fillWidth="true" />
 			</content>

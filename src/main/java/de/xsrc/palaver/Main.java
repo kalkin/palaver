@@ -1,6 +1,5 @@
 package de.xsrc.palaver;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -16,9 +15,7 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
@@ -38,6 +35,8 @@ public class Main extends Application {
 		});
 		Flow flow = new Flow(MainController.class);
 		Scene scene = handleI18n(flow);
+		scene.getStylesheets().add("application.css");
+
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
