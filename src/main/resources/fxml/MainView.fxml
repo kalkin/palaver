@@ -13,7 +13,7 @@
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList">
+				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList" cancelButton="true">
 					<tooltip>
 						<Tooltip text="%hide_palaver_list" />
 					</tooltip>

@@ -20,8 +20,8 @@
 	<bottom>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="back" onAction="#close" text="%back_button" />
-				<Button text="%save" onAction="#addPalaverAction" />
+				<Button fx:id="back" onAction="#close" text="%back_button" cancelButton="true"/>
+				<Button text="%save" onAction="#addPalaverAction" defaultButton="true" />
 			</buttons>
 		</ButtonBar>
 	</bottom>

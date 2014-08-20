@@ -12,12 +12,13 @@
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="back">
+				<Button fx:id="back" cancelButton="true">
 					<tooltip>
 						<Tooltip text="%back_button" />
 					</tooltip>
 				</Button>
-				<Button fx:id="addAccountButton" onAction="#addAccount">
+				<Button fx:id="addAccountButton" onAction="#addAccount"
+					defaultButton="true">
 					<tooltip>
 						<Tooltip text="%add_account" />
 					</tooltip>

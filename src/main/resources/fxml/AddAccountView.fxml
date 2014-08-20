@@ -21,8 +21,8 @@
 	<bottom>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="back" onAction="#close" text="%back_button" />
-				<Button text="%add_account" onAction="#saveAccount" />
+				<Button fx:id="back" onAction="#close" text="%back_button" cancelButton="true"/>
+				<Button text="%add_account" onAction="#saveAccount"  defaultButton="true"/>
 			</buttons>
 		</ButtonBar>
 	</bottom>
