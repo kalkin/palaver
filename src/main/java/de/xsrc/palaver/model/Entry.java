@@ -4,6 +4,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -63,6 +64,10 @@ public class Entry implements EntityWithId<String> {
 
 	public void setFrom(String from) {
 		this.from.set(from);
+	}
+
+	public ObservableValue<? extends String> bodyProperty() {
+		return body;
 	}
 
 }
