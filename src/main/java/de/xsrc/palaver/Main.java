@@ -22,9 +22,9 @@ import org.jivesoftware.smack.XMPPException;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.utils.ChatUtils;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.ChatUtils;
 
 public class Main extends Application {
 
