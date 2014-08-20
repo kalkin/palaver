@@ -103,4 +103,9 @@
 			<version>4.0.2</version>
 		</dependency>
 	</dependencies>
+	<scm>
+		<url>https://github.com/xsrc/palaver.git</url>
+	</scm>
+	<url>https://github.com/xsrc/palaver</url>
+	<description>A Modern Instant Messaging Client</description>
 </project>
