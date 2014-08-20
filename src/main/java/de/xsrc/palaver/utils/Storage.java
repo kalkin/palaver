@@ -40,9 +40,18 @@ public class Storage<S extends EntityWithId<String>, String> {
 			.getName());
 	private ObservableList<S> cacheList;
 
-	public void delete(S entity) throws CrudException {
+	public void delete(S entity) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public S getById(String id) throws CrudException {
+		for (S s : cacheList) {
+			if (s.getId().equals(id))
+				return s;
+		}
+		throw new CrudException(clazz.getSimpleName() + " with id " + id
+				+ " not found");
 	}
 
 	public Storage(Class<S> clazz) {
@@ -120,7 +129,8 @@ public class Storage<S extends EntityWithId<String>, String> {
 					.toLowerCase() + "s");
 			doc.appendChild(rootElement);
 
-			JAXBContext jc = JAXBContext.newInstance(Account.class, Entry.class, Palaver.class, History.class);
+			JAXBContext jc = JAXBContext.newInstance(Account.class,
+					Entry.class, Palaver.class, History.class);
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(
 					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
