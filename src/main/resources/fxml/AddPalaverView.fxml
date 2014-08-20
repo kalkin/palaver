@@ -21,7 +21,7 @@
 		<ButtonBar>
 			<buttons>
 				<Button fx:id="back" onAction="#close" text="%back_button" />
-				<Button text="%add_palaver" onAction="#addPalaverAction" />
+				<Button text="%save" onAction="#addPalaverAction" />
 			</buttons>
 		</ButtonBar>
 	</bottom>

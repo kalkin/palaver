@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -33,7 +34,6 @@ public class MainController {
 	@FXML
 	private Button addPalaverButton;
 
-	
 	@FXML
 	private ListView<Palaver> palaverList;
 
@@ -41,6 +41,11 @@ public class MainController {
 
 	@FXML
 	private BorderPane borderPane;
+	
+	@FXML
+	private Button hidePalaverButton;
+
+	private Node palaverListTmp;
 
 	@FXML
 	private void initialize() {
@@ -74,6 +79,7 @@ public class MainController {
 						});
 		showAccountsButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.USER));
 		addPalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
+		hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
 	}
 
 	@FXML
@@ -86,4 +92,17 @@ public class MainController {
 		}
 	}
 
+	@FXML
+	private void hidePalaver(){
+		if(palaverListTmp == null){
+			palaverListTmp = borderPane.getLeft();
+			borderPane.setLeft(null);
+			hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
+		}else {
+			borderPane.setLeft(palaverListTmp);
+			palaverListTmp = null;
+			hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+		}
+		System.out.println("drin");
+	}
 }
