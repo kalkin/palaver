@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
@@ -7,15 +8,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
 		<Label fx:id="body" text="Lore Ipsum dolores" wrapText="true"
-			BorderPane.alignment="CENTER" />
+			BorderPane.alignment="CENTER">
+			<BorderPane.margin>
+				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+			</BorderPane.margin>
+		</Label>
 	</center>
 	<left>
-		<VBox alignment="CENTER" maxHeight="64.0" maxWidth="64.0"
-			minHeight="64.0" minWidth="64.0" prefHeight="64.0" prefWidth="64.0">
+		<VBox maxHeight="64.0" maxWidth="64.0" minHeight="64.0" minWidth="64.0"
+			prefHeight="64.0" prefWidth="64.0">
 			<children>
 				<Label fx:id="from" alignment="CENTER" text="K" textAlignment="CENTER"
 					BorderPane.alignment="CENTER">

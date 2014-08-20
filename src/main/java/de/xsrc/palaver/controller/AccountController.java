@@ -4,10 +4,12 @@ import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -21,6 +23,8 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.crud.CrudException;
 
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
@@ -31,6 +35,8 @@ public class AccountController {
 	@BackAction
 	private Button back;
 	
+	@FXML
+	private Button addAccountButton;
 
 	@FXML
 	private ListView<Account> palaverList;
@@ -40,6 +46,12 @@ public class AccountController {
 		Storage<Account,String> s = Utils.getStorage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
+		back.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+		HBox hbox = new HBox();
+		hbox.setAlignment(Pos.CENTER);
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER));
+		addAccountButton.setGraphic(hbox);
 	}
 
 	@FXML

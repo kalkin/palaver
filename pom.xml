@@ -57,6 +57,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>de.jensd</groupId>
+			<artifactId>fontawesomefx</artifactId>
+			<version>8.0.8</version>
+		</dependency>
+		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack-core</artifactId>
 			<version>4.0.2</version>

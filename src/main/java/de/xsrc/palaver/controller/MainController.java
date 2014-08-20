@@ -18,6 +18,8 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
 
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Utils;
 
@@ -28,6 +30,10 @@ public class MainController {
 	@LinkAction(AccountController.class)
 	private Button showAccountsButton;
 
+	@FXML
+	private Button addPalaverButton;
+
+	
 	@FXML
 	private ListView<Palaver> palaverList;
 
@@ -63,8 +69,11 @@ public class MainController {
 									e.printStackTrace();
 								}
 							}
-							borderPane.setCenter(historyMap.get(newValue).getRootNode());
+							borderPane.setCenter(historyMap.get(newValue)
+									.getRootNode());
 						});
+		showAccountsButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.USER));
+		addPalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
 	}
 
 	@FXML

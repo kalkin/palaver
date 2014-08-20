@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.ScrollPane?>
 <?import org.controlsfx.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
@@ -12,9 +13,17 @@
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="addPalaverButton" onAction="#addPalaver" text="%add_palaver" />
 
-				<Button fx:id="showAccountsButton" text="%account_managment" />
+				<Button fx:id="addPalaverButton" onAction="#addPalaver">
+					<tooltip>
+						<Tooltip text="%new_palaver" />
+					</tooltip>
+				</Button>
+				<Button fx:id="showAccountsButton">
+					<tooltip>
+						<Tooltip text="%account_managment" />
+					</tooltip>
+				</Button>
 			</buttons>
 		</ButtonBar>
 	</top>
