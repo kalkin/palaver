@@ -22,6 +22,10 @@ public class History {
 	public List<Entry> getEntryList() {
 		return entryList.get();
 	}
+	
+	public ObservableList<Entry> getEntryListProperty(){
+		return entryList;
+	}
 
 	public void setEntryList(ObservableList<Entry> history) {
 		this.entryList.set(history);

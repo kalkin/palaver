@@ -31,14 +31,7 @@ public class HistoryController {
 	public void setPalaver(Palaver p) {
 		List<Entry> f = p.history.getEntryList();
 		this.palaver = p;
-		ObservableList<Entry> historyList;
-		if (f == null) {
-			historyList = FXCollections.observableList(new LinkedList<Entry>());
-		} else {
-			historyList = FXCollections.observableList(f);
-		}
-
-		history.setItems(historyList);
+		history.setItems(p.history.getEntryListProperty());
 	}
 
 	@FXML

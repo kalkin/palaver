@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -18,10 +19,10 @@ import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.ChatUtils;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
@@ -32,29 +33,29 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
+		Platform.runLater(() -> {
+			handleXmpp();
+		});
 		Flow flow = new Flow(MainController.class);
 		Scene scene = handleI18n(flow);
 		primaryStage.setScene(scene);
+
 		primaryStage.show();
-		handleXmpp();
 	}
 
-	private ObservableMap<Account,XMPPConnection> handleXmpp() {
+	private ObservableMap<Account, XMPPConnection> handleXmpp() {
 		ObservableList<Account> accountList = Utils.getStorage(Account.class)
 				.getAll();
 		ObservableMap<Account, XMPPConnection> conMap = FXCollections
 				.observableHashMap();
 		for (Account account : accountList) {
 			logger.fine("Connection account " + account);
-			String keys[] = account.getJid().split("@");
-			XMPPConnection c = new XMPPTCPConnection(keys[1]);
 			try {
-				c.connect();
-				c.login(keys[0], account.getPassword());
+				XMPPConnection c = ChatUtils.connectAccount(account);
 				logger.info("Connected account: " + account);
 				conMap.put(account, c);
 			} catch (SmackException | IOException | XMPPException e) {
-				logger.warning("Can not connect to server: " + keys[1]);
+				logger.warning("Can not connect to server for " + account);
 				e.printStackTrace();
 			}
 		}
