@@ -13,7 +13,7 @@
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="hidePalaverButton" onAction="#hidePalaver">
+				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList">
 					<tooltip>
 						<Tooltip text="%hide_palaver_list" />
 					</tooltip>
@@ -37,7 +37,7 @@
 		</ButtonBar>
 	</top>
 	<left>
-		<ListView fx:id="palaverList" />
+		<ListView fx:id="palaverListView" />
 	</left>
 </BorderPane>
 

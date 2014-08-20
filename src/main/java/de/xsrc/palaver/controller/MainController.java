@@ -7,10 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.ViewFactory;
@@ -39,7 +41,7 @@ public class MainController {
 	private Button addPalaverButton;
 
 	@FXML
-	private ListView<Palaver> palaverList;
+	private ListView<Palaver> palaverListView;
 
 	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
 
@@ -55,8 +57,13 @@ public class MainController {
 	private void initialize() {
 		ObservableList<Palaver> palavers = Utils.getStorage(Palaver.class)
 				.getAll();
-		palaverList.setItems(palavers);
-		MultipleSelectionModel<Palaver> selModel = palaverList
+		palaverListView.setItems(palavers);
+		palaverListView.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
+		    @Override public ListCell<Palaver> call(ListView<Palaver> listView) {
+		        return new PalaverCell();
+		    }
+		});
+		MultipleSelectionModel<Palaver> selModel = palaverListView
 				.getSelectionModel();
 
 		selModel.setSelectionMode(SelectionMode.SINGLE);
@@ -102,7 +109,7 @@ public class MainController {
 	}
 
 	@FXML
-	private void hidePalaver() {
+	private void hidePalaverList() {
 		if (palaverListTmp == null) {
 			palaverListTmp = borderPane.getLeft();
 			borderPane.setLeft(null);
