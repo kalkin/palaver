@@ -69,6 +69,7 @@ public class ChatUtils {
 
 		ConnectionConfiguration config = configureConnection(StringUtils
 				.parseServer(jid));
+		//config.setDebuggerEnabled(true);
 
 		XMPPConnection c = new XMPPTCPConnection(config);
 		c.connect();

@@ -82,7 +82,7 @@ public class MainController {
 									.getRootNode());
 						});
 		showAccountsButton.setGraphic(AwesomeDude
-				.createIconLabel(AwesomeIcon.USER));
+				.createIconLabel(AwesomeIcon.GEAR));
 		addPalaverButton.setGraphic(AwesomeDude
 				.createIconLabel(AwesomeIcon.PLUS));
 		hidePalaverButton.setGraphic(AwesomeDude
