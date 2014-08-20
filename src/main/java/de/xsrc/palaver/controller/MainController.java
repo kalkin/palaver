@@ -32,6 +32,10 @@ public class MainController {
 	private Button showAccountsButton;
 
 	@FXML
+	@LinkAction(BuddyListView.class)
+	private Button showBuddyListButton;
+
+	@FXML
 	private Button addPalaverButton;
 
 	@FXML
@@ -41,7 +45,7 @@ public class MainController {
 
 	@FXML
 	private BorderPane borderPane;
-	
+
 	@FXML
 	private Button hidePalaverButton;
 
@@ -77,9 +81,14 @@ public class MainController {
 							borderPane.setCenter(historyMap.get(newValue)
 									.getRootNode());
 						});
-		showAccountsButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.USER));
-		addPalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
-		hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+		showAccountsButton.setGraphic(AwesomeDude
+				.createIconLabel(AwesomeIcon.USER));
+		addPalaverButton.setGraphic(AwesomeDude
+				.createIconLabel(AwesomeIcon.PLUS));
+		hidePalaverButton.setGraphic(AwesomeDude
+				.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+		showBuddyListButton.setGraphic(AwesomeDude
+				.createIconLabel(AwesomeIcon.USERS));
 	}
 
 	@FXML
@@ -93,15 +102,17 @@ public class MainController {
 	}
 
 	@FXML
-	private void hidePalaver(){
-		if(palaverListTmp == null){
+	private void hidePalaver() {
+		if (palaverListTmp == null) {
 			palaverListTmp = borderPane.getLeft();
 			borderPane.setLeft(null);
-			hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
-		}else {
+			hidePalaverButton.setGraphic(AwesomeDude
+					.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
+		} else {
 			borderPane.setLeft(palaverListTmp);
 			palaverListTmp = null;
-			hidePalaverButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+			hidePalaverButton.setGraphic(AwesomeDude
+					.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
 		}
 		System.out.println("drin");
 	}

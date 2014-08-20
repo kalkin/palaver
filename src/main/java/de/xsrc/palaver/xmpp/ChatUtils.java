@@ -1,8 +1,14 @@
 package de.xsrc.palaver.xmpp;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -11,6 +17,7 @@ import javax.net.ssl.X509TrustManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -142,5 +149,23 @@ public class ChatUtils {
 		} };
 
 		return trustAllCerts;
+	}
+
+	public static ObservableList<String>getBuddys(){
+		Collection<XMPPConnection> values = getConMap().values();
+		HashMap<String, RosterEntry> buddyMap = new HashMap<String, RosterEntry>();
+		ObservableList<String> result = FXCollections.observableList(new LinkedList<String>());
+		for (XMPPConnection con : values) {
+			Collection<RosterEntry> allEntries = con.getRoster().getEntries();
+			for (RosterEntry rosterEntry : allEntries) {
+				if(!buddyMap.containsKey(rosterEntry.getUser())){
+					buddyMap.put(rosterEntry.getUser(), rosterEntry);
+					result.add(rosterEntry.getName());
+				}
+				
+			}
+				
+		}
+		return result;
 	}
 }

@@ -18,6 +18,11 @@
 						<Tooltip text="%hide_palaver_list" />
 					</tooltip>
 				</Button>
+				<Button fx:id="showBuddyListButton">
+					<tooltip>
+						<Tooltip text="%budy_list" />
+					</tooltip>
+				</Button>
 				<Button fx:id="addPalaverButton" onAction="#addPalaver">
 					<tooltip>
 						<Tooltip text="%new_palaver" />

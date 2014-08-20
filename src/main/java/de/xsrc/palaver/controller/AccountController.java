@@ -47,11 +47,7 @@ public class AccountController {
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
 		back.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
-		HBox hbox = new HBox();
-		hbox.setAlignment(Pos.CENTER);
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER));
-		addAccountButton.setGraphic(hbox);
+		addAccountButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
 	}
 
 	@FXML
