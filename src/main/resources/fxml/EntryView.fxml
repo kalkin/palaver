@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPaneminHeight = xmlns="http://javafx.com/javafx/8"
+<BorderPane xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1">
 	<center>
 		<Label fx:id="body" text="Lore Ipsum dolores" wrapText="true"
