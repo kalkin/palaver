@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPaneminHeight = xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
 	<center>
-		<Label fx:id="body" text="Label" wrapText="true"
+		<Label fx:id="body" text="Lore Ipsum dolores" wrapText="true"
 			BorderPane.alignment="CENTER" />
 	</center>
 	<left>
-		<Canvas fx:id="canvas" BorderPane.alignment="CENTER" />
+		<VBox alignment="CENTER" maxHeight="64.0" maxWidth="64.0"
+			minHeight="64.0" minWidth="64.0" prefHeight="64.0" prefWidth="64.0">
+			<children>
+				<Label fx:id="from" alignment="CENTER" text="K" textAlignment="CENTER"
+					BorderPane.alignment="CENTER">
+					<font>
+						<Font size="60.0" />
+					</font>
+				</Label>
+			</children>
+		</VBox>
 	</left>
 </BorderPane>
