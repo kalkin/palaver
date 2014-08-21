@@ -13,7 +13,7 @@ public class PalaverCell extends ListCell<Palaver> {
 	@Override
 	public void updateItem(Palaver p, boolean empty) {
 		super.updateItem(p, empty);
-		if (p != null) {
+		if (!empty && p != null) {
 			String name = StringUtils.parseName(p.getRecipient());
 			if (name != null && name.length() > 0) {
 				StackPane sp = UiUtils.getAvatar(name);
@@ -21,8 +21,10 @@ public class PalaverCell extends ListCell<Palaver> {
 				setText(StringUtils.parseName(p.getRecipient()));
 				setFont(Font.font(23));
 			}
+		} else {
+			setGraphic(null);
+			setText(null);
 		}
 	}
-
 
 }

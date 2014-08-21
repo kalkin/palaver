@@ -9,11 +9,14 @@ public class BuddyCell extends ListCell<String> {
 	@Override
 	public void updateItem(String name, boolean empty) {
 		super.updateItem(name, empty);
-		if (name != null && name.length() > 0) {
+		if (!empty && name != null && name.length() > 0) {
 			StackPane sp = UiUtils.getAvatar(name);
 			setGraphic(sp);
 			setText(name);
 			setFont(Font.font(23));
+		} else {
+			setGraphic(null);
+			setText(null);
 		}
 	}
 
