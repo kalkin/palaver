@@ -25,10 +25,14 @@
 		</ButtonBar>
 	</top>
 	<center>
-		<ListView fx:id="list" prefHeight="200.0" prefWidth="200.0"
-			BorderPane.alignment="CENTER" />
+		<ListView fx:id="list"/>
 	</center>
 	<bottom>
-		<TextField BorderPane.alignment="CENTER" />
+		<HBox>
+			<children>
+				<Label fx:id="faSearch" />
+				<TextField fx:id="searchInput" />
+			</children>
+		</HBox>
 	</bottom>
 </BorderPane>

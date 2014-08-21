@@ -69,7 +69,7 @@ public class ChatUtils {
 
 		ConnectionConfiguration config = configureConnection(StringUtils
 				.parseServer(jid));
-		//config.setDebuggerEnabled(true);
+		// config.setDebuggerEnabled(true);
 
 		XMPPConnection c = new XMPPTCPConnection(config);
 		c.connect();
@@ -152,20 +152,24 @@ public class ChatUtils {
 		return trustAllCerts;
 	}
 
-	public static ObservableList<String>getBuddys(){
+	public static ObservableList<String> getBuddys() {
 		Collection<XMPPConnection> values = getConMap().values();
 		HashMap<String, RosterEntry> buddyMap = new HashMap<String, RosterEntry>();
-		ObservableList<String> result = FXCollections.observableList(new LinkedList<String>());
+		ObservableList<String> result = FXCollections
+				.observableList(new LinkedList<String>());
 		for (XMPPConnection con : values) {
 			Collection<RosterEntry> allEntries = con.getRoster().getEntries();
 			for (RosterEntry rosterEntry : allEntries) {
-				if(!buddyMap.containsKey(rosterEntry.getUser())){
+				if (!buddyMap.containsKey(rosterEntry.getUser())) {
 					buddyMap.put(rosterEntry.getUser(), rosterEntry);
-					result.add(rosterEntry.getName());
+					String name = rosterEntry.getName();
+					if (name != null && name.length() > 0) {
+						result.add(name);
+					}
 				}
-				
+
 			}
-				
+
 		}
 		return result;
 	}
