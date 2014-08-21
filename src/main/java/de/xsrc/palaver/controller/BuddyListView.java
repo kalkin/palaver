@@ -4,8 +4,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.BackAction;
@@ -19,7 +21,7 @@ public class BuddyListView {
 	@FXML
 	@BackAction
 	private Button back;
-	
+
 	@FXML
 	private Button addBuddy;
 	@FXML
@@ -35,6 +37,12 @@ public class BuddyListView {
 		addBuddy.setGraphic(hbox);
 		ObservableList<String> buddyList = ChatUtils.getBuddys();
 		list.setItems(buddyList);
+		list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(ListView<String> listView) {
+				return new BuddyCell();
+			}
+		});
 	}
 
 }

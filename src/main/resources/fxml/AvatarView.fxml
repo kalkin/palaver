@@ -8,14 +8,21 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
 
-<StackPane styleClass="avatar" alignment="TOP_CENTER" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<StackPane styleClass="avatar" alignment="TOP_CENTER"
+	xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
 	<children>
-		<Rectangle fx:id="r" arcHeight="5.0" arcWidth="5.0" height="64.0" stroke="BLACK" strokeType="INSIDE" width="64.0" />
-		<Text fx:id="from" boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" text="K" textAlignment="CENTER">
+		<Rectangle fx:id="r" arcHeight="5.0" arcWidth="5.0" height="64.0"
+			stroke="BLACK" strokeType="INSIDE" width="64.0" />
+		<Text fx:id="from" boundsType="LOGICAL_VERTICAL_CENTER"
+			strokeType="OUTSIDE" strokeWidth="0.0" text="K" textAlignment="CENTER">
 			<font>
 				<Font size="60.0" />
 			</font>
 		</Text>
 	</children>
+	<padding>
+		<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+	</padding>
 </StackPane>
