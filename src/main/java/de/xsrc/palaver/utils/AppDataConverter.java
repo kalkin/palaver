@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.datafx.reader.converter.InputStreamConverter;
+import org.datafx.util.EntityWithId;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -61,7 +62,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			jc = JAXBContext.newInstance(this.clazz);
 			Unmarshaller u = jc.createUnmarshaller();
 			currentIndex++;
-			JAXBElement<T> element = u
+			JAXBElement<T> element = (JAXBElement<T>) u
 					.unmarshal(dataList.item(oldIndex), clazz);
 			return element.getValue();
 		} catch (JAXBException e) {

@@ -38,14 +38,14 @@ public class ColdStorage {
 	 * 
 	 * @param <T>
 	 * 
-	 * @param clazz
+	 * @param c
 	 * @return
 	 * @throws IOException
 	 */
 	public static <T extends EntityWithId<String>> LinkedHashSet<T> get(
-			Class<T> clazz) throws IOException {
-		logger.finer("Reading XML file for model" + clazz.getSimpleName());
-		AppDataSource<T> source = new AppDataSource<T>(clazz);
+			Class<?> c) throws IOException {
+		logger.finer("Reading XML file for model" + c.getSimpleName());
+		AppDataSource<T> source = new AppDataSource<T>(c);
 		LinkedHashSet<T> result = new LinkedHashSet<T>();
 		while (source.next()) {
 			T tmp = source.get();
