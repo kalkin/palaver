@@ -1,11 +1,19 @@
 package de.xsrc.palaver.xmpp;
 
+import java.util.ResourceBundle;
+
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import org.datafx.controller.flow.Flow;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.FlowHandler;
+import org.datafx.controller.flow.container.DefaultFlowContainer;
 
 public class UiUtils {
 	public static StackPane getAvatar(String name) {
@@ -25,5 +33,14 @@ public class UiUtils {
 		sp.getChildren().add(r);
 		sp.getChildren().add(t);
 		return sp;
+	}
+
+	public static Scene prepareFlow(Flow f) throws FlowException {
+		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+		DefaultFlowContainer container = new DefaultFlowContainer();
+		FlowHandler flowHandler = f.createHandler();
+		flowHandler.getViewConfiguration().setResources(b);
+		flowHandler.start(container);
+		return new Scene(container.getView());
 	}
 }

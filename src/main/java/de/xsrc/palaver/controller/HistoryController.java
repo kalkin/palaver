@@ -37,19 +37,24 @@ public class HistoryController {
 	private Palaver palaver;
 	private ObservableList<Entry> history;
 
+	@FXML
+	private void initialize() {
+		requestFocus();
+
+	}
+
 	public void setPalaver(Palaver p) {
 		this.palaver = p;
-		history = p.history.getEntryListProperty();
+		// history = palaver.history.getEntryListProperty();
+		history = p.history.<Entry>getEntryListProperty();
 		add(history);
-
 		history.addListener((Change<? extends Entry> change) -> {
 			while (change.next()) {
-				logger.finer("New Msgs were added to " + palaver);
+				logger.finer("New Msgs were added to " + p);
 				add(change.getAddedSubList());
-
+				requestFocus();
 			}
 		});
-		requestFocus();
 	}
 
 	private void add(List<? extends Entry> list) {
@@ -63,7 +68,6 @@ public class HistoryController {
 						EntryController.class);
 				context.getController().setEntry(entry);
 				historyBox.getChildren().add(context.getRootNode());
-				scrollPane.setVvalue(scrollPane.getVmax());
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
 				logger.severe("Could not add entry from " + entry.getFrom()
@@ -86,6 +90,7 @@ public class HistoryController {
 		Platform.runLater(() -> {
 			chatInput.requestFocus();
 			chatInput.positionCaret(chatInput.getLength());
+			Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
 		});
 
 	}

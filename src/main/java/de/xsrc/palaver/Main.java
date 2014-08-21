@@ -1,6 +1,5 @@
 package de.xsrc.palaver;
 
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
@@ -13,8 +12,6 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
-import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.jivesoftware.smack.XMPPConnection;
 
 import de.xsrc.palaver.controller.MainController;
@@ -22,6 +19,7 @@ import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
+import de.xsrc.palaver.xmpp.UiUtils;
 
 public class Main extends Application {
 
@@ -34,7 +32,7 @@ public class Main extends Application {
 			handleXmpp();
 		});
 		Flow flow = new Flow(MainController.class);
-		Scene scene = handleI18n(flow);
+		Scene scene = UiUtils.prepareFlow(flow);
 		scene.getStylesheets().add("application.css");
 
 		primaryStage.setScene(scene);
@@ -55,14 +53,7 @@ public class Main extends Application {
 		return conMap;
 	}
 
-	private Scene handleI18n(Flow f) throws FlowException {
-		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
-		DefaultFlowContainer container = new DefaultFlowContainer();
-		FlowHandler flowHandler = f.createHandler();
-		flowHandler.getViewConfiguration().setResources(b);
-		flowHandler.start(container);
-		return new Scene(container.getView());
-	}
+
 
 	public static void main(String[] args) {
 

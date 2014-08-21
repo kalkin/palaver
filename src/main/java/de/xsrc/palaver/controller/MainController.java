@@ -87,10 +87,10 @@ public class MainController {
 									e.printStackTrace();
 								}
 							}
-							historyMap.get(newValue).getController()
-									.requestFocus();
 							borderPane.setCenter(historyMap.get(newValue)
 									.getRootNode());
+							historyMap.get(newValue).getController()
+							.requestFocus();
 						});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
