@@ -31,7 +31,8 @@
 		<HBox>
 			<children>
 				<Label fx:id="faSearch" />
-				<TextField fx:id="searchInput" />
+				<TextField fx:id="searchInput"/>
+				<Button text="start"  onAction="#startPalaverAction" defaultButton="true" fx:id="startPalaverButton"/>
 			</children>
 		</HBox>
 	</bottom>

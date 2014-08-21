@@ -4,12 +4,14 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.xmpp.model.Buddy;
 
-public class BuddyCell extends ListCell<String> {
+public class BuddyCell extends ListCell<Buddy> {
 	@Override
-	public void updateItem(String name, boolean empty) {
-		super.updateItem(name, empty);
-		if (!empty && name != null && name.length() > 0) {
+	public void updateItem(Buddy buddy, boolean empty) {
+		super.updateItem(buddy, empty);
+		if (!empty && buddy != null && buddy.getName().length() > 0) {
+			String name = buddy.getName();
 			StackPane sp = UiUtils.getAvatar(name);
 			setGraphic(sp);
 			setText(name);

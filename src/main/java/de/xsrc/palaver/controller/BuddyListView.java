@@ -1,10 +1,13 @@
 package de.xsrc.palaver.controller;
 
+import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,20 +20,26 @@ import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.BackAction;
+import org.datafx.crud.CrudException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
+import de.xsrc.palaver.xmpp.model.Buddy;
 
 @FXMLController("/fxml/BuddyListView.fxml")
-public class BuddyListView {
+public class BuddyListView extends AbstractController {
 	@FXML
 	@BackAction
 	private Button back;
 
 	@FXML
 	private Button addBuddy;
-
+	@FXML
+	private Button startPalaverButton;
 	@FXML
 	private Label faSearch;
 
@@ -38,7 +47,10 @@ public class BuddyListView {
 	private TextField searchInput;
 
 	@FXML
-	private ListView<String> list;
+	private ListView<Buddy> list;
+
+	private static final Logger logger = Logger.getLogger(BuddyListView.class
+			.getName());
 
 	@FXML
 	private void initialize() {
@@ -47,14 +59,16 @@ public class BuddyListView {
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
 
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
+		hbox.getChildren().add(
+				AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
+		hbox.getChildren().add(
+				AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
 		list.setItems(ChatUtils.getBuddys());
 		list.setManaged(true);
-		list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+		list.setCellFactory(new Callback<ListView<Buddy>, ListCell<Buddy>>() {
 			@Override
-			public ListCell<String> call(ListView<String> listView) {
+			public ListCell<Buddy> call(ListView<Buddy> listView) {
 				return new BuddyCell();
 			}
 		});
@@ -64,10 +78,13 @@ public class BuddyListView {
 					String newVal) {
 				handleSearchByKey(oldVal, newVal);
 			}
+			
 		});
 
 		AwesomeDude.setIcon(faSearch, AwesomeIcon.SEARCH, "20");
 		Platform.runLater(() -> searchInput.requestFocus());
+		
+		startPalaverButton.setOnAction((ActionEvent event)-> startPalaverAction());
 
 	}
 
@@ -86,15 +103,34 @@ public class BuddyListView {
 		newVal = newVal.toUpperCase();
 
 		// Filter out the entries that don't contain the entered text
-		ObservableList<String> subentries = FXCollections.observableArrayList();
-		for (Object entry : list.getItems()) {
-			String entryText = (String) entry;
-			if (entryText.toUpperCase().contains(newVal)) {
+		ObservableList<Buddy> subentries = FXCollections.observableArrayList();
+		for (Buddy entry : list.getItems()) {
+			Buddy entryText = entry;
+			if (entryText.toString().toUpperCase().contains(newVal)) {
 				subentries.add(entryText);
 			}
 		}
 		list.setItems(subentries);
 		list.getSelectionModel().select(0);
 
+	}
+
+	@FXML
+	private void startPalaverAction() {
+		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
+		System.out.println("drin");
+		try {
+			Utils.getStorage(Palaver.class).getById(
+					buddy.getAccount() + ":"
+							+ StringUtils.parseBareAddress(buddy.getJid()));
+			System.out.println("Palaver does exists");
+		} catch (CrudException e) {
+			Palaver p = new Palaver();
+			p.setAccount(buddy.getAccount());
+			p.setRecipient(buddy.getJid());
+			System.out.println(p.getAccount() + " is starting palaver with "
+					+ p.getRecipient());
+			Utils.getStorage(Palaver.class).save(p);
+		}
 	}
 }

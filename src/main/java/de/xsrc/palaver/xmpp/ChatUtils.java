@@ -2,7 +2,6 @@ package de.xsrc.palaver.xmpp;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -28,6 +27,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class ChatUtils {
 	private static final Logger logger = Logger.getLogger(ChatUtils.class
@@ -152,22 +152,21 @@ public class ChatUtils {
 		return trustAllCerts;
 	}
 
-	public static ObservableList<String> getBuddys() {
+	public static ObservableList<Buddy> getBuddys() {
 		Collection<XMPPConnection> values = getConMap().values();
-		HashMap<String, RosterEntry> buddyMap = new HashMap<String, RosterEntry>();
-		ObservableList<String> result = FXCollections
-				.observableList(new LinkedList<String>());
+		ObservableList<Buddy> result = FXCollections
+				.observableList(new LinkedList<Buddy>());
 		for (XMPPConnection con : values) {
 			Collection<RosterEntry> allEntries = con.getRoster().getEntries();
 			for (RosterEntry rosterEntry : allEntries) {
-				if (!buddyMap.containsKey(rosterEntry.getUser())) {
-					buddyMap.put(rosterEntry.getUser(), rosterEntry);
-					String name = rosterEntry.getName();
-					if (name != null && name.length() > 0) {
-						result.add(name);
-					}
+				String name = rosterEntry.getName();
+				if (name != null && name.length() > 0) {
+					Buddy b = new Buddy();
+					b.setName(name);
+					b.setJid(StringUtils.parseBareAddress(rosterEntry.getUser()));
+					b.setAccount(StringUtils.parseBareAddress(con.getUser()));
+					result.add(b);
 				}
-
 			}
 
 		}
