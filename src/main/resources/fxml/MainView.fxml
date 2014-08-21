@@ -7,13 +7,16 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import org.controlsfx.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
+<?import javafx.geometry.*?>
+
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
 	prefHeight="480" fx:id="borderPane">
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList" cancelButton="true">
+				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList"
+					cancelButton="true">
 					<tooltip>
 						<Tooltip text="%hide_palaver_list" />
 					</tooltip>
@@ -34,10 +37,13 @@
 					</tooltip>
 				</Button>
 			</buttons>
+			<padding>
+				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+			</padding>
 		</ButtonBar>
 	</top>
 	<left>
-		<ListView fx:id="palaverListView" />
+		<ListView  fx:id="palaverListView" />
 	</left>
 </BorderPane>
 

@@ -11,7 +11,7 @@
 	<top>
 		<ButtonBar>
 			<buttons>
-				<Button fx:id="back">
+				<Button fx:id="back" cancelButton="true">
 					<tooltip>
 						<Tooltip text="%back_button" />
 					</tooltip>
@@ -25,7 +25,7 @@
 		</ButtonBar>
 	</top>
 	<center>
-		<ListView fx:id="list"/>
+		<ListView fx:id="list" />
 	</center>
 	<bottom>
 		<HBox>

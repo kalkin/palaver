@@ -5,9 +5,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<BorderPane styleClass="history" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/8">
 	<center>
-		<ScrollPane styleClass="history"  fx:id="scrollPane" fitToWidth="true">
+		<ScrollPane fx:id="scrollPane" fitToWidth="true">
 			<content>
 				<VBox fx:id="historyBox" fillWidth="true" />
 			</content>

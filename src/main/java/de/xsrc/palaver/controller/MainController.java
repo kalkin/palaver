@@ -58,11 +58,13 @@ public class MainController {
 		ObservableList<Palaver> palavers = Utils.getStorage(Palaver.class)
 				.getAll();
 		palaverListView.setItems(palavers);
-		palaverListView.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
-		    @Override public ListCell<Palaver> call(ListView<Palaver> listView) {
-		        return new PalaverCell();
-		    }
-		});
+		palaverListView
+				.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
+					@Override
+					public ListCell<Palaver> call(ListView<Palaver> listView) {
+						return new PalaverCell();
+					}
+				});
 		MultipleSelectionModel<Palaver> selModel = palaverListView
 				.getSelectionModel();
 
@@ -85,18 +87,15 @@ public class MainController {
 									e.printStackTrace();
 								}
 							}
-							historyMap.get(newValue).getController().requestFocus();
+							historyMap.get(newValue).getController()
+									.requestFocus();
 							borderPane.setCenter(historyMap.get(newValue)
 									.getRootNode());
 						});
-		showAccountsButton.setGraphic(AwesomeDude
-				.createIconLabel(AwesomeIcon.GEAR));
-		addPalaverButton.setGraphic(AwesomeDude
-				.createIconLabel(AwesomeIcon.PLUS));
-		hidePalaverButton.setGraphic(AwesomeDude
-				.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
-		showBuddyListButton.setGraphic(AwesomeDude
-				.createIconLabel(AwesomeIcon.USERS));
+		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
+		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
+		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
+		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
 	}
 
 	@FXML

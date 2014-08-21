@@ -46,8 +46,8 @@ public class AccountController {
 		Storage<Account,String> s = Utils.getStorage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
 		palaverList.setItems(all);
-		back.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
-		addAccountButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
+		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
+		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");
 	}
 
 	@FXML

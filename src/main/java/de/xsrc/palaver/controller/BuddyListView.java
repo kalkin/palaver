@@ -42,11 +42,13 @@ public class BuddyListView {
 
 	@FXML
 	private void initialize() {
-		back.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "20");
+
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS));
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER));
+
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
 		list.setItems(ChatUtils.getBuddys());
 		list.setManaged(true);
@@ -64,7 +66,7 @@ public class BuddyListView {
 			}
 		});
 
-		faSearch.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.SEARCH));
+		AwesomeDude.setIcon(faSearch, AwesomeIcon.SEARCH, "20");
 		Platform.runLater(() -> searchInput.requestFocus());
 
 	}
