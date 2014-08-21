@@ -1,8 +1,12 @@
 package de.xsrc.palaver.controller;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -45,6 +49,9 @@ public class MainController {
 
 	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
 
+	private ObservableList<Palaver> all = FXCollections
+			.observableList(new LinkedList<Palaver>());
+
 	@FXML
 	private BorderPane borderPane;
 
@@ -57,7 +64,37 @@ public class MainController {
 	private void initialize() {
 		ObservableList<Palaver> palavers = Utils.getStorage(Palaver.class)
 				.getAll();
-		palaverListView.setItems(palavers);
+		for (Palaver palaver : palavers) {
+			if(!palaver.getClosed()){
+				all.add(palaver);
+			}
+		}
+		palavers.addListener((Change<? extends Palaver> c) -> {
+			while (c.next()) {
+				System.out.println("CHANGES");
+				if (c.getAddedSize() > 0) {
+					List<? extends Palaver> subList = c.getAddedSubList();
+					for (Palaver p : subList) {
+						if (p.getClosed() && all.contains(p)) {
+							all.remove(p);
+						} else if (!p.getClosed() && !all.contains(p)) {
+							all.add(p);
+						}
+					}
+				} else if (c.wasUpdated()) {
+					ObservableList<? extends Palaver> subList = c.getList();
+					for (Palaver p : subList) {
+						if (p.getClosed() && all.contains(p)) {
+							all.remove(p);
+						} else if (!p.getClosed() && !all.contains(p)) {
+							all.add(p);
+						}
+					}
+				}
+			}
+		});
+		// palavers.removeIf(p -> p.getClosed());
+		palaverListView.setItems(all);
 		palaverListView
 				.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
 					@Override
@@ -90,7 +127,7 @@ public class MainController {
 							borderPane.setCenter(historyMap.get(newValue)
 									.getRootNode());
 							historyMap.get(newValue).getController()
-							.requestFocus();
+									.requestFocus();
 						});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
@@ -122,5 +159,12 @@ public class MainController {
 					.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
 		}
 		System.out.println("drin");
+	}
+
+	@FXML
+	private void removeAction() {
+		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
+		p.setClosed(true);
+		Utils.getStorage(Palaver.class).save(p);
 	}
 }

@@ -7,7 +7,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,7 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
+import org.datafx.controller.util.VetoException;
 import org.datafx.crud.CrudException;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -28,18 +29,22 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
+import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Buddy;
 
 @FXMLController("/fxml/BuddyListView.fxml")
 public class BuddyListView extends AbstractController {
+
 	@FXML
 	@BackAction
 	private Button back;
 
 	@FXML
 	private Button addBuddy;
+
 	@FXML
 	private Button startPalaverButton;
+
 	@FXML
 	private Label faSearch;
 
@@ -78,13 +83,11 @@ public class BuddyListView extends AbstractController {
 					String newVal) {
 				handleSearchByKey(oldVal, newVal);
 			}
-			
+
 		});
 
 		AwesomeDude.setIcon(faSearch, AwesomeIcon.SEARCH, "20");
 		Platform.runLater(() -> searchInput.requestFocus());
-		
-		startPalaverButton.setOnAction((ActionEvent event)-> startPalaverAction());
 
 	}
 
@@ -116,21 +119,28 @@ public class BuddyListView extends AbstractController {
 	}
 
 	@FXML
-	private void startPalaverAction() {
+	private void startPalaverAction() throws VetoException, FlowException {
 		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
 		System.out.println("drin");
-		try {
-			Utils.getStorage(Palaver.class).getById(
-					buddy.getAccount() + ":"
-							+ StringUtils.parseBareAddress(buddy.getJid()));
-			System.out.println("Palaver does exists");
-		} catch (CrudException e) {
-			Palaver p = new Palaver();
-			p.setAccount(buddy.getAccount());
-			p.setRecipient(buddy.getJid());
-			System.out.println(p.getAccount() + " is starting palaver with "
-					+ p.getRecipient());
-			Utils.getStorage(Palaver.class).save(p);
+
+		if (buddy != null) {
+			try {
+				Utils.getStorage(Palaver.class).getById(
+						buddy.getAccount() + ":"
+								+ StringUtils.parseBareAddress(buddy.getJid()));
+				System.out.println("Palaver does exists");
+			} catch (CrudException e) {
+				Palaver p = new Palaver();
+				p.setAccount(buddy.getAccount());
+				p.setRecipient(buddy.getJid());
+				System.out.println(p.getAccount()
+						+ " is starting palaver with " + p.getRecipient());
+				Utils.getStorage(Palaver.class).save(p);
+			}
 		}
+		fh = UiUtils.getFlowHandler();
+		fh.navigateBack();
+		return;
+
 	}
 }

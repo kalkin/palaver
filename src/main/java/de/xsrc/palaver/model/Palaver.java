@@ -1,5 +1,7 @@
 package de.xsrc.palaver.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -26,10 +28,13 @@ public class Palaver implements EntityWithId<String> {
 	@XmlElement(name = "history", type = History.class)
 	public History history;
 
+	private BooleanProperty closed;
+
 	public Palaver() {
 		this.recipient = new SimpleStringProperty();
 		this.account = new SimpleStringProperty();
 		this.history = new History();
+		this.closed = new SimpleBooleanProperty(false);
 	}
 
 	public String getId() {
@@ -63,5 +68,12 @@ public class Palaver implements EntityWithId<String> {
 
 	public void add(Entry entry) {
 		history.addEntry(entry);
+	}
+
+	public boolean getClosed(){
+		return this.closed.get();
+	}
+	public void setClosed(boolean b) {
+		this.closed.set(b);
 	}
 }

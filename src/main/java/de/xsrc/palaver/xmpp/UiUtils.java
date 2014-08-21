@@ -16,6 +16,9 @@ import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 
 public class UiUtils {
+
+	private static FlowHandler fh;
+
 	public static StackPane getAvatar(String name) {
 		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9,
 				0x9a42c8, 0xc84164, 0xFF00bcd4, 0x888888 };
@@ -35,12 +38,16 @@ public class UiUtils {
 		return sp;
 	}
 
-	public static Scene prepareFlow(Flow f) throws FlowException {
-		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+	public static synchronized Scene prepareFlow(Flow f) throws FlowException {
 		DefaultFlowContainer container = new DefaultFlowContainer();
-		FlowHandler flowHandler = f.createHandler();
-		flowHandler.getViewConfiguration().setResources(b);
-		flowHandler.start(container);
+		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+		fh = f.createHandler();
+		fh.getViewConfiguration().setResources(b);
+		fh.start(container);
 		return new Scene(container.getView());
+	}
+
+	public static FlowHandler getFlowHandler() {
+		return fh;
 	}
 }

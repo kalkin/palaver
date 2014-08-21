@@ -37,13 +37,13 @@ public class AccountController {
 	private Button addAccountButton;
 
 	@FXML
-	private ListView<Account> palaverList;
+	private ListView<Account> accountList;
 
 	@FXML
 	public void initialize() throws CrudException {
 		Storage<Account,String> s = Utils.getStorage(Account.class);
 		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
-		palaverList.setItems(all);
+		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");
 	}
@@ -62,7 +62,7 @@ public class AccountController {
 
 	@FXML
 	private void editAction() {
-		Account acc = palaverList.getSelectionModel().getSelectedItem();
+		Account acc = accountList.getSelectionModel().getSelectedItem();
 		try {
 			ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 			ViewConfiguration config = new ViewConfiguration();
@@ -83,7 +83,7 @@ public class AccountController {
 
 	@FXML
 	private void removeAction(){
-		Account acc = palaverList.getSelectionModel().getSelectedItem();
-		palaverList.getItems().remove(acc);
+		Account acc = accountList.getSelectionModel().getSelectedItem();
+		accountList.getItems().remove(acc);
 	}
 }
