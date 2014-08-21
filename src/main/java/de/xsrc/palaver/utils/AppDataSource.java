@@ -7,7 +7,7 @@ import org.datafx.reader.FileSource;
 
 public class AppDataSource<T> extends FileSource<T> {
 
-	public AppDataSource(Class<T> c) throws IOException {
+	public AppDataSource(Class<?> c) throws IOException {
 		super(getFile(c), new AppDataConverter<T>(c));
 	}
 
@@ -19,7 +19,7 @@ public class AppDataSource<T> extends FileSource<T> {
 	 * @return
 	 * @throws IOException
 	 */
-	public static File getFile(@SuppressWarnings("rawtypes") Class c) throws IOException {
+	public static File getFile( Class<?> c) throws IOException {
 
 		File file = new File(workingDirectory() + "/" + c.getSimpleName() + "s"); // Make
 

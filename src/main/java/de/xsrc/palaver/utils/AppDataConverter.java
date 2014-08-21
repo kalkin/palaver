@@ -21,12 +21,12 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 
 	private NodeList dataList;
 	private int currentIndex = 0;
-	private Class<T> clazz;
+	private Class<?> clazz;
 	private InputStream inputStream;
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
 
-	public AppDataConverter(Class<T> clazz) {
+	public  AppDataConverter(Class<?> clazz) {
 		this.clazz = clazz;
 	}
 
