@@ -26,6 +26,11 @@ public class MsgListener implements MessageListener {
 
 	public void processMessage(Chat chat, Message message) {
 		logger.finest(message.toString());
+		String body = message.getBody();
+		if( body == null || body.length() == 0 ){
+			logger.finer("Empty message from " + message.getFrom());
+			return;
+		}
 		String id = accountJid + ":"
 				+ StringUtils.parseBareAddress(chat.getParticipant());
 
