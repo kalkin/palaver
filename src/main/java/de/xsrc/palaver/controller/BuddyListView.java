@@ -1,5 +1,6 @@
 package de.xsrc.palaver.controller;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -64,6 +65,8 @@ public class BuddyListView {
 		});
 
 		faSearch.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.SEARCH));
+		Platform.runLater(() -> searchInput.requestFocus());
+
 	}
 
 	ObservableList<String> entries = FXCollections.observableArrayList();

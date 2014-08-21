@@ -85,6 +85,7 @@ public class MainController {
 									e.printStackTrace();
 								}
 							}
+							historyMap.get(newValue).getController().requestFocus();
 							borderPane.setCenter(historyMap.get(newValue)
 									.getRootNode());
 						});

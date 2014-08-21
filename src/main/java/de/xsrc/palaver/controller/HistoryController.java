@@ -3,6 +3,7 @@ package de.xsrc.palaver.controller;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,6 +49,7 @@ public class HistoryController {
 
 			}
 		});
+		requestFocus();
 	}
 
 	private void add(List<? extends Entry> list) {
@@ -78,5 +80,13 @@ public class HistoryController {
 		Utils.getStorage(Palaver.class).save(palaver);
 		ChatUtils.sendMsg(palaver, e);
 		chatInput.clear();
+	}
+
+	public void requestFocus() {
+		Platform.runLater(() -> {
+			chatInput.requestFocus();
+			chatInput.positionCaret(chatInput.getLength());
+		});
+
 	}
 }
