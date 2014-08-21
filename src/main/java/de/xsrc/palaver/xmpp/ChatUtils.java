@@ -13,6 +13,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.datafx.crud.CrudException;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -23,10 +24,12 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.carbons.CarbonManager;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class ChatUtils {
@@ -56,13 +59,19 @@ public class ChatUtils {
 			try {
 				connection = connectAccount(account);
 			} catch (SmackException | IOException | XMPPException e) {
+				logger.severe("Could not connect to " + account);
 				e.printStackTrace();
 			}
 		}
 		return connection;
 	}
 
-	private static XMPPConnection connectAccount(Account a)
+	private static XMPPConnection connectAccount(Account account)
+			throws SmackException, IOException, XMPPException {
+		return connectAccount(account, null);
+	}
+
+	private static XMPPConnection connectAccount(Account a, XMPPConnection c)
 			throws SmackException, IOException, XMPPException {
 		logger.finer("Connecting to account " + a);
 		String jid = a.getJid();
@@ -71,9 +80,15 @@ public class ChatUtils {
 				.parseServer(jid));
 		// config.setDebuggerEnabled(true);
 
-		XMPPConnection c = new XMPPTCPConnection(config);
+		if (c == null) {
+			c = new XMPPTCPConnection(config);
+
+		}
 		c.connect();
-		c.login(StringUtils.parseName(jid), a.getPassword());
+		if (c.isConnected()) {
+			c.login(StringUtils.parseName(jid), a.getPassword());
+			CarbonManager.getInstanceFor(c).enableCarbons();
+		}
 		ChatManager.getInstanceFor(c).addChatListener(new ChatListener(a));
 		getConMap().put(a.getJid(), c);
 
@@ -113,7 +128,23 @@ public class ChatUtils {
 		logger.finer("Sending msg " + e);
 		try {
 			getChat(p).sendMessage(e.getBody());
-		} catch (NotConnectedException | XMPPException e1) {
+		} catch (NotConnectedException e1) {
+			try {
+				logger.warning("Could not send msg connection lost?");
+				Account a = Utils.getStorage(Account.class).getById(
+						p.getAccount());
+				XMPPConnection con = getConMap().get(a);
+				if (!con.isConnected()) {
+					logger.warning("Trying to reconnect");
+					connectAccount(a, con);
+					sendMsg(p, e);
+				}
+			} catch (CrudException | SmackException | IOException
+					| XMPPException e2) {
+				e2.printStackTrace();
+			}
+		} catch (XMPPException e1) {
+			logger.warning("Could not send msg");
 			e1.printStackTrace();
 		}
 	}
