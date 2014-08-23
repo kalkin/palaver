@@ -2,6 +2,7 @@ package de.xsrc.palaver.controller;
 
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -19,7 +20,6 @@ import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
-import org.datafx.crud.CrudException;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
@@ -32,7 +32,7 @@ public class AccountController {
 	@FXML
 	@BackAction
 	private Button back;
-	
+
 	@FXML
 	private Button addAccountButton;
 
@@ -40,9 +40,17 @@ public class AccountController {
 	private ListView<Account> accountList;
 
 	@FXML
-	public void initialize() throws CrudException {
+	public void initialize() {
 		ObservableList<Account> all = Storage.getList(Account.class);
-		accountList.setItems(all);
+		System.out.println(accountList);
+		all.addListener((Change<? extends Account> c) -> {
+			if (c.next()) {
+				accountList.setItems(all);
+			}
+		});
+		if (all.size() > 0) {
+			accountList.getItems().addAll(all);
+		}
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");
 	}
@@ -66,7 +74,9 @@ public class AccountController {
 			ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 			ViewConfiguration config = new ViewConfiguration();
 			config.setResources(b);
-			ViewContext<AddAccountController> context = ViewFactory.getInstance().createByController(AddAccountController.class, null, config);
+			ViewContext<AddAccountController> context = ViewFactory
+					.getInstance().createByController(
+							AddAccountController.class, null, config);
 			context.register("account", acc);
 			context.getController().setContext(context);
 			Scene scene = new Scene((Parent) context.getRootNode());
@@ -81,7 +91,7 @@ public class AccountController {
 	}
 
 	@FXML
-	private void removeAction(){
+	private void removeAction() {
 		Account acc = accountList.getSelectionModel().getSelectedItem();
 		accountList.getItems().remove(acc);
 	}

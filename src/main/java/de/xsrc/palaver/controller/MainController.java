@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
@@ -65,7 +66,7 @@ public class MainController {
 	private void initialize() {
 		ObservableList<Palaver> palavers = Storage.getList(Palaver.class);
 		for (Palaver palaver : palavers) {
-			if(!palaver.getClosed()){
+			if (!palaver.getClosed()) {
 				all.add(palaver);
 			}
 		}
@@ -78,7 +79,7 @@ public class MainController {
 						if (p.getClosed() && all.contains(p)) {
 							all.remove(p);
 						} else if (!p.getClosed() && !all.contains(p)) {
-							all.add(p);
+							Platform.runLater(() -> all.add(p));
 						}
 					}
 				} else if (c.wasUpdated()) {

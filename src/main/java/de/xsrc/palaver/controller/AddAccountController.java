@@ -12,6 +12,7 @@ import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AddAccountView.fxml")
@@ -46,6 +47,7 @@ public class AddAccountController {
 	public void saveAccount() {
 		if (account == null) {
 			account = new Account(jidField.getText(), passwordField.getText());
+			Storage.getList(Account.class).add(account);
 		} else {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());

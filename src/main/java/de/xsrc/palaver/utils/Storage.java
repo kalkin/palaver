@@ -30,7 +30,7 @@ public class Storage {
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	protected synchronized <T extends EntityWithId<?>> boolean initialize(
+	public synchronized static <T extends EntityWithId<?>> boolean initialize(
 			Class<?>... classes) throws IllegalStateException {
 		logger.finer("Importing Tables " + classes + " in to the DB");
 		mapOfLists = new ConcurrentHashMap<Class<?>, ObservableList<? extends EntityWithId<?>>>(

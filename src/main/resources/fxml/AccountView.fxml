@@ -27,7 +27,7 @@
 		</ButtonBar>
 	</top>
 	<center>
-		<ListView fx:id="palaverList">
+		<ListView fx:id="accountList">
 			<contextMenu>
 				<ContextMenu>
 					<items>

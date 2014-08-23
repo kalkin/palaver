@@ -16,9 +16,11 @@ import org.jivesoftware.smack.XMPPConnection;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class Main extends Application {
 
@@ -27,6 +29,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
+		Storage.initialize(Account.class, Palaver.class, Buddy.class);
 		Platform.runLater(() -> {
 			handleXmpp();
 		});
