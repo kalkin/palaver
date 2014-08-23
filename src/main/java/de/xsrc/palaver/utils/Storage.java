@@ -1,174 +1,83 @@
 package de.xsrc.palaver.utils;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.datafx.crud.CrudException;
 import org.datafx.util.EntityWithId;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.History;
-import de.xsrc.palaver.model.Palaver;
+public class Storage {
 
-public class Storage<S extends EntityWithId<String>, String> {
+	protected static ConcurrentHashMap<Class<?>, ObservableList<? extends EntityWithId<?>>> mapOfLists;
 
-	private Class<S> clazz;
-	private static final Logger logger = Logger.getLogger(Storage.class
+	private static final Logger logger = Logger.getLogger(ColdStorage.class
 			.getName());
-	private ObservableList<S> cacheList;
 
-	public void delete(S entity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public S getById(String id) throws CrudException {
-		for (S s : cacheList) {
-			if (s.getId().equals(id))
-				return s;
-		}
-		throw new CrudException(clazz.getSimpleName() + " with id " + id
-				+ " not found");
-	}
-
-	public Storage(Class<S> clazz) {
-		super();
-		this.clazz = clazz;
-	}
-
-	public void save(S entity) {
-		ObservableList<S> list = getAll();
-		if (list.contains(entity)) {
-			logger.finest("Entity " + entity + " from model "
-					+ clazz.getSimpleName() + " is already in the list");
-			saveModel();
-		} else {
-			list.add(entity);
-		}
-	}
-
-	public ObservableList<S> getAll() {
-		if (cacheList == null) {
-			logger.finer("Initializing cache for model "
-					+ this.clazz.getSimpleName());
-			cacheList = initialize();
-
-			cacheList.addListener((Change<? extends S> c) -> {
-				while (c.next()) {
-					if (c.wasPermutated()) {
-						logger.finest("Permutated: " + c.getFrom() + " => "
-								+ c.getTo());
-					} else if (c.wasUpdated()) {
-						logger.finest("Updated: " + c.getFrom() + " => "
-								+ c.getTo());
-					} else {
-						if (c.getRemovedSize() > 0)
-							logger.finest("Added: " + c.getRemovedSize() + " "
-									+ clazz.getSimpleName());
-						if (c.getAddedSize() > 0)
-							logger.finest("Removed: " + c.getAddedSize() + " "
-									+ clazz.getSimpleName());
-					}
-				}
-				saveModel();
+	/**
+	 * This method must be run once on in the app! new
+	 * Storage().initialiaze(...). After that the static methods should be used
+	 * to interact with the storage
+	 * 
+	 * @param classes
+	 * @return
+	 * @throws IllegalStateException
+	 */
+	protected synchronized <T extends EntityWithId<?>> boolean initialize(
+			Class<?>... classes) throws IllegalStateException {
+		logger.finer("Importing Tables " + classes + " in to the DB");
+		mapOfLists = new ConcurrentHashMap<Class<?>, ObservableList<? extends EntityWithId<?>>>(
+				4);
+		for (Class<?> clazz : classes) {
+			ObservableList<T> list = FXCollections
+					.synchronizedObservableList(FXCollections
+							.observableList(ColdStorage.get(clazz)));
+			list.addListener((Change<? extends T> change) -> {
+				if (change.next())
+					Storage.save(change.getList().get(0).getClass());
 			});
+			mapOfLists.put(clazz, list);
 		}
-		return cacheList;
+		return true;
 	}
 
-	private ObservableList<S> initialize() {
-		ObservableList<S> result = FXCollections.observableArrayList();
-		AppDataSource<S> cs;
+	@SuppressWarnings("unchecked")
+	protected static synchronized <T extends EntityWithId<?>> void save(
+			Class<T> clazz) {
 		try {
-			cs = new AppDataSource<S>(clazz);
-			while (cs.next()) {
-				S tmp = cs.get();
-				result.add(tmp);
-			}
-			logger.finest("Read " + result.size() + " records from Model "
-					+ clazz.getSimpleName());
-
-		} catch (IOException e) {
-			logger.warning("Reading data for model " + clazz.getSimpleName()
-					+ " failed. First run?");
+			ColdStorage.save(clazz, (List<T>) mapOfLists.get(clazz));
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | ClassCastException
+				| ParserConfigurationException | JAXBException | IOException e) {
+			e.printStackTrace();
+			logger.severe("Could not save to cold storage");
 		}
-		return result;
 	}
 
-	private void saveModel() {
-		logger.finest("Trying to save model: " + this.clazz.getSimpleName());
-		try {
-			DocumentBuilder docBuilder;
-			docBuilder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-			Element rootElement = doc.createElement(clazz.getSimpleName()
-					.toLowerCase() + "s");
-			doc.appendChild(rootElement);
+	@SuppressWarnings("unchecked")
+	protected static <T extends EntityWithId<?>> ObservableList<T> getList(
+			Class<? extends T> clazz) {
 
-			JAXBContext jc = JAXBContext.newInstance(Account.class,
-					Entry.class, Palaver.class, History.class);
-			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(
-					javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
-					Boolean.TRUE);
-			ObservableList<S> list = getAll();
-			for (S s : list) {
-				marshaller.marshal(s, doc.getFirstChild());
-			}
+		return (ObservableList<T>) mapOfLists.get(clazz);
+	}
 
-			TransformerFactory transformerFactory = TransformerFactory
-					.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			File file = AppDataSource.getFile(clazz);
-			StreamResult result = new StreamResult(file);
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(
-					"{http://xml.apache.org/xslt}indent-amount", "2");
-			transformer.transform(source, result);
-			logger.finer("Saved model " + this.clazz.getSimpleName());
-
-		} catch (ParserConfigurationException | JAXBException
-				| TransformerConfigurationException e) {
-			e.printStackTrace();
-			logger.severe("This should not happen :-/");
-			Platform.exit();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-			logger.severe("Could not transform XML for model "
-					+ clazz.getSimpleName() + ". Model data broken?");
-			Platform.exit();
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.severe("Could not write storage file for  model "
-					+ clazz.getSimpleName()
-					+ " to disk. Check disk space and access rights");
-
+	public static <T extends EntityWithId<?>> T getById(Class<T> clazz,
+			String id) {
+		ObservableList<T> list = getList(clazz);
+		for (T t : list) {
+			if (t.getId().equals(id))
+				return t;
 		}
+		throw new IllegalArgumentException("Id " + id
+				+ " does not exist in table " + clazz.getSimpleName());
 
 	}
+
 }

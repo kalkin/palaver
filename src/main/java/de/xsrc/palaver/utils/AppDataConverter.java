@@ -1,5 +1,6 @@
 package de.xsrc.palaver.utils;
 
+import java.beans.Introspector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -13,7 +14,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.datafx.reader.converter.InputStreamConverter;
-import org.datafx.util.EntityWithId;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -39,12 +39,13 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 
 	public synchronized void initialize(InputStream is) throws IOException {
 		this.inputStream = is;
-
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(inputStream);
-			dataList = doc.getElementsByTagName(this.clazz.getSimpleName().toLowerCase());
+			doc.getDocumentElement().normalize(); // http://tinyurl.com/kms457a
+			String name = Introspector.decapitalize(this.clazz.getSimpleName());
+			dataList = doc.getElementsByTagName(name);
 		} catch (ParserConfigurationException | SAXException e) {
 			String errorMsg = "Could not read/parse the AppData Config";
 			logger.warning(errorMsg);
@@ -62,6 +63,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			jc = JAXBContext.newInstance(this.clazz);
 			Unmarshaller u = jc.createUnmarshaller();
 			currentIndex++;
+			@SuppressWarnings("unchecked")
 			JAXBElement<T> element = (JAXBElement<T>) u
 					.unmarshal(dataList.item(oldIndex), clazz);
 			return element.getValue();

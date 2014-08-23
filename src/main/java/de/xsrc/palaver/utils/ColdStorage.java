@@ -3,7 +3,7 @@ package de.xsrc.palaver.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -42,14 +42,20 @@ public class ColdStorage {
 	 * @return
 	 * @throws IOException
 	 */
-	public static <T extends EntityWithId<String>> LinkedHashSet<T> get(
-			Class<?> c) throws IOException {
+	public static <T extends EntityWithId<?>> LinkedList<T> get(Class<?> c) {
 		logger.finer("Reading XML file for model" + c.getSimpleName());
-		AppDataSource<T> source = new AppDataSource<T>(c);
-		LinkedHashSet<T> result = new LinkedHashSet<T>();
-		while (source.next()) {
-			T tmp = source.get();
-			result.add(tmp);
+		LinkedList<T> result = new LinkedList<T>();
+		AppDataSource<T> source;
+		try {
+			source = new AppDataSource<T>(c);
+
+			while (source.next()) {
+				T tmp = source.get();
+				result.add(tmp);
+			}
+
+		} catch (IOException e) {
+			return result;
 		}
 		return result;
 	}
@@ -67,7 +73,7 @@ public class ColdStorage {
 	 * @throws ClassCastException
 	 * @throws IOException
 	 */
-	public static <T extends EntityWithId<String>> void save(Class<T> clazz,
+	public static <T extends EntityWithId<?>> void save(Class<T> clazz,
 			List<T> list) throws ParserConfigurationException, JAXBException,
 			ClassNotFoundException, InstantiationException,
 			IllegalAccessException, ClassCastException, IOException {
@@ -97,7 +103,7 @@ public class ColdStorage {
 		LSSerializer writer = impl.createLSSerializer();
 		writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
 		LSOutput output = impl.createLSOutput();
-		File file = AppDataSource.getFile(clazz);
+		File file = Utils.getFile(clazz);
 		output.setByteStream(new FileOutputStream(file));
 		writer.write(doc, output);
 	}
