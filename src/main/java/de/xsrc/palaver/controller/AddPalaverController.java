@@ -14,6 +14,7 @@ import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AddPalaverView.fxml")
@@ -33,8 +34,7 @@ public class AddPalaverController {
 
 	@FXML
 	private void initialize() {
-		ObservableList<Account> accounts = Utils.getStorage(Account.class)
-				.getAll();
+		ObservableList<Account> accounts = Storage.getList(Account.class);
 		accountChoice.getItems().addAll(accounts);
 		if (accounts.size() > 0) {
 			accountChoice.getSelectionModel().select(0);
@@ -49,7 +49,7 @@ public class AddPalaverController {
 		logger.finer(account.getJid() + " is starting palaver with "
 				+ jid.getText());
 		p.setAccount(account.getId());
-		Utils.getStorage(Palaver.class).getAll().add(p);
+		Storage.getList(Palaver.class).add(p);
 		Stage stage = (Stage) back.getScene().getWindow();
 		stage.close();
 	}

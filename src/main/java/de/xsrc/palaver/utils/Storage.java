@@ -62,7 +62,7 @@ public class Storage {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <T extends EntityWithId<?>> ObservableList<T> getList(
+	public static <T extends EntityWithId<?>> ObservableList<T> getList(
 			Class<? extends T> clazz) {
 
 		return (ObservableList<T>) mapOfLists.get(clazz);

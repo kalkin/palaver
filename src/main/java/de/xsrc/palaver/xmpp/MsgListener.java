@@ -12,7 +12,7 @@ import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.utils.Storage;
 
 public class MsgListener implements MessageListener {
 	private static final Logger logger = Logger.getLogger(MessageListener.class
@@ -27,7 +27,7 @@ public class MsgListener implements MessageListener {
 	public void processMessage(Chat chat, Message message) {
 		logger.finest(message.toString());
 		String body = message.getBody();
-		if( body == null || body.length() == 0 ){
+		if (body == null || body.length() == 0) {
 			logger.finer("Empty message from " + message.getFrom());
 			return;
 		}
@@ -37,13 +37,13 @@ public class MsgListener implements MessageListener {
 		Entry e = new Entry(StringUtils.parseBareAddress(message.getFrom()),
 				message.getBody());
 		try {
-			Palaver p = Utils.getStorage(Palaver.class).getById(id);
+			Palaver p = Storage.getById(Palaver.class, id);
 			Platform.runLater(() -> {
 				p.history.addEntry(e);
-				Utils.getStorage(Palaver.class).save(p);
+				Storage.getList(Palaver.class).add(p);
 			});
 
-		} catch (CrudException e1) {
+		} catch (IllegalArgumentException e1) {
 			e1.printStackTrace();
 			logger.warning("Received msg but no palaver" + message);
 		}

@@ -21,13 +21,12 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.util.VetoException;
-import org.datafx.crud.CrudException;
 import org.jivesoftware.smack.util.StringUtils;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Buddy;
@@ -54,6 +53,7 @@ public class BuddyListView extends AbstractController {
 	@FXML
 	private ListView<Buddy> list;
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
 
@@ -125,17 +125,16 @@ public class BuddyListView extends AbstractController {
 
 		if (buddy != null) {
 			try {
-				Utils.getStorage(Palaver.class).getById(
-						buddy.getAccount() + ":"
-								+ StringUtils.parseBareAddress(buddy.getJid()));
+				Storage.getById(Palaver.class, buddy.getAccount() + ":"
+						+ StringUtils.parseBareAddress(buddy.getJid()));
 				System.out.println("Palaver does exists");
-			} catch (CrudException e) {
+			} catch (IllegalArgumentException e) {
 				Palaver p = new Palaver();
 				p.setAccount(buddy.getAccount());
 				p.setRecipient(buddy.getJid());
+				Storage.getList(Palaver.class).add(p);
 				System.out.println(p.getAccount()
 						+ " is starting palaver with " + p.getRecipient());
-				Utils.getStorage(Palaver.class).save(p);
 			}
 		}
 		fh = UiUtils.getFlowHandler();

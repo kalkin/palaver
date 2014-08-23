@@ -28,6 +28,7 @@ import org.datafx.controller.flow.action.LinkAction;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/MainView.fxml")
@@ -62,8 +63,7 @@ public class MainController {
 
 	@FXML
 	private void initialize() {
-		ObservableList<Palaver> palavers = Utils.getStorage(Palaver.class)
-				.getAll();
+		ObservableList<Palaver> palavers = Storage.getList(Palaver.class);
 		for (Palaver palaver : palavers) {
 			if(!palaver.getClosed()){
 				all.add(palaver);
@@ -165,6 +165,5 @@ public class MainController {
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
 		p.setClosed(true);
-		Utils.getStorage(Palaver.class).save(p);
 	}
 }

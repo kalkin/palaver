@@ -29,7 +29,7 @@ import org.jivesoftware.smackx.carbons.CarbonManager;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class ChatUtils {
@@ -131,15 +131,14 @@ public class ChatUtils {
 		} catch (NotConnectedException e1) {
 			try {
 				logger.warning("Could not send msg connection lost?");
-				Account a = Utils.getStorage(Account.class).getById(
-						p.getAccount());
+				Account a = Storage.getById(Account.class, p.getAccount());
 				XMPPConnection con = getConMap().get(a);
 				if (!con.isConnected()) {
 					logger.warning("Trying to reconnect");
 					connectAccount(a, con);
 					sendMsg(p, e);
 				}
-			} catch (CrudException | SmackException | IOException
+			} catch (IllegalArgumentException | SmackException | IOException
 					| XMPPException e2) {
 				e2.printStackTrace();
 			}

@@ -41,8 +41,7 @@ public class AccountController {
 
 	@FXML
 	public void initialize() throws CrudException {
-		Storage<Account,String> s = Utils.getStorage(Account.class);
-		ObservableList<Account> all = (ObservableList<Account>) s.getAll();
+		ObservableList<Account> all = Storage.getList(Account.class);
 		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");

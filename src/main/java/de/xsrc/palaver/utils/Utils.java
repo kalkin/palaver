@@ -25,22 +25,6 @@ public class Utils {
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
 
-	public static synchronized <T extends EntityWithId<String>> Storage<T, String> getStorage(Class<T> clazz) {
-		if (Utils.storage == null) {
-			logger.finer("Initializing");
-			Utils.storage = new HashMap<Class, Storage>();
-		}
-
-		logger.finest("Getting Storage for model " + clazz.getSimpleName());
-		Storage<T, String> result = storage.get(clazz);
-		if (result == null) {
-			result = new Storage<T, String>(clazz);
-			storage.put(clazz, result);
-		}
-		return result;
-
-	}
-
 	public static Stage getDialog(Flow f) throws FlowException {
 		return getDialog(f, null);
 	}

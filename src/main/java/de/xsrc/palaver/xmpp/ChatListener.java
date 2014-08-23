@@ -10,6 +10,7 @@ import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
 public class ChatListener implements ChatManagerListener {
@@ -31,7 +32,7 @@ public class ChatListener implements ChatManagerListener {
 					+ StringUtils.parseBareAddress(chat.getParticipant());
 			try {
 				// if a new chat this should fail
-				Palaver p = Utils.getStorage(Palaver.class).getById(id);
+				Palaver p = Storage.getById(Palaver.class, id);
 				chat.addMessageListener(new MsgListener(account.getJid()));
 				ChatUtils.getChat(p);
 				logger.finest("Retrieved palaver: " + p);
@@ -41,10 +42,8 @@ public class ChatListener implements ChatManagerListener {
 				Palaver p = new Palaver();
 				p.setAccount(account.getJid());
 				p.setRecipient(recipent);
+				Storage.getList(Palaver.class).add(p);
 				logger.finer("Created new palaver" + p);
-				Platform.runLater(() -> {
-					Utils.getStorage(Palaver.class).save(p);
-				});
 			}
 		}
 	}

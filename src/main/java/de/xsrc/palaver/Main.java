@@ -17,7 +17,6 @@ import org.jivesoftware.smack.XMPPConnection;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.utils.Storage;
-import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 
@@ -41,8 +40,7 @@ public class Main extends Application {
 	}
 
 	private ObservableMap<Account, XMPPConnection> handleXmpp() {
-		ObservableList<Account> accountList = Utils.getStorage(Account.class)
-				.getAll();
+		ObservableList<Account> accountList = Storage.getList(Account.class);
 		ObservableMap<Account, XMPPConnection> conMap = FXCollections
 				.observableHashMap();
 		for (Account account : accountList) {
@@ -52,8 +50,6 @@ public class Main extends Application {
 		}
 		return conMap;
 	}
-
-
 
 	public static void main(String[] args) {
 

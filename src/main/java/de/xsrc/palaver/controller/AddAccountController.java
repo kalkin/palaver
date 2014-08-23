@@ -50,7 +50,6 @@ public class AddAccountController {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());
 		}
-		Utils.getStorage(Account.class).save(account);
 		close();
 
 	}

@@ -1,9 +1,9 @@
 package de.xsrc.palaver.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.datafx.util.EntityWithId;
 

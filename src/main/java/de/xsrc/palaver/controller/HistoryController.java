@@ -81,7 +81,6 @@ public class HistoryController {
 		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
 		this.history.add(e);
 		logger.finer(historyBox.toString());
-		Utils.getStorage(Palaver.class).save(palaver);
 		ChatUtils.sendMsg(palaver, e);
 		chatInput.clear();
 	}
