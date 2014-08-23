@@ -1,5 +1,6 @@
 package de.xsrc.palaver.utils;
 
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -10,14 +11,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import de.xsrc.palaver.model.AbstractModel;
-
 @RunWith(Suite.class)
-@SuiteClasses({ ColdStorageTest.class, StorageTest.class, de.xsrc.palaver.model.AbstractModelTest.class })
+@SuiteClasses({ ColdStorageTest.class, StorageTest.class })
 public class AllTests {
 	@XmlRootElement
-	static class TestModel extends AbstractModel implements
-			EntityWithId<String> {
+	static class TestModel implements EntityWithId<String> {
 
 		private static final long serialVersionUID = 1L;
 

@@ -17,23 +17,24 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.xsrc.palaver.utils.AllTests.TestModel;
+import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.utils.Storage;
 
 public class StorageTest {
 
-	private static LinkedList<TestModel> list;
+	private static LinkedList<AllTests.TestModel> list;
 	private static Storage db;
 
 	@Before
 	public void setUpClass() throws Exception {
 		// Clear the xml file
-		list = new LinkedList<TestModel>();
-		list.add(new TestModel("alice@example.com", "password"));
-		list.add(new TestModel("bob@example.com", "password"));
-		list.add(new TestModel("eve@example.com", "password"));
-		ColdStorage.save(TestModel.class, list);
+		list = new LinkedList<AllTests.TestModel>();
+		list.add(new AllTests.TestModel("alice@example.com", "password"));
+		list.add(new AllTests.TestModel("bob@example.com", "password"));
+		list.add(new AllTests.TestModel("eve@example.com", "password"));
+		ColdStorage.save(AllTests.TestModel.class, list);
 		db = new Storage();
-		db.initialize(TestModel.class);
+		db.initialize(AllTests.TestModel.class);
 	}
 
 	@After
@@ -41,68 +42,71 @@ public class StorageTest {
 			InstantiationException, IllegalAccessException, ClassCastException,
 			ParserConfigurationException, JAXBException, IOException {
 
-		LinkedList<TestModel> list = new LinkedList<TestModel>();
-		ColdStorage.save(TestModel.class, list);
+		LinkedList<AllTests.TestModel> list = new LinkedList<AllTests.TestModel>();
+		ColdStorage.save(AllTests.TestModel.class, list);
 
 	}
 
 	@Test
 	public void testGetList() {
 		@SuppressWarnings("unused")
-		ObservableList<TestModel> result = Storage.getList(TestModel.class);
+		ObservableList<AllTests.TestModel> result = Storage
+				.getList(AllTests.TestModel.class);
 	}
 
 	@Test
 	public void testAddWriteback() {
-		Storage.getList(TestModel.class).add(
-				new TestModel("hans@example.com", "password"));
+		Storage.getList(AllTests.TestModel.class).add(
+				new AllTests.TestModel("hans@example.com", "password"));
 		checkStorage();
 	}
 
 	private void checkStorage() {
-		ObservableList<TestModel> expected = Storage.getList(TestModel.class);
-		LinkedList<EntityWithId<?>> result = ColdStorage.get(TestModel.class);
-		assertTrue(checkIfListsMatch(expected,
-				extracted(result)));
+		ObservableList<AllTests.TestModel> expected = Storage
+				.getList(AllTests.TestModel.class);
+		LinkedList<EntityWithId<?>> result = ColdStorage
+				.get(AllTests.TestModel.class);
+		assertTrue(checkIfListsMatch(expected, extracted(result)));
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<? extends EntityWithId<String>> extracted(
+	private List<? extends EntityWithId<?>> extracted(
 			LinkedList<EntityWithId<?>> result) {
-		return (List<? extends EntityWithId<String>>) result;
+		return result;
 	}
 
 	@Test
 	public void testAddUpdateWriteback() {
-		Storage.getList(TestModel.class).add(
-				new TestModel("hans@example.com", "password"));
-		TestModel m = Storage.getById(TestModel.class, "hans@example.com");
+		Storage.getList(AllTests.TestModel.class).add(
+				new AllTests.TestModel("hans@example.com", "password"));
+		AllTests.TestModel m = Storage.getById(AllTests.TestModel.class,
+				"hans@example.com");
 		m.setPassword("newpassword");
 		checkStorage();
 	}
 
 	@Test
 	public void testUpdateWriteback() {
-		Storage.getList(TestModel.class).get(0).setPassword("test");
+		Storage.getList(AllTests.TestModel.class).get(0).setPassword("test");
 		checkStorage();
 	}
 
 	@Test
 	public void testDeleteWriteback() {
-		ObservableList<TestModel> expected = Storage.getList(TestModel.class);
+		ObservableList<AllTests.TestModel> expected = Storage
+				.getList(AllTests.TestModel.class);
 		expected.remove(0);
-		LinkedList<EntityWithId<?>> result = ColdStorage.get(TestModel.class);
-		assertTrue(checkIfListsMatch(expected,
-				extracted(result)));
+		LinkedList<EntityWithId<?>> result = ColdStorage
+				.get(AllTests.TestModel.class);
+		assertTrue(checkIfListsMatch(expected, extracted(result)));
 	}
 
 	private boolean checkIfListsMatch(
-			List<? extends EntityWithId<String>> expectedList,
-			List<? extends EntityWithId<String>> resultList) {
+			List<? extends EntityWithId<?>> expectedList,
+			List<? extends EntityWithId<?>> resultList) {
 		assertEquals(resultList.size(), expectedList.size());
-		for (EntityWithId<String> result : resultList) {
+		for (EntityWithId<?> result : resultList) {
 			boolean found = false;
-			for (EntityWithId<String> expected : expectedList) {
+			for (EntityWithId<?> expected : expectedList) {
 				if (result.getId().equals(expected.getId())) {
 					found = true;
 					break;
@@ -118,7 +122,8 @@ public class StorageTest {
 	@Test
 	public void testGetById() throws IOException {
 		String expected = "alice@example.com";
-		TestModel t = Storage.getById(TestModel.class, "alice@example.com");
+		AllTests.TestModel t = Storage.getById(AllTests.TestModel.class,
+				"alice@example.com");
 		assertTrue(t.getId().equals(expected));
 	}
 

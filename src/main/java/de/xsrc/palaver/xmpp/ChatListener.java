@@ -2,8 +2,6 @@ package de.xsrc.palaver.xmpp;
 
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
-
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.util.StringUtils;
@@ -11,7 +9,6 @@ import org.jivesoftware.smack.util.StringUtils;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Storage;
-import de.xsrc.palaver.utils.Utils;
 
 public class ChatListener implements ChatManagerListener {
 

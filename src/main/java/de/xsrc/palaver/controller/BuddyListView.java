@@ -19,6 +19,7 @@ import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.util.VetoException;
 import org.jivesoftware.smack.util.StringUtils;
@@ -32,7 +33,7 @@ import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Buddy;
 
 @FXMLController("/fxml/BuddyListView.fxml")
-public class BuddyListView extends AbstractController {
+public class BuddyListView {
 
 	@FXML
 	@BackAction
@@ -137,7 +138,7 @@ public class BuddyListView extends AbstractController {
 						+ " is starting palaver with " + p.getRecipient());
 			}
 		}
-		fh = UiUtils.getFlowHandler();
+		FlowHandler fh = UiUtils.getFlowHandler();
 		fh.navigateBack();
 		return;
 
