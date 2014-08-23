@@ -37,6 +37,14 @@ public class Palaver implements EntityWithId<String> {
 		this.closed = new SimpleBooleanProperty(false);
 	}
 
+	public Palaver(String account, String recipient) {
+		this.recipient = new SimpleStringProperty(recipient);
+		this.account = new SimpleStringProperty(account);
+		this.history = new History();
+		this.closed = new SimpleBooleanProperty(false);
+
+	}
+
 	public String getId() {
 		return account.get() + ":" + recipient.get();
 	}
@@ -70,10 +78,15 @@ public class Palaver implements EntityWithId<String> {
 		history.addEntry(entry);
 	}
 
-	public boolean getClosed(){
+	public boolean getClosed() {
 		return this.closed.get();
 	}
+
 	public void setClosed(boolean b) {
 		this.closed.set(b);
+	}
+
+	public boolean equals(Palaver p) {
+		return p.getId().equals(getId());
 	}
 }
