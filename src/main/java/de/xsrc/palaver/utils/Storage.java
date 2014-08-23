@@ -69,7 +69,7 @@ public class Storage {
 	}
 
 	public static <T extends EntityWithId<?>> T getById(Class<T> clazz,
-			String id) {
+			String id) throws IllegalArgumentException {
 		ObservableList<T> list = getList(clazz);
 		for (T t : list) {
 			if (t.getId().equals(id))
