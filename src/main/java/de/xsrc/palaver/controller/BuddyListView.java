@@ -122,19 +122,18 @@ public class BuddyListView {
 	@FXML
 	private void startPalaverAction() throws VetoException, FlowException {
 		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
-		System.out.println("drin");
 
 		if (buddy != null) {
 			try {
 				Storage.getById(Palaver.class, buddy.getAccount() + ":"
 						+ StringUtils.parseBareAddress(buddy.getJid()));
-				System.out.println("Palaver does exists");
+				logger.finer("Palaver does not exists");
 			} catch (IllegalArgumentException e) {
 				Palaver p = new Palaver();
 				p.setAccount(buddy.getAccount());
 				p.setRecipient(buddy.getJid());
 				Storage.getList(Palaver.class).add(p);
-				System.out.println(p.getAccount()
+				logger.finer(p.getAccount()
 						+ " is starting palaver with " + p.getRecipient());
 			}
 		}
