@@ -20,7 +20,6 @@ import org.datafx.controller.context.ViewContext;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.Storage;
-import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
 
 @FXMLController("/fxml/HistoryView.fxml")
@@ -45,7 +44,6 @@ public class HistoryController {
 
 	public void setPalaver(Palaver p) {
 		this.palaver = p;
-		// history = palaver.history.getEntryListProperty();
 		history = p.history.<Entry>getEntryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
@@ -67,7 +65,8 @@ public class HistoryController {
 				context = ViewFactory.getInstance().createByController(
 						EntryController.class);
 				context.getController().setEntry(entry);
-				historyBox.getChildren().add(context.getRootNode());
+				Platform.runLater(() -> historyBox.getChildren().add(
+						context.getRootNode()));
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
 				logger.severe("Could not add entry from " + entry.getFrom()
