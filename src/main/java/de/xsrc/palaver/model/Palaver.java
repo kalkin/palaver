@@ -89,4 +89,8 @@ public class Palaver implements EntityWithId<String> {
 	public boolean equals(Palaver p) {
 		return p.getId().equals(getId());
 	}
+	
+	public BooleanProperty closedProperty(){
+		return closed;
+	}
 }

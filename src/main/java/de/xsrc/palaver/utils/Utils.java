@@ -15,7 +15,6 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.util.EntityWithId;
 
 public class Utils {
 
@@ -24,10 +23,6 @@ public class Utils {
 	private static HashMap<Class, Storage> storage;
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
-
-	public static Stage getDialog(Flow f) throws FlowException {
-		return getDialog(f, null);
-	}
 
 	public static Stage getDialog(Flow f, ViewFlowContext flowContext)
 			throws FlowException {

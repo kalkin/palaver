@@ -1,18 +1,23 @@
 package de.xsrc.palaver.utils;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.datafx.provider.ListDataProvider;
+import org.datafx.reader.WritableDataReader;
 import org.datafx.util.EntityWithId;
+import org.datafx.writer.WriteBackHandler;
+
+import de.xsrc.palaver.model.Palaver;
 
 public class Storage {
 
@@ -30,18 +35,26 @@ public class Storage {
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	public synchronized static <T extends EntityWithId<?>> boolean initialize(
-			Class<?>... classes) throws IllegalStateException {
+	protected synchronized static <T extends EntityWithId<?>> boolean initialize(
+			Class... classes) throws IllegalStateException {
 		logger.finer("Importing Tables " + classes + " in to the DB");
 		mapOfLists = new ConcurrentHashMap<Class<?>, ObservableList<? extends EntityWithId<?>>>(
 				4);
-		for (Class<?> clazz : classes) {
+		for (Class<T> clazz : classes) {
+			ListDataProvider<T> provider = new ListDataProvider<T>(
+					new AppDataSource<T>(clazz));
 			ObservableList<T> list = FXCollections
 					.synchronizedObservableList(FXCollections
-							.observableList(ColdStorage.get(clazz)));
-			list.addListener((Change<? extends T> change) -> {
-				if (change.next())
-					Storage.save(change.getList().get(0).getClass());
+							.observableList(new LinkedList<T>()));
+			provider.setResultObservableList(list);
+			provider.retrieve();
+			provider.setAddEntryHandler(new WriteBackHandler<T>() {
+
+				@Override
+				public WritableDataReader<T> createDataSource(T observable) {
+					System.out.println("Changed " + observable);
+					return null;
+				}
 			});
 			mapOfLists.put(clazz, list);
 		}
@@ -62,13 +75,13 @@ public class Storage {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends EntityWithId<?>> ObservableList<T> getList(
+	protected static <T extends EntityWithId<?>> ObservableList<T> getList(
 			Class<? extends T> clazz) {
 
 		return (ObservableList<T>) mapOfLists.get(clazz);
 	}
 
-	public static <T extends EntityWithId<?>> T getById(Class<T> clazz,
+	protected static <T extends EntityWithId<?>> T getById(Class<T> clazz,
 			String id) throws IllegalArgumentException {
 		ObservableList<T> list = getList(clazz);
 		for (T t : list) {

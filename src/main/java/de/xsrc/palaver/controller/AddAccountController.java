@@ -1,5 +1,7 @@
 package de.xsrc.palaver.controller;
 
+import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -12,11 +14,12 @@ import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
 import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.utils.Storage;
 
 @FXMLController("/fxml/AddAccountView.fxml")
 public class AddAccountController {
 
+	private static final Logger logger = Logger.getLogger(AddAccountController.class
+			.getName());
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
@@ -46,7 +49,8 @@ public class AddAccountController {
 	public void saveAccount() {
 		if (account == null) {
 			account = new Account(jidField.getText(), passwordField.getText());
-			Storage.getList(Account.class).add(account);
+			logger.fine("Saving Account " + account);
+			// TODO Fix MeStorage.getList(Account.class).add(account);
 		} else {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());

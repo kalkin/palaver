@@ -14,6 +14,7 @@ import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
+import org.datafx.controller.flow.context.ViewFlowContext;
 
 public class UiUtils {
 
@@ -38,13 +39,22 @@ public class UiUtils {
 		return sp;
 	}
 
-	public static synchronized Scene prepareFlow(Flow f) throws FlowException {
-		DefaultFlowContainer container = new DefaultFlowContainer();
+	public static synchronized Scene prepareFlow(Flow f,
+			ViewFlowContext flowContext) throws FlowException {
 		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
-		fh = f.createHandler();
-		fh.getViewConfiguration().setResources(b);
-		fh.start(container);
-		return new Scene(container.getView());
+
+		DefaultFlowContainer container = new DefaultFlowContainer();
+		FlowHandler flowHandler;
+		if (flowContext != null) {
+			flowHandler = f.createHandler(flowContext);
+		} else {
+			flowHandler = f.createHandler();
+		}
+		flowHandler.getViewConfiguration().setResources(b);
+		flowHandler.start(container);
+		Scene scene = new Scene(container.getView());
+		scene.getStylesheets().add("application.css");
+		return scene;
 	}
 
 	public static FlowHandler getFlowHandler() {

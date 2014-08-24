@@ -2,7 +2,6 @@ package de.xsrc.palaver.controller;
 
 import java.util.ResourceBundle;
 
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -16,15 +15,17 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.ViewFactory;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
+import org.datafx.controller.flow.context.FXMLViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AccountView.fxml")
@@ -32,6 +33,9 @@ public class AccountController {
 	@FXML
 	@BackAction
 	private Button back;
+
+	@FXMLViewFlowContext
+	private ViewFlowContext context;
 
 	@FXML
 	private Button addAccountButton;
@@ -41,16 +45,11 @@ public class AccountController {
 
 	@FXML
 	public void initialize() {
-		ObservableList<Account> all = Storage.getList(Account.class);
-		System.out.println(accountList);
-		all.addListener((Change<? extends Account> c) -> {
-			if (c.next()) {
-				accountList.setItems(all);
-			}
-		});
-		if (all.size() > 0) {
-			accountList.getItems().addAll(all);
-		}
+
+		@SuppressWarnings("unchecked")
+		ObservableList<Account> all = (ObservableList<Account>) ApplicationContext
+				.getInstance().getRegisteredObject("account-list");
+		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");
 	}
@@ -60,7 +59,7 @@ public class AccountController {
 	private void addAccount() {
 		Flow f = new Flow(AddAccountController.class);
 		try {
-			Utils.getDialog(f).show();
+			Utils.getDialog(f, null).show();
 		} catch (FlowException e) {
 			e.printStackTrace();
 		}

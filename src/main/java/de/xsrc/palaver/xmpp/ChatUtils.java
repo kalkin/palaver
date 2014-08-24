@@ -18,7 +18,6 @@ import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -28,7 +27,6 @@ import org.jivesoftware.smackx.carbons.CarbonManager;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class ChatUtils {
@@ -125,26 +123,27 @@ public class ChatUtils {
 
 	public static void sendMsg(Palaver p, Entry e) {
 		logger.finer("Sending msg " + e);
-		try {
-			getChat(p).sendMessage(e.getBody());
-		} catch (NotConnectedException e1) {
-			try {
-				logger.warning("Could not send msg connection lost?");
-				Account a = Storage.getById(Account.class, p.getAccount());
-				XMPPConnection con = getConMap().get(a);
-				if (!con.isConnected()) {
-					logger.warning("Trying to reconnect");
-					connectAccount(a, con);
-					sendMsg(p, e);
-				}
-			} catch (IllegalArgumentException | SmackException | IOException
-					| XMPPException e2) {
-				e2.printStackTrace();
-			}
-		} catch (XMPPException e1) {
-			logger.warning("Could not send msg");
-			e1.printStackTrace();
-		}
+		// TODO Fix me
+		// try {
+		// getChat(p).sendMessage(e.getBody());
+		// } catch (NotConnectedException e1) {
+		// try {
+		// logger.warning("Could not send msg connection lost?");
+		// Account a = Storage.getById(Account.class, p.getAccount());
+		// XMPPConnection con = getConMap().get(a);
+		// if (!con.isConnected()) {
+		// logger.warning("Trying to reconnect");
+		// connectAccount(a, con);
+		// sendMsg(p, e);
+		// }
+		// } catch (IllegalArgumentException | SmackException | IOException
+		// | XMPPException e2) {
+		// e2.printStackTrace();
+		// }
+		// } catch (XMPPException e1) {
+		// logger.warning("Could not send msg");
+		// e1.printStackTrace();
+		// }
 	}
 
 	protected static SSLContext getContext() throws Exception {

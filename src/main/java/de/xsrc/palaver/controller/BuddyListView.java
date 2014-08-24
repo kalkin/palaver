@@ -7,6 +7,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,12 +24,9 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.util.VetoException;
-import org.jivesoftware.smack.util.StringUtils;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Buddy;
@@ -54,7 +53,6 @@ public class BuddyListView {
 	@FXML
 	private ListView<Buddy> list;
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
 
@@ -89,7 +87,6 @@ public class BuddyListView {
 
 		AwesomeDude.setIcon(faSearch, AwesomeIcon.SEARCH, "20");
 		Platform.runLater(() -> searchInput.requestFocus());
-
 	}
 
 	ObservableList<String> entries = FXCollections.observableArrayList();
@@ -124,20 +121,21 @@ public class BuddyListView {
 		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
 
 		if (buddy != null) {
-			try {
-				Storage.getById(Palaver.class, buddy.getAccount() + ":"
-						+ StringUtils.parseBareAddress(buddy.getJid()));
-				logger.finer("Palaver does not exists");
-			} catch (IllegalArgumentException e) {
-				Palaver p = new Palaver();
-				p.setAccount(buddy.getAccount());
-				p.setRecipient(buddy.getJid());
-				Storage.getList(Palaver.class).add(p);
-				logger.finer(p.getAccount()
-						+ " is starting palaver with " + p.getRecipient());
-			}
+			logger.fine("Starting palaver with " + buddy.getJid());
+			// TODO FIX ME
+			// try {
+			// Storage.getById(Palaver.class, buddy.getAccount() + ":"
+			// + StringUtils.parseBareAddress(buddy.getJid()));
+			// logger.finer("Palaver does not exists");
+			// } catch (IllegalArgumentException e) {
+			// Palaver p = new Palaver();
+			// p.setAccount(buddy.getAccount());
+			// p.setRecipient(buddy.getJid());
+			// Storage.getList(Palaver.class).add(p);
+			// logger.finer(p.getAccount()
+			// + " is starting palaver with " + p.getRecipient());
+			// }
 		}
-		FlowHandler fh = UiUtils.getFlowHandler();
 		fh.navigateBack();
 		return;
 

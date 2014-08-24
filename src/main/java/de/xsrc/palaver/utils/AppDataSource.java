@@ -14,7 +14,7 @@ public class AppDataSource<T> extends AbstractDataReader<T> {
 
 	public AppDataSource(String workingDir, Class<T> clazz) {
 		try {
-			new XmlDataSource<T>(workingDir, clazz);
+			converter = new XmlDataSource<T>(workingDir, clazz);
 		} catch (IOException e) {
 			logger.info("Save file for class  " + clazz.getSimpleName()
 					+ " contained no data");
@@ -24,7 +24,7 @@ public class AppDataSource<T> extends AbstractDataReader<T> {
 
 	public AppDataSource(Class<T> clazz) {
 		try {
-			new XmlDataSource<T>(clazz);
+			converter = new XmlDataSource<T>(clazz);
 		} catch (IOException e) {
 			logger.info("Save file for class  " + clazz.getSimpleName()
 					+ " contained no data");

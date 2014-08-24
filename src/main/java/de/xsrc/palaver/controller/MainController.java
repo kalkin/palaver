@@ -1,10 +1,8 @@
 package de.xsrc.palaver.controller;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,16 +15,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
+import org.datafx.controller.flow.context.ViewFlowContext;
+import org.datafx.provider.ListDataProvider;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.Storage;
+import de.xsrc.palaver.utils.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/MainView.fxml")
@@ -48,9 +49,6 @@ public class MainController {
 
 	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
 
-	private ObservableList<Palaver> all = FXCollections
-			.observableList(new LinkedList<Palaver>());
-
 	@FXML
 	private BorderPane borderPane;
 
@@ -59,9 +57,15 @@ public class MainController {
 
 	private Node palaverListTmp;
 
+	private ListDataProvider<Palaver> provider;
+
+	private ObservableList<Palaver> palavers;
+
+
 	@FXML
 	private void initialize() {
-		ObservableList<Palaver> palavers = Storage.getList(Palaver.class);
+		provider = new ListDataProvider<Palaver>(new PalaverProvider());
+		palavers = provider.getData().get();
 
 		palaverListView.setItems(palavers);
 		palaverListView
@@ -105,10 +109,19 @@ public class MainController {
 	}
 
 	@FXML
-	private void addPalaver() {
+	private void addPalaver() throws FxmlLoadException {
 		Flow f = new Flow(AddPalaverController.class);
+		ViewFlowContext vCon = new ViewFlowContext();
+
+		vCon.register(provider);
+
+		ViewContext<AddPalaverController> context = ViewFactory.getInstance()
+				.createByController(AddPalaverController.class);
+		context.getController().setProvider(palavers);
+		
+
 		try {
-			Utils.getDialog(f).show();
+			Utils.getDialog(f, vCon).show();
 		} catch (FlowException e) {
 			e.printStackTrace();
 		}

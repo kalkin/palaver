@@ -7,22 +7,24 @@ import java.util.logging.Logger;
 import org.datafx.reader.FileSource;
 import org.datafx.reader.WritableDataReader;
 
-public class XmlDataSource<T> extends FileSource<T> implements WritableDataReader<T>{
+public class XmlDataSource<T> extends FileSource<T> implements
+		WritableDataReader<T> {
 	private static final Logger logger = Logger.getLogger(XmlDataSource.class
 			.getName());
 
 	public XmlDataSource(Class<?> c) throws FileNotFoundException, IOException {
 		super(Utils.getFile(c), new XmlDataConverter(c));
 	}
-	
-	public XmlDataSource(String workingDir, Class <?> c) throws FileNotFoundException, IOException{
+
+	public XmlDataSource(String workingDir, Class<?> c)
+			throws FileNotFoundException, IOException {
 		super(Utils.getFile(workingDir, c), new XmlDataConverter(c));
 	}
 
 	@Override
 	public void writeBack() {
 		logger.info("would write back ");
-		
+
 	}
 
 }

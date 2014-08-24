@@ -1,26 +1,30 @@
 package de.xsrc.palaver;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import org.datafx.controller.context.ApplicationContext;
+import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
-import org.jivesoftware.smack.XMPPConnection;
+import org.datafx.controller.flow.context.ViewFlowContext;
+import org.datafx.provider.ListDataProvider;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
-import de.xsrc.palaver.xmpp.model.Buddy;
 
 public class Main extends Application {
 
@@ -29,29 +33,48 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
-		Storage.initialize(Account.class, Palaver.class, Buddy.class);
+		ListDataProvider<Account> accounts = new ListDataProvider<Account>(
+				new AccountProvider());
+		ObservableList<Account> list = FXCollections
+				.observableList(new LinkedList<Account>());
+		accounts.setResultObservableList(list);
+
+		ApplicationContext.getInstance().register("account-list", list);
+
+		ViewFlowContext c = new ViewFlowContext();
 		Platform.runLater(() -> {
-			handleXmpp();
+			accounts.retrieve();
 		});
+		handleXmpp(list);
+
 		Flow flow = new Flow(MainController.class);
-		Scene scene = UiUtils.prepareFlow(flow);
-		scene.getStylesheets().add("application.css");
+		Scene scene = UiUtils.prepareFlow(flow, c);
 
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
 	}
 
-	private ObservableMap<Account, XMPPConnection> handleXmpp() {
-		ObservableList<Account> accountList = Storage.getList(Account.class);
-		ObservableMap<Account, XMPPConnection> conMap = FXCollections
-				.observableHashMap();
-		for (Account account : accountList) {
-			logger.fine("Connection account " + account);
-			ChatUtils.getConnection(account);
-			logger.info("Connected account: " + account);
-		}
-		return conMap;
+	private void handleXmpp(ObservableList<Account> accountList) {
+		accountList.addListener(new ListChangeListener<Account>() {
+
+			@Override
+			public void onChanged(
+					javafx.collections.ListChangeListener.Change<? extends Account> c) {
+				while (c.next()) {
+					if (c.getAddedSize() > 0) {
+						List<? extends Account> list = c.getAddedSubList();
+						for (Account account : list) {
+							logger.fine("Connection account " + account);
+							ChatUtils.getConnection(account);
+							logger.info("Connected account: " + account);
+						}
+					}
+				}
+
+			}
+		});
+
 	}
 
 	public static void main(String[] args) {
