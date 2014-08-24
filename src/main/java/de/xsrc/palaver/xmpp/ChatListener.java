@@ -30,10 +30,11 @@ public class ChatListener implements ChatManagerListener {
 			try {
 				// if a new chat this should fail
 				Palaver p = Storage.getById(Palaver.class, id);
+				p.setClosed(false);
 				chat.addMessageListener(new MsgListener(account.getJid()));
 				ChatUtils.getChat(p);
 				logger.finest("Retrieved palaver: " + p);
-			} catch (Exception e) {
+			} catch (IllegalArgumentException e) {
 				String recipent = StringUtils.parseBareAddress(chat
 						.getParticipant());
 				Palaver p = new Palaver();

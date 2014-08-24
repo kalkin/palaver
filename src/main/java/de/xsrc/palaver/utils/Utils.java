@@ -57,12 +57,16 @@ public class Utils {
 	 * @throws IOException
 	 */
 	public static File getFile( Class<?> c) throws IOException {
-
-		File file = new File(workingDirectory() + "/" + c.getSimpleName() + "s"); // Make
+		return getFile(workingDirectory(), c);
+	}
+	
+	public static File getFile(String workingDir, Class<?> c) throws IOException{
+		File file = new File(workingDir + "/" + c.getSimpleName() + "s"); // Make
 
 		if (!file.exists()) {
 			file.getParentFile().mkdirs();
 			file.createNewFile();
+			System.out.println(file.getPath());
 		}
 		return file;
 	}

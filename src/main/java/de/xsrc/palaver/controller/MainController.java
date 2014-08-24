@@ -2,12 +2,9 @@ package de.xsrc.palaver.controller;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -65,37 +62,8 @@ public class MainController {
 	@FXML
 	private void initialize() {
 		ObservableList<Palaver> palavers = Storage.getList(Palaver.class);
-		for (Palaver palaver : palavers) {
-			if (!palaver.getClosed()) {
-				all.add(palaver);
-			}
-		}
-		palavers.addListener((Change<? extends Palaver> c) -> {
-			while (c.next()) {
-				System.out.println("CHANGES");
-				if (c.getAddedSize() > 0) {
-					List<? extends Palaver> subList = c.getAddedSubList();
-					for (Palaver p : subList) {
-						if (p.getClosed() && all.contains(p)) {
-							all.remove(p);
-						} else if (!p.getClosed() && !all.contains(p)) {
-							Platform.runLater(() -> all.add(p));
-						}
-					}
-				} else if (c.wasUpdated()) {
-					ObservableList<? extends Palaver> subList = c.getList();
-					for (Palaver p : subList) {
-						if (p.getClosed() && all.contains(p)) {
-							all.remove(p);
-						} else if (!p.getClosed() && !all.contains(p)) {
-							all.add(p);
-						}
-					}
-				}
-			}
-		});
-		// palavers.removeIf(p -> p.getClosed());
-		palaverListView.setItems(all);
+
+		palaverListView.setItems(palavers);
 		palaverListView
 				.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
 					@Override
@@ -159,12 +127,11 @@ public class MainController {
 			hidePalaverButton.setGraphic(AwesomeDude
 					.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
 		}
-		System.out.println("drin");
 	}
 
 	@FXML
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
-		p.setClosed(true);
+		palaverListView.getItems().remove(p);
 	}
 }

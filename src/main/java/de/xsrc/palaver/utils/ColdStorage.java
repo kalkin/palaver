@@ -45,9 +45,9 @@ public class ColdStorage {
 	public static <T extends EntityWithId<?>> LinkedList<T> get(Class<?> c) {
 		logger.finer("Reading XML file for model" + c.getSimpleName());
 		LinkedList<T> result = new LinkedList<T>();
-		AppDataSource<T> source;
+		XmlDataSource<T> source;
 		try {
-			source = new AppDataSource<T>(c);
+			source = new XmlDataSource<T>(c);
 
 			while (source.next()) {
 				T tmp = source.get();

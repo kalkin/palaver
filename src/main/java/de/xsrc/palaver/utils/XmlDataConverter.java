@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class AppDataConverter<T> extends InputStreamConverter<T> {
+public class XmlDataConverter<T> extends InputStreamConverter<T> {
 
 	private NodeList dataList;
 	private int currentIndex = 0;
@@ -27,7 +27,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 	private static final Logger logger = Logger.getLogger(Storage.class
 			.getName());
 
-	public  AppDataConverter(Class<?> clazz) {
+	public XmlDataConverter(Class<?> clazz) {
 		this.clazz = clazz;
 	}
 
@@ -50,8 +50,7 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			String errorMsg = "Could not read/parse the AppData Config";
 			logger.warning(errorMsg);
 			IOException exception = new IOException(errorMsg);
-			exception.setStackTrace(e.getStackTrace());	
-			throw exception;
+			exception.setStackTrace(e.getStackTrace());
 		}
 
 	}
@@ -64,13 +63,14 @@ public class AppDataConverter<T> extends InputStreamConverter<T> {
 			Unmarshaller u = jc.createUnmarshaller();
 			currentIndex++;
 			@SuppressWarnings("unchecked")
-			JAXBElement<T> element = (JAXBElement<T>) u
-					.unmarshal(dataList.item(oldIndex), clazz);
+			JAXBElement<T> element = (JAXBElement<T>) u.unmarshal(
+					dataList.item(oldIndex), clazz);
 			return element.getValue();
 		} catch (JAXBException e) {
 			e.printStackTrace();
 			currentIndex++;
 			return null;
+
 		}
 	}
 }
