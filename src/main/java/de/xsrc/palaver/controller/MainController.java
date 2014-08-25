@@ -78,23 +78,27 @@ public class MainController {
 				.addListener(
 						(ObservableValue<? extends Palaver> observable,
 								Palaver oldValue, Palaver newValue) -> {
-							if (!historyMap.containsKey(newValue)) {
-								try {
-									ViewContext<HistoryController> context = ViewFactory
-											.getInstance().createByController(
-													HistoryController.class);
-									context.getController()
-											.setPalaver(newValue);
-									historyMap.put(newValue, context);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+							if (newValue != null) {
+								if (!historyMap.containsKey(newValue)) {
+									try {
+										ViewContext<HistoryController> context = ViewFactory
+												.getInstance()
+												.createByController(
+														HistoryController.class);
+										context.getController().setPalaver(
+												newValue);
+										historyMap.put(newValue, context);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
+
+								borderPane.setCenter(historyMap.get(newValue)
+										.getRootNode());
+								historyMap.get(newValue).getController()
+										.requestFocus();
 							}
-							borderPane.setCenter(historyMap.get(newValue)
-									.getRootNode());
-							historyMap.get(newValue).getController()
-									.requestFocus();
 						});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
@@ -131,6 +135,7 @@ public class MainController {
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
 		palaverListView.getItems().remove(p);
+		historyMap.remove(p);
 		p.setClosed(true);
 	}
 }
