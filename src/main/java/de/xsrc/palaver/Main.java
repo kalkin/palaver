@@ -54,9 +54,8 @@ public class Main extends Application {
 					if (c.getAddedSize() > 0) {
 						List<? extends Account> list = c.getAddedSubList();
 						for (Account account : list) {
-							logger.fine("Connection account " + account);
+							logger.fine("Connecting to account " + account);
 							ChatUtils.getConnection(account);
-							logger.info("Connected account: " + account);
 						}
 					}
 				}

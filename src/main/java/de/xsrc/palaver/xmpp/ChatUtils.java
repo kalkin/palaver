@@ -57,7 +57,6 @@ public class ChatUtils {
 				connection = connectAccount(account);
 			} catch (SmackException | IOException | XMPPException e) {
 				logger.severe("Could not connect to " + account);
-				e.printStackTrace();
 			}
 		}
 		return connection;
