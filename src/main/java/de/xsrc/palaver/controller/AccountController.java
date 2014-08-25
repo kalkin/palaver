@@ -26,6 +26,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AccountView.fxml")
@@ -46,9 +47,8 @@ public class AccountController {
 	@FXML
 	public void initialize() {
 
-		@SuppressWarnings("unchecked")
-		ObservableList<Account> all = (ObservableList<Account>) ApplicationContext
-				.getInstance().getRegisteredObject("account-list");
+		ObservableList<Account> all = ApplicationContext.getInstance()
+				.getRegisteredObject(AccountProvider.class).getData().get();
 		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");

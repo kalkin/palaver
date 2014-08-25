@@ -1,12 +1,10 @@
 package de.xsrc.palaver;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -15,8 +13,6 @@ import javafx.stage.Stage;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.provider.ListDataProvider;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
@@ -32,22 +28,16 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
-		ListDataProvider<Account> accounts = new ListDataProvider<Account>(
-				new AccountProvider());
-		ObservableList<Account> list = FXCollections
-				.observableList(new LinkedList<Account>());
-		accounts.setResultObservableList(list);
+		AccountProvider accounts = new AccountProvider();
+		ApplicationContext.getInstance().register(accounts);
 
-		ApplicationContext.getInstance().register("account-list", list);
-
-		ViewFlowContext c = new ViewFlowContext();
 		Platform.runLater(() -> {
 			accounts.retrieve();
+			handleXmpp(accounts.getData().get());
 		});
-		handleXmpp(list);
 
 		Flow flow = new Flow(MainController.class);
-		Scene scene = UiUtils.prepareFlow(flow, c);
+		Scene scene = UiUtils.prepareFlow(flow, null);
 
 		primaryStage.setScene(scene);
 

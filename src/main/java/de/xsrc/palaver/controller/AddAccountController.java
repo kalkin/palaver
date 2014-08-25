@@ -2,6 +2,7 @@ package de.xsrc.palaver.controller;
 
 import java.util.logging.Logger;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -9,17 +10,19 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.provider.AccountProvider;
 
 @FXMLController("/fxml/AddAccountView.fxml")
 public class AddAccountController {
 
-	private static final Logger logger = Logger.getLogger(AddAccountController.class
-			.getName());
+	private static final Logger logger = Logger
+			.getLogger(AddAccountController.class.getName());
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
@@ -50,7 +53,9 @@ public class AddAccountController {
 		if (account == null) {
 			account = new Account(jidField.getText(), passwordField.getText());
 			logger.fine("Saving Account " + account);
-			// TODO Fix MeStorage.getList(Account.class).add(account);
+			ObservableList<Account> all = ApplicationContext.getInstance()
+					.getRegisteredObject(AccountProvider.class).getData().get();
+			all.add(account);
 		} else {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());
