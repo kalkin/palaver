@@ -18,14 +18,18 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Buddy;
@@ -78,8 +82,8 @@ public class BuddyListView {
 		});
 
 		searchInput.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue<? extends String> observable, String oldVal,
-					String newVal) {
+			public void changed(ObservableValue<? extends String> observable,
+					String oldVal, String newVal) {
 				handleSearchByKey(oldVal, newVal);
 			}
 
@@ -119,21 +123,21 @@ public class BuddyListView {
 	@FXML
 	private void startPalaverAction() throws VetoException, FlowException {
 		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
+		PalaverProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(PalaverProvider.class);
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
-			// TODO FIX ME
-			// try {
-			// Storage.getById(Palaver.class, buddy.getAccount() + ":"
-			// + StringUtils.parseBareAddress(buddy.getJid()));
-			// logger.finer("Palaver does not exists");
-			// } catch (IllegalArgumentException e) {
-			// Palaver p = new Palaver();
-			// p.setAccount(buddy.getAccount());
-			// p.setRecipient(buddy.getJid());
-			// Storage.getList(Palaver.class).add(p);
-			// logger.finer(p.getAccount()
-			// + " is starting palaver with " + p.getRecipient());
-			// }
+			String recipient = StringUtils.parseBareAddress(buddy.getJid());
+			Palaver p = provider.getById(buddy.getAccount(), recipient);
+			if (p == null) {
+				logger.finer("Palaver does not exists");
+				p = new Palaver(buddy.getAccount(), recipient);
+				provider.getData().add(p);
+			} else {
+				p.setClosed(false);
+			}
+			logger.finer(p.getAccount()
+					+ " started palaver with " + p.getRecipient());
 		}
 		UiUtils.getFlowHandler(context).navigateBack();
 	}

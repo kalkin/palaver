@@ -131,5 +131,6 @@ public class MainController {
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
 		palaverListView.getItems().remove(p);
+		p.setClosed(true);
 	}
 }

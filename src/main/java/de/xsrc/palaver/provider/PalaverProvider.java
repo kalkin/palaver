@@ -12,26 +12,38 @@ import de.xsrc.palaver.utils.AppDataSource;
 
 public class PalaverProvider extends ListDataProvider<Palaver> {
 
-	public PalaverProvider(){
+	public PalaverProvider() {
 		super(null, null, null);
 		AppDataSource<Palaver> dr = new AppDataSource<Palaver>(Palaver.class);
 		this.setDataReader(dr);
 		this.setAddEntryHandler(new WriteBackHandler<Palaver>() {
 			@Override
-			public WritableDataReader<Palaver> createDataSource(Palaver observable) {
-				ObservableList<Palaver> list = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData();
+			public WritableDataReader<Palaver> createDataSource(
+					Palaver observable) {
+				ObservableList<Palaver> list = ApplicationContext.getInstance()
+						.getRegisteredObject(PalaverProvider.class).getData();
 				return new AppDataWriter<Palaver>(list, Palaver.class);
 			}
 		});
 		this.setWriteBackHandler(new WriteBackHandler<Palaver>() {
 			@Override
-			public WritableDataReader<Palaver> createDataSource(Palaver observable) {
-				System.out.println("drin");
-				ObservableList<Palaver> list = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData();
+			public WritableDataReader<Palaver> createDataSource(
+					Palaver observable) {
+				ObservableList<Palaver> list = ApplicationContext.getInstance()
+						.getRegisteredObject(PalaverProvider.class).getData();
 				return new AppDataWriter<Palaver>(list, Palaver.class);
 			}
 		});
 	}
 
+	public Palaver getById(String account, String recipient) {
+		String id = account + ":" + recipient;
+		for (Palaver p : getData()) {
+			if (p.getId().equals(id)) {
+				return p;
+			}
+		}
+		return null;
+	}
 
 }
