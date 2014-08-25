@@ -2,14 +2,20 @@ package de.xsrc.palaver.xmpp;
 
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
+
+import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.ColdStorage;
 
 public class ChatListener implements ChatManagerListener {
 
-	@SuppressWarnings("unused")
 	private Account account;
 
 	private static final Logger logger = Logger.getLogger(ChatListener.class
@@ -23,27 +29,29 @@ public class ChatListener implements ChatManagerListener {
 	public void chatCreated(Chat chat, boolean createdLocally) {
 		if (!createdLocally) {
 			// Listen for new incoming chats
-//			String id = account.getId() + ":"
-//					+ StringUtils.parseBareAddress(chat.getParticipant());
+			String recipent = StringUtils.parseBareAddress(chat
+					.getParticipant());
+			String id = account.getId() + ":" + recipent;
 			logger.fine("Got new Msg");
-			// TODO FIX ME
-			// try {
-			// // if a new chat this should fail
-			// Palaver p = Storage.getById(Palaver.class, id);
-			// p.setClosed(false);
-			// chat.addMessageListener(new MsgListener(account.getJid()));
-			// ChatUtils.getChat(p);
-			// logger.finest("Retrieved palaver: " + p);
-			// } catch (IllegalArgumentException e) {
-			// String recipent = StringUtils.parseBareAddress(chat
-			// .getParticipant());
-			// Palaver p = new Palaver();
-			// p.setAccount(account.getJid());
-			// p.setRecipient(recipent);
-			// Storage.getList(Palaver.class).add(p);
-			// logger.finer("Created new palaver" + p);
-			// }
+			PalaverProvider provider = ApplicationContext.getInstance()
+					.getRegisteredObject(PalaverProvider.class);
+			Palaver palaver = provider.getById(id);
+			System.out.println(provider.getData());
+			if (palaver == null) {
+				Palaver p = new Palaver();
+				p.setAccount(account.getJid());
+				p.setRecipient(recipent);
+				Platform.runLater(() -> {
+					provider.getData().add(p);
+					System.out.println(provider.getData());
+					p.setClosed(false);
+					// TODO Find out why write back handler does not handle this.
+					ColdStorage.save(Palaver.class, provider.getData());
+				});
+			} else if (palaver.getClosed()) {
+				palaver.setClosed(false);
+			}
+			chat.addMessageListener(new MsgListener(account.getJid()));
 		}
 	}
-
 }

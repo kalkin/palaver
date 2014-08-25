@@ -15,10 +15,13 @@ import javafx.scene.layout.VBox;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 
@@ -44,7 +47,7 @@ public class HistoryController {
 
 	public void setPalaver(Palaver p) {
 		this.palaver = p;
-		history = p.history.<Entry>getEntryListProperty();
+		history = p.history.getEntryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
 			while (change.next()) {
@@ -80,6 +83,10 @@ public class HistoryController {
 		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
 		this.history.add(e);
 		logger.finer(historyBox.toString());
+		PalaverProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(PalaverProvider.class);
+		// TODO Find out why write back handler does not handle this.
+		ColdStorage.save(Palaver.class, provider.getData());
 		ChatUtils.sendMsg(palaver, e);
 		chatInput.clear();
 	}

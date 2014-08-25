@@ -38,6 +38,10 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 
 	public Palaver getById(String account, String recipient) {
 		String id = account + ":" + recipient;
+		return getById(id);
+	}
+
+	public Palaver getById(String id) {
 		for (Palaver p : getData()) {
 			if (p.getId().equals(id)) {
 				return p;
