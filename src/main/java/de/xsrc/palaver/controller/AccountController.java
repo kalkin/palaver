@@ -48,7 +48,7 @@ public class AccountController {
 	public void initialize() {
 
 		ObservableList<Account> all = ApplicationContext.getInstance()
-				.getRegisteredObject(AccountProvider.class).getData().get();
+				.getRegisteredObject(AccountProvider.class).getData();
 		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");

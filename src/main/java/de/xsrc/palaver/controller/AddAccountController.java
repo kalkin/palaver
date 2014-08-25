@@ -2,7 +2,6 @@ package de.xsrc.palaver.controller;
 
 import java.util.logging.Logger;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -53,9 +52,9 @@ public class AddAccountController {
 		if (account == null) {
 			account = new Account(jidField.getText(), passwordField.getText());
 			logger.fine("Saving Account " + account);
-			ObservableList<Account> all = ApplicationContext.getInstance()
-					.getRegisteredObject(AccountProvider.class).getData().get();
-			all.add(account);
+			AccountProvider provider = ApplicationContext.getInstance()
+					.getRegisteredObject(AccountProvider.class);
+			provider.getData().add(account);
 		} else {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());
