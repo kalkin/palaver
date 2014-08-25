@@ -1,5 +1,6 @@
 package de.xsrc.palaver.xmpp;
 
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 
 public class UiUtils {
 
-	private static FlowHandler fh;
+	private static HashMap<ViewFlowContext, FlowHandler> fh = new HashMap<ViewFlowContext, FlowHandler>(4);
 
 	public static StackPane getAvatar(String name) {
 		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9,
@@ -50,6 +51,7 @@ public class UiUtils {
 		} else {
 			flowHandler = f.createHandler();
 		}
+		fh.put(flowHandler.getFlowContext(), flowHandler);
 		flowHandler.getViewConfiguration().setResources(b);
 		flowHandler.start(container);
 		Scene scene = new Scene(container.getView());
@@ -57,7 +59,7 @@ public class UiUtils {
 		return scene;
 	}
 
-	public static FlowHandler getFlowHandler() {
-		return fh;
+	public static FlowHandler getFlowHandler(ViewFlowContext context) {
+		return fh.get(context);
 	}
 }

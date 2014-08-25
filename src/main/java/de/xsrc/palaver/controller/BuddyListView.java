@@ -7,8 +7,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,8 +19,9 @@ import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.BackAction;
+import org.datafx.controller.flow.context.FXMLViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
@@ -41,8 +40,8 @@ public class BuddyListView {
 	@FXML
 	private Button addBuddy;
 
-	@FXML
-	private Button startPalaverButton;
+	@FXMLViewFlowContext
+	private ViewFlowContext context;
 
 	@FXML
 	private Label faSearch;
@@ -56,7 +55,6 @@ public class BuddyListView {
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
 
-	@FXML
 	private void initialize() {
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "20");
 
@@ -119,7 +117,6 @@ public class BuddyListView {
 	@FXML
 	private void startPalaverAction() throws VetoException, FlowException {
 		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
-
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
 			// TODO FIX ME
@@ -136,8 +133,6 @@ public class BuddyListView {
 			// + " is starting palaver with " + p.getRecipient());
 			// }
 		}
-		fh.navigateBack();
-		return;
-
+		UiUtils.getFlowHandler(context).navigateBack();
 	}
 }
