@@ -55,6 +55,7 @@ public class BuddyListView {
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
 
+	@SuppressWarnings("unused")
 	private void initialize() {
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "20");
 
@@ -76,7 +77,7 @@ public class BuddyListView {
 		});
 
 		searchInput.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue observable, String oldVal,
+			public void changed(ObservableValue<? extends String> observable, String oldVal,
 					String newVal) {
 				handleSearchByKey(oldVal, newVal);
 			}
