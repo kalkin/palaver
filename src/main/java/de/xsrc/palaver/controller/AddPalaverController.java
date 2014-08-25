@@ -1,10 +1,8 @@
 package de.xsrc.palaver.controller;
 
-import java.util.LinkedList;
 import java.util.logging.Logger;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -12,10 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.crud.CrudException;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
 
 @FXMLController("/fxml/AddPalaverView.fxml")
 public class AddPalaverController {
@@ -32,13 +33,9 @@ public class AddPalaverController {
 	@FXML
 	private ChoiceBox<Account> accountChoice;
 
-	private ObservableList<Palaver> provider;
-
 	@FXML
 	private void initialize() {
-		// TODO Fix me
-		//ObservableList<Account> accounts = Stoage.getList(Account.class);
-		ObservableList<Account> accounts = FXCollections.observableArrayList(new LinkedList<Account>());
+		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
 		accountChoice.getItems().addAll(accounts);
 		if (accounts.size() > 0) {
 			accountChoice.getSelectionModel().select(0);
@@ -53,15 +50,11 @@ public class AddPalaverController {
 		logger.finer(account.getJid() + " is starting palaver with "
 				+ jid.getText());
 		p.setAccount(account.getId());
-		provider.add(p);
+		ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData().add(p);
 		Stage stage = (Stage) back.getScene().getWindow();
 		stage.close();
 	}
 	
-	public void setProvider(ObservableList<Palaver> palavers){
-		this.provider = palavers;
-	}
-
 	@FXML
 	private void close() {
 		Stage stage = (Stage) back.getScene().getWindow();

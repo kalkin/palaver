@@ -3,7 +3,6 @@ package de.xsrc.palaver.controller;
 import java.util.HashMap;
 
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -17,17 +16,16 @@ import javafx.util.Callback;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
-import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.provider.ListDataProvider;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.utils.PalaverProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/MainView.fxml")
@@ -57,17 +55,13 @@ public class MainController {
 
 	private Node palaverListTmp;
 
-	private ListDataProvider<Palaver> provider;
-
-	private ObservableList<Palaver> palavers;
-
-
 	@FXML
 	private void initialize() {
-		provider = new ListDataProvider<Palaver>(new PalaverProvider());
-		palavers = provider.getData().get();
+		PalaverProvider provider = new PalaverProvider();
+		provider.retrieve();
+		ApplicationContext.getInstance().register(provider);
 
-		palaverListView.setItems(palavers);
+		palaverListView.setItems(provider.getData());
 		palaverListView
 				.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
 					@Override
@@ -111,17 +105,8 @@ public class MainController {
 	@FXML
 	private void addPalaver() throws FxmlLoadException {
 		Flow f = new Flow(AddPalaverController.class);
-		ViewFlowContext vCon = new ViewFlowContext();
-
-		vCon.register(provider);
-
-		ViewContext<AddPalaverController> context = ViewFactory.getInstance()
-				.createByController(AddPalaverController.class);
-		context.getController().setProvider(palavers);
-		
-
 		try {
-			Utils.getDialog(f, vCon).show();
+			Utils.getDialog(f, null).show();
 		} catch (FlowException e) {
 			e.printStackTrace();
 		}
