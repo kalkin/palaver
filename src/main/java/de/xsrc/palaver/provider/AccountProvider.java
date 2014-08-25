@@ -25,5 +25,13 @@ public class AccountProvider extends ListDataProvider<Account> {
 				return new AppDataWriter<Account>(list, Account.class);
 			}
 		});
+		this.setWriteBackHandler(new WriteBackHandler<Account>() {
+			@Override
+			public WritableDataReader<Account> createDataSource(Account observable) {
+				System.out.println("drin");
+				ObservableList<Account> list = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+				return new AppDataWriter<Account>(list, Account.class);
+			}
+		});
 	}
 }
