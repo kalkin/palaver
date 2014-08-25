@@ -55,7 +55,7 @@ public class BuddyListView {
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
 
-	@SuppressWarnings("unused")
+	@FXML
 	private void initialize() {
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "20");
 
@@ -67,6 +67,7 @@ public class BuddyListView {
 		hbox.getChildren().add(
 				AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
+		System.out.println(ChatUtils.getBuddys());
 		list.setItems(ChatUtils.getBuddys());
 		list.setManaged(true);
 		list.setCellFactory(new Callback<ListView<Buddy>, ListCell<Buddy>>() {
