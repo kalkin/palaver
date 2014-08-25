@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -65,46 +68,61 @@ public class ColdStorage {
 	 * 
 	 * @param clazz
 	 * @param list
-	 * @throws ParserConfigurationException
-	 * @throws JAXBException
-	 * @throws ClassNotFoundException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassCastException
-	 * @throws IOException
 	 */
 	public static <T extends EntityWithId<?>> void save(Class<T> clazz,
-			List<T> list) throws ParserConfigurationException, JAXBException,
-			ClassNotFoundException, InstantiationException,
-			IllegalAccessException, ClassCastException, IOException {
-		logger.finer("Saving XML file for model" + clazz.getSimpleName());
-		Document doc = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder().newDocument();
+			List<T> list) {
+		Service service = new Service() {
+			@Override
+			protected Task createTask() {
+				Task task = new Task() {
+					@Override
+					protected Object call()
+							throws ParserConfigurationException, JAXBException,
+							ClassNotFoundException, InstantiationException,
+							IllegalAccessException, ClassCastException,
+							IOException {
 
-		// Create wrapper root element to wrap the beans iE Account -> Accounts
-		Element rootElement = doc.createElement(clazz.getSimpleName()
-				.toLowerCase() + "s");
-		Marshaller m = JAXBContext.newInstance(clazz).createMarshaller();
-		doc.appendChild(rootElement);
-		m.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
-				Boolean.TRUE);
+						logger.finer("Saving XML file for model"
+								+ clazz.getSimpleName());
+						Document doc = DocumentBuilderFactory.newInstance()
+								.newDocumentBuilder().newDocument();
 
-		for (T t : list) {
-			// attach all nodes to the root wrapper
-			m.marshal(t, doc.getFirstChild());
-		}
+						// Create wrapper root element to wrap the beans iE
+						// Account -> Accounts
+						Element rootElement = doc.createElement(clazz
+								.getSimpleName().toLowerCase() + "s");
+						Marshaller m = JAXBContext.newInstance(clazz)
+								.createMarshaller();
+						doc.appendChild(rootElement);
+						m.setProperty(
+								javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+								Boolean.TRUE);
 
-		DOMImplementationRegistry registry = DOMImplementationRegistry
-				.newInstance();
+						for (T t : list) {
+							// attach all nodes to the root wrapper
+							m.marshal(t, doc.getFirstChild());
+						}
 
-		DOMImplementationLS impl = (DOMImplementationLS) registry
-				.getDOMImplementation("LS");
+						DOMImplementationRegistry registry = DOMImplementationRegistry
+								.newInstance();
 
-		LSSerializer writer = impl.createLSSerializer();
-		writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
-		LSOutput output = impl.createLSOutput();
-		File file = Utils.getFile(clazz);
-		output.setByteStream(new FileOutputStream(file));
-		writer.write(doc, output);
+						DOMImplementationLS impl = (DOMImplementationLS) registry
+								.getDOMImplementation("LS");
+
+						LSSerializer writer = impl.createLSSerializer();
+						writer.getDomConfig().setParameter(
+								"format-pretty-print", Boolean.TRUE);
+						LSOutput output = impl.createLSOutput();
+						File file = Utils.getFile(clazz);
+						output.setByteStream(new FileOutputStream(file));
+						return writer.write(doc, output);
+
+					}
+				};
+				return task;
+			}
+		};
+		service.start();
+
 	}
 }

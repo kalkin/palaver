@@ -27,6 +27,7 @@ import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/AccountView.fxml")
@@ -93,5 +94,6 @@ public class AccountController {
 	private void removeAction() {
 		Account acc = accountList.getSelectionModel().getSelectedItem();
 		accountList.getItems().remove(acc);
+		ColdStorage.save(Account.class, accountList.getItems());
 	}
 }

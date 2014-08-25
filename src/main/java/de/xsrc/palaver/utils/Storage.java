@@ -1,6 +1,5 @@
 package de.xsrc.palaver.utils;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,15 +8,10 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.util.EntityWithId;
 import org.datafx.writer.WriteBackHandler;
-
-import de.xsrc.palaver.model.Palaver;
 
 public class Storage {
 
@@ -64,14 +58,7 @@ public class Storage {
 	@SuppressWarnings("unchecked")
 	protected static synchronized <T extends EntityWithId<?>> void save(
 			Class<T> clazz) {
-		try {
-			ColdStorage.save(clazz, (List<T>) mapOfLists.get(clazz));
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | ClassCastException
-				| ParserConfigurationException | JAXBException | IOException e) {
-			e.printStackTrace();
-			logger.severe("Could not save to cold storage");
-		}
+		ColdStorage.save(clazz, (List<T>) mapOfLists.get(clazz));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.datafx.reader.WritableDataReader;
 import org.datafx.util.EntityWithId;
 
@@ -39,16 +36,7 @@ public class AppDataWriter<T extends EntityWithId<?>> implements WritableDataRea
 
 	@Override
 	public void writeBack() {
-		try {
 			ColdStorage.save(clazz, data);
-		} catch (ClassNotFoundException
-				| InstantiationException
-				| IllegalAccessException | ClassCastException
-				| ParserConfigurationException | JAXBException
-				| IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
 	}
 
 }
