@@ -16,14 +16,19 @@ import javax.net.ssl.X509TrustManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
@@ -35,6 +40,7 @@ public class ChatUtils {
 			.getName());
 
 	private static ConcurrentHashMap<Palaver, Chat> chatMap;
+	private static ConcurrentHashMap<String, MultiUserChat> mucMap;
 	private static ConcurrentHashMap<String, XMPPConnection> conMap;
 
 	private static synchronized ConcurrentHashMap<Palaver, Chat> getChatMap() {
@@ -105,6 +111,38 @@ public class ChatUtils {
 		return config;
 	}
 
+	public static MultiUserChat getMuc(Palaver p) {
+		MultiUserChat muc = getMucMap().get(p.getRecipient());
+		if (muc == null || !muc.isJoined()) {
+			XMPPConnection connection = getConMap().get(p.getAccount());
+			muc = new MultiUserChat(connection, p.getRecipient());
+			try {
+				muc.createOrJoin(StringUtils.parseName(p.getAccount()));
+				muc.addMessageListener(new PacketListener() {
+					
+					@Override
+					public void processPacket(Packet packet) throws NotConnectedException {
+						// TODO Auto-generated method stub
+						if(packet instanceof Message){
+							Message msg = (Message) packet;
+							Entry e = new Entry(msg.getFrom(), msg.getBody());
+							p.history.addEntry(e);
+						}
+						
+					}
+				});
+			} catch (XMPPErrorException | SmackException e) {
+				e.printStackTrace();
+			}
+			getMucMap().put(p.getRecipient(), muc);
+		} else {
+			logger.warning("Chat room " + p.getRecipient()
+					+ " already exists in mucMap, this is weird");
+		}
+
+		return muc;
+	}
+
 	public synchronized static Chat getChat(Palaver palaver) {
 		Chat chat = getChatMap().get(palaver);
 		if (chat == null) {
@@ -123,8 +161,16 @@ public class ChatUtils {
 
 	public static void sendMsg(Palaver p, Entry e) {
 		logger.finer("Sending msg " + e);
+		String servername = StringUtils.parseServer(p.getRecipient());
 		try {
-			getChat(p).sendMessage(e.getBody());
+			if (servername.startsWith("muc")) {
+				MultiUserChat muc = getMuc(p);
+				Message msg = muc.createMessage();
+				msg.setBody(e.getBody());
+				muc.sendMessage(msg);
+			} else {
+				getChat(p).sendMessage(e.getBody());
+			}
 		} catch (NotConnectedException | XMPPException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -185,4 +231,12 @@ public class ChatUtils {
 		}
 		return result;
 	}
+
+	protected synchronized static ConcurrentHashMap<String, MultiUserChat> getMucMap() {
+		if (mucMap == null) {
+			mucMap = new ConcurrentHashMap<String, MultiUserChat>();
+		}
+		return mucMap;
+	}
+
 }
