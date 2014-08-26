@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,9 +14,11 @@ import javafx.stage.Stage;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Storage;
@@ -34,11 +37,7 @@ public class Main extends Application {
 		PalaverProvider palavers = new PalaverProvider();
 		ApplicationContext.getInstance().register(palavers);
 
-		Platform.runLater(() -> {
-			accounts.retrieve();
-			palavers.retrieve();
-			handleXmpp(accounts.getData().get());
-		});
+
 
 		Flow flow = new Flow(MainController.class);
 		Scene scene = UiUtils.prepareFlow(flow, null);
@@ -46,6 +45,24 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
+		Platform.runLater(() -> {
+			accounts.retrieve();
+			palavers.retrieve();
+			handleXmpp(accounts.getData().get());
+			palavers.getData().get()
+					.addListener((Change<? extends Palaver> c) -> {
+						while (c.next()) {
+							if(c.getAddedSize() > 0){
+								for (Palaver p : c.getAddedSubList()) {
+									String server = StringUtils.parseServer(p.getRecipient());
+									if(server.startsWith("muc")){
+										ChatUtils.getMuc(p);
+									}
+								}
+							}
+						}
+					});
+		});
 	}
 
 	private void handleXmpp(ObservableList<Account> accountList) {
