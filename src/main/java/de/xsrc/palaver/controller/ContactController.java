@@ -35,8 +35,8 @@ import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Contact;
 
-@FXMLController("/fxml/BuddyListView.fxml")
-public class BuddyListView {
+@FXMLController("/fxml/ContactView.fxml")
+public class ContactController {
 
 	@FXML
 	@BackAction
@@ -57,7 +57,7 @@ public class BuddyListView {
 	@FXML
 	private ListView<Contact> list;
 
-	private static final Logger logger = Logger.getLogger(BuddyListView.class
+	private static final Logger logger = Logger.getLogger(ContactController.class
 			.getName());
 
 	@FXML

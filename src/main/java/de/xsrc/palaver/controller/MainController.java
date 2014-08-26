@@ -36,7 +36,7 @@ public class MainController {
 	private Button showAccountsButton;
 
 	@FXML
-	@LinkAction(BuddyListView.class)
+	@LinkAction(ContactController.class)
 	private Button showBuddyListButton;
 
 	@FXML
