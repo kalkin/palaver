@@ -17,6 +17,9 @@ import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
@@ -81,13 +84,22 @@ public class HistoryController {
 	@FXML
 	private void sendMsgAction() {
 		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
-		this.history.add(e);
 		logger.finer(historyBox.toString());
 		PalaverProvider provider = ApplicationContext.getInstance()
 				.getRegisteredObject(PalaverProvider.class);
 		// TODO Find out why write back handler does not handle this.
 		ColdStorage.save(Palaver.class, provider.getData());
-		ChatUtils.sendMsg(palaver, e);
+		String server = StringUtils.parseServer(palaver.getRecipient());
+		if (server.startsWith("muc")) {
+			try {
+				ChatUtils.getMuc(palaver).sendMessage(e.getBody());
+			} catch (NotConnectedException | XMPPException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			this.history.add(e);
+			ChatUtils.sendMsg(palaver, e);
+		}
 		chatInput.clear();
 	}
 
