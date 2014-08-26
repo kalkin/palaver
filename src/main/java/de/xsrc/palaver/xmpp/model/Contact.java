@@ -3,13 +3,13 @@ package de.xsrc.palaver.xmpp.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Buddy {
+public class Contact {
 
 	private StringProperty name;
 	private StringProperty jid;
 	private StringProperty account;
 
-	public Buddy() {
+	public Contact() {
 		this.name = new SimpleStringProperty();
 		this.jid = new SimpleStringProperty();
 		this.account = new SimpleStringProperty();
@@ -41,5 +41,10 @@ public class Buddy {
 
 	public String toString() {
 		return getName();
+	}
+	
+	public boolean equal(Contact c){
+		return c.getJid().equals(getJid());
+		
 	}
 }

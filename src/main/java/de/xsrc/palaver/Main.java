@@ -14,12 +14,14 @@ import javafx.stage.Stage;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
@@ -36,8 +38,8 @@ public class Main extends Application {
 		ApplicationContext.getInstance().register(accounts);
 		PalaverProvider palavers = new PalaverProvider();
 		ApplicationContext.getInstance().register(palavers);
-
-
+		ContactProvider contacts = new ContactProvider();
+		ApplicationContext.getInstance().register(contacts);
 
 		Flow flow = new Flow(MainController.class);
 		Scene scene = UiUtils.prepareFlow(flow, null);
@@ -49,25 +51,30 @@ public class Main extends Application {
 			accounts.retrieve();
 			palavers.retrieve();
 			handleXmpp(accounts.getData().get());
-			palavers.getData().get()
-					.addListener((Change<? extends Palaver> c) -> {
-						while (c.next()) {
-							if(c.getAddedSize() > 0){
-								for (Palaver p : c.getAddedSubList()) {
-									String server = StringUtils.parseServer(p.getRecipient());
-									if(server.startsWith("muc")){
-										ChatUtils.getMuc(p);
+			palavers.getData()
+					.get()
+					.addListener(
+							(Change<? extends Palaver> c) -> {
+								while (c.next()) {
+									if (c.getAddedSize() > 0) {
+										for (Palaver p : c.getAddedSubList()) {
+											String server = StringUtils
+													.parseServer(p
+															.getRecipient());
+											if (server.startsWith("muc")) {
+												ChatUtils.getMuc(p);
+											}
+										}
 									}
 								}
-							}
-						}
-					});
+							});
 		});
 	}
 
 	private void handleXmpp(ObservableList<Account> accountList) {
+		ContactProvider provider = ApplicationContext.getInstance().getRegisteredObject(ContactProvider.class);
+		
 		accountList.addListener(new ListChangeListener<Account>() {
-
 			@Override
 			public void onChanged(
 					javafx.collections.ListChangeListener.Change<? extends Account> c) {
@@ -76,7 +83,11 @@ public class Main extends Application {
 						List<? extends Account> list = c.getAddedSubList();
 						for (Account account : list) {
 							logger.fine("Connecting to account " + account);
-							ChatUtils.getConnection(account);
+							XMPPConnection con = ChatUtils.getConnection(account);
+							if(con.isAuthenticated()){
+								logger.fine("Initializing roster for " + account);
+								provider.initRoster(account, con.getRoster());
+							}
 						}
 					}
 				}

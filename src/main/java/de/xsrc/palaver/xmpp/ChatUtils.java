@@ -33,7 +33,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.xmpp.model.Buddy;
+import de.xsrc.palaver.xmpp.model.Contact;
 
 public class ChatUtils {
 	private static final Logger logger = Logger.getLogger(ChatUtils.class
@@ -210,17 +210,18 @@ public class ChatUtils {
 
 		return trustAllCerts;
 	}
+	
 
-	public static ObservableList<Buddy> getBuddys() {
+	public static ObservableList<Contact> getBuddys() {
 		Collection<XMPPConnection> values = getConMap().values();
-		ObservableList<Buddy> result = FXCollections
-				.observableList(new LinkedList<Buddy>());
+		ObservableList<Contact> result = FXCollections
+				.observableList(new LinkedList<Contact>());
 		for (XMPPConnection con : values) {
 			Collection<RosterEntry> allEntries = con.getRoster().getEntries();
 			for (RosterEntry rosterEntry : allEntries) {
 				String name = rosterEntry.getName();
 				if (name != null && name.length() > 0) {
-					Buddy b = new Buddy();
+					Contact b = new Contact();
 					b.setName(name);
 					b.setJid(StringUtils.parseBareAddress(rosterEntry.getUser()));
 					b.setAccount(StringUtils.parseBareAddress(con.getUser()));

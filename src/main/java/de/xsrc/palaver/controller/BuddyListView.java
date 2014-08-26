@@ -29,10 +29,11 @@ import org.jivesoftware.smack.util.StringUtils;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
-import de.xsrc.palaver.xmpp.model.Buddy;
+import de.xsrc.palaver.xmpp.model.Contact;
 
 @FXMLController("/fxml/BuddyListView.fxml")
 public class BuddyListView {
@@ -54,7 +55,7 @@ public class BuddyListView {
 	private TextField searchInput;
 
 	@FXML
-	private ListView<Buddy> list;
+	private ListView<Contact> list;
 
 	private static final Logger logger = Logger.getLogger(BuddyListView.class
 			.getName());
@@ -71,12 +72,13 @@ public class BuddyListView {
 		hbox.getChildren().add(
 				AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
-		System.out.println(ChatUtils.getBuddys());
-		list.setItems(ChatUtils.getBuddys());
+		
+		ContactProvider provider = ApplicationContext.getInstance().getRegisteredObject(ContactProvider.class);
+		list.setItems(provider.getData());
 		list.setManaged(true);
-		list.setCellFactory(new Callback<ListView<Buddy>, ListCell<Buddy>>() {
+		list.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
 			@Override
-			public ListCell<Buddy> call(ListView<Buddy> listView) {
+			public ListCell<Contact> call(ListView<Contact> listView) {
 				return new BuddyCell();
 			}
 		});
@@ -108,9 +110,9 @@ public class BuddyListView {
 		newVal = newVal.toUpperCase();
 
 		// Filter out the entries that don't contain the entered text
-		ObservableList<Buddy> subentries = FXCollections.observableArrayList();
-		for (Buddy entry : list.getItems()) {
-			Buddy entryText = entry;
+		ObservableList<Contact> subentries = FXCollections.observableArrayList();
+		for (Contact entry : list.getItems()) {
+			Contact entryText = entry;
 			if (entryText.toString().toUpperCase().contains(newVal)) {
 				subentries.add(entryText);
 			}
@@ -122,7 +124,7 @@ public class BuddyListView {
 
 	@FXML
 	private void startPalaverAction() throws VetoException, FlowException {
-		Buddy buddy = list.getSelectionModel().getSelectedItems().get(0);
+		Contact buddy = list.getSelectionModel().getSelectedItems().get(0);
 		PalaverProvider provider = ApplicationContext.getInstance()
 				.getRegisteredObject(PalaverProvider.class);
 		if (buddy != null) {
