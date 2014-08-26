@@ -17,6 +17,7 @@ import org.datafx.controller.flow.FlowException;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Storage;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
@@ -30,9 +31,12 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws FlowException {
 		AccountProvider accounts = new AccountProvider();
 		ApplicationContext.getInstance().register(accounts);
+		PalaverProvider palavers = new PalaverProvider();
+		ApplicationContext.getInstance().register(palavers);
 
 		Platform.runLater(() -> {
 			accounts.retrieve();
+			palavers.retrieve();
 			handleXmpp(accounts.getData().get());
 		});
 

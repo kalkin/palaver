@@ -57,9 +57,7 @@ public class MainController {
 
 	@FXML
 	private void initialize() {
-		PalaverProvider provider = new PalaverProvider();
-		provider.retrieve();
-		ApplicationContext.getInstance().register(provider);
+		PalaverProvider provider = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class);
 
 		palaverListView.setItems(provider.getData());
 		palaverListView
