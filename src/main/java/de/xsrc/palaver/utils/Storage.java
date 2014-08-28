@@ -21,9 +21,8 @@ public class Storage {
 			.getName());
 
 	/**
-	 * This method must be run once on in the app! new
-	 * Storage().initialiaze(...). After that the static methods should be used
-	 * to interact with the storage
+	 * This method must be run once on in the app! new Storage().initialiaze(...).
+	 * After that the static methods should be used to interact with the storage
 	 * 
 	 * @param classes
 	 * @return
@@ -75,8 +74,8 @@ public class Storage {
 			if (t.getId().equals(id))
 				return t;
 		}
-		throw new IllegalArgumentException("Id " + id
-				+ " does not exist in table " + clazz.getSimpleName());
+		throw new IllegalArgumentException("Id " + id + " does not exist in table "
+				+ clazz.getSimpleName());
 
 	}
 

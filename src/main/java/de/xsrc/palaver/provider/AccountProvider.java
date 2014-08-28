@@ -11,8 +11,6 @@ import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.utils.AppDataSource;
 
 public class AccountProvider extends ListDataProvider<Account> {
-	
-	
 
 	public AccountProvider() {
 		super(null, null, null);
@@ -21,14 +19,16 @@ public class AccountProvider extends ListDataProvider<Account> {
 		this.setAddEntryHandler(new WriteBackHandler<Account>() {
 			@Override
 			public WritableDataReader<Account> createDataSource(Account observable) {
-				ObservableList<Account> list = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+				ObservableList<Account> list = ApplicationContext.getInstance()
+						.getRegisteredObject(AccountProvider.class).getData();
 				return new AppDataWriter<Account>(list, Account.class);
 			}
 		});
 		this.setWriteBackHandler(new WriteBackHandler<Account>() {
 			@Override
 			public WritableDataReader<Account> createDataSource(Account observable) {
-				ObservableList<Account> list = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+				ObservableList<Account> list = ApplicationContext.getInstance()
+						.getRegisteredObject(AccountProvider.class).getData();
 				return new AppDataWriter<Account>(list, Account.class);
 			}
 		});

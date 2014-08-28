@@ -76,26 +76,21 @@ public class ColdStorage {
 			protected Task createTask() {
 				Task task = new Task() {
 					@Override
-					protected Object call()
-							throws ParserConfigurationException, JAXBException,
-							ClassNotFoundException, InstantiationException,
-							IllegalAccessException, ClassCastException,
-							IOException {
+					protected Object call() throws ParserConfigurationException,
+							JAXBException, ClassNotFoundException, InstantiationException,
+							IllegalAccessException, ClassCastException, IOException {
 
-						logger.finer("Saving XML file for model"
-								+ clazz.getSimpleName());
+						logger.finer("Saving XML file for model" + clazz.getSimpleName());
 						Document doc = DocumentBuilderFactory.newInstance()
 								.newDocumentBuilder().newDocument();
 
 						// Create wrapper root element to wrap the beans iE
 						// Account -> Accounts
-						Element rootElement = doc.createElement(clazz
-								.getSimpleName().toLowerCase() + "s");
-						Marshaller m = JAXBContext.newInstance(clazz)
-								.createMarshaller();
+						Element rootElement = doc.createElement(clazz.getSimpleName()
+								.toLowerCase() + "s");
+						Marshaller m = JAXBContext.newInstance(clazz).createMarshaller();
 						doc.appendChild(rootElement);
-						m.setProperty(
-								javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+						m.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
 								Boolean.TRUE);
 
 						for (T t : list) {
@@ -110,8 +105,8 @@ public class ColdStorage {
 								.getDOMImplementation("LS");
 
 						LSSerializer writer = impl.createLSSerializer();
-						writer.getDomConfig().setParameter(
-								"format-pretty-print", Boolean.TRUE);
+						writer.getDomConfig().setParameter("format-pretty-print",
+								Boolean.TRUE);
 						LSOutput output = impl.createLSOutput();
 						File file = Utils.getFile(clazz);
 						output.setByteStream(new FileOutputStream(file));

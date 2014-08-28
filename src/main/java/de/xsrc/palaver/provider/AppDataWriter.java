@@ -9,16 +9,17 @@ import org.datafx.util.EntityWithId;
 
 import de.xsrc.palaver.utils.ColdStorage;
 
-public class AppDataWriter<T extends EntityWithId<?>> implements WritableDataReader<T> {
+public class AppDataWriter<T extends EntityWithId<?>> implements
+		WritableDataReader<T> {
 
 	private List<T> data;
 	private Class<T> clazz;
 
-	public AppDataWriter (List<T> list, Class<T> clazz){
+	public AppDataWriter(List<T> list, Class<T> clazz) {
 		this.data = list;
 		this.clazz = clazz;
 	}
-	
+
 	@Override
 	public T get() throws IOException {
 		return null;
@@ -36,7 +37,7 @@ public class AppDataWriter<T extends EntityWithId<?>> implements WritableDataRea
 
 	@Override
 	public void writeBack() {
-			ColdStorage.save(clazz, data);
+		ColdStorage.save(clazz, data);
 	}
 
 }

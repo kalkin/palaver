@@ -119,16 +119,16 @@ public class ChatUtils {
 			try {
 				muc.createOrJoin(StringUtils.parseName(p.getAccount()));
 				muc.addMessageListener(new PacketListener() {
-					
+
 					@Override
 					public void processPacket(Packet packet) throws NotConnectedException {
 						// TODO Auto-generated method stub
-						if(packet instanceof Message){
+						if (packet instanceof Message) {
 							Message msg = (Message) packet;
 							Entry e = new Entry(msg.getFrom(), msg.getBody());
 							p.history.addEntry(e);
 						}
-						
+
 					}
 				});
 			} catch (XMPPErrorException | SmackException e) {
@@ -180,8 +180,8 @@ public class ChatUtils {
 	protected static SSLContext getContext() throws Exception {
 		try {
 			SSLContext sslContext = SSLContext.getInstance("SSL");
-			sslContext.init(null, getTrustManager(),
-					new java.security.SecureRandom());
+			sslContext
+					.init(null, getTrustManager(), new java.security.SecureRandom());
 
 			return sslContext;
 		} catch (Exception e) {
@@ -210,7 +210,6 @@ public class ChatUtils {
 
 		return trustAllCerts;
 	}
-	
 
 	public static ObservableList<Contact> getBuddys() {
 		Collection<XMPPConnection> values = getConMap().values();

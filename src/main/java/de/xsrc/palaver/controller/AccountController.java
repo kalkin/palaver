@@ -74,9 +74,8 @@ public class AccountController {
 			ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 			ViewConfiguration config = new ViewConfiguration();
 			config.setResources(b);
-			ViewContext<AddAccountController> context = ViewFactory
-					.getInstance().createByController(
-							AddAccountController.class, null, config);
+			ViewContext<AddAccountController> context = ViewFactory.getInstance()
+					.createByController(AddAccountController.class, null, config);
 			context.register("account", acc);
 			context.getController().setContext(context);
 			Scene scene = new Scene((Parent) context.getRootNode());

@@ -57,7 +57,8 @@ public class MainController {
 
 	@FXML
 	private void initialize() {
-		PalaverProvider provider = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class);
+		PalaverProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(PalaverProvider.class);
 
 		palaverListView.setItems(provider.getData());
 		palaverListView
@@ -72,32 +73,26 @@ public class MainController {
 
 		selModel.setSelectionMode(SelectionMode.SINGLE);
 
-		selModel.selectedItemProperty()
-				.addListener(
-						(ObservableValue<? extends Palaver> observable,
-								Palaver oldValue, Palaver newValue) -> {
-							if (newValue != null) {
-								if (!historyMap.containsKey(newValue)) {
-									try {
-										ViewContext<HistoryController> context = ViewFactory
-												.getInstance()
-												.createByController(
-														HistoryController.class);
-										context.getController().setPalaver(
-												newValue);
-										historyMap.put(newValue, context);
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-
-								borderPane.setCenter(historyMap.get(newValue)
-										.getRootNode());
-								historyMap.get(newValue).getController()
-										.requestFocus();
+		selModel.selectedItemProperty().addListener(
+				(ObservableValue<? extends Palaver> observable, Palaver oldValue,
+						Palaver newValue) -> {
+					if (newValue != null) {
+						if (!historyMap.containsKey(newValue)) {
+							try {
+								ViewContext<HistoryController> context = ViewFactory
+										.getInstance().createByController(HistoryController.class);
+								context.getController().setPalaver(newValue);
+								historyMap.put(newValue, context);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-						});
+						}
+
+						borderPane.setCenter(historyMap.get(newValue).getRootNode());
+						historyMap.get(newValue).getController().requestFocus();
+					}
+				});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
 		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");

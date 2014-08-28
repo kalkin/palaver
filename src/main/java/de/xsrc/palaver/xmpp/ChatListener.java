@@ -29,8 +29,7 @@ public class ChatListener implements ChatManagerListener {
 	public void chatCreated(Chat chat, boolean createdLocally) {
 		if (!createdLocally) {
 			// Listen for new incoming chats
-			String recipent = StringUtils.parseBareAddress(chat
-					.getParticipant());
+			String recipent = StringUtils.parseBareAddress(chat.getParticipant());
 			String id = account.getId() + ":" + recipent;
 			logger.fine("Got new Msg");
 			PalaverProvider provider = ApplicationContext.getInstance()
@@ -46,8 +45,8 @@ public class ChatListener implements ChatManagerListener {
 					System.out.println(provider.getData());
 					p.setClosed(false);
 					// TODO Find out why write back handler does not handle this.
-					ColdStorage.save(Palaver.class, provider.getData());
-				});
+						ColdStorage.save(Palaver.class, provider.getData());
+					});
 			} else if (palaver.getClosed()) {
 				palaver.setClosed(false);
 			}

@@ -67,13 +67,12 @@ public class ContactController {
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
 
-		hbox.getChildren().add(
-				AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
-		hbox.getChildren().add(
-				AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
+		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
-		
-		ContactProvider provider = ApplicationContext.getInstance().getRegisteredObject(ContactProvider.class);
+
+		ContactProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(ContactProvider.class);
 		list.setItems(provider.getData());
 		list.setManaged(true);
 		list.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
@@ -138,8 +137,8 @@ public class ContactController {
 			} else {
 				p.setClosed(false);
 			}
-			logger.finer(p.getAccount()
-					+ " started palaver with " + p.getRecipient());
+			logger
+					.finer(p.getAccount() + " started palaver with " + p.getRecipient());
 		}
 		UiUtils.getFlowHandler(context).navigateBack();
 	}

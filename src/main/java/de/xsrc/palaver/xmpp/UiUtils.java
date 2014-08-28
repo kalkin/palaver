@@ -19,11 +19,12 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 
 public class UiUtils {
 
-	private static HashMap<ViewFlowContext, FlowHandler> fh = new HashMap<ViewFlowContext, FlowHandler>(4);
+	private static HashMap<ViewFlowContext, FlowHandler> fh = new HashMap<ViewFlowContext, FlowHandler>(
+			4);
 
 	public static StackPane getAvatar(String name) {
-		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9,
-				0x9a42c8, 0xc84164, 0xFF00bcd4, 0x888888 };
+		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
+				0xc84164, 0xFF00bcd4, 0x888888 };
 		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
 		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
 		Rectangle r = new Rectangle(64, 64);

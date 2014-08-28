@@ -32,8 +32,8 @@ import de.xsrc.palaver.xmpp.ChatUtils;
 public class HistoryController {
 	@FXML
 	private TextField chatInput;
-	private static final Logger logger = Logger.getLogger(Storage.class
-			.getName());
+	private static final Logger logger = Logger
+			.getLogger(Storage.class.getName());
 	@FXML
 	private VBox historyBox;
 	@FXML
@@ -75,8 +75,8 @@ public class HistoryController {
 						context.getRootNode()));
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
-				logger.severe("Could not add entry from " + entry.getFrom()
-						+ " " + entry);
+				logger.severe("Could not add entry from " + entry.getFrom() + " "
+						+ entry);
 			}
 		}
 	}

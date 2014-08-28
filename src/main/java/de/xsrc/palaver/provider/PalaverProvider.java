@@ -18,8 +18,7 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 		this.setDataReader(dr);
 		this.setAddEntryHandler(new WriteBackHandler<Palaver>() {
 			@Override
-			public WritableDataReader<Palaver> createDataSource(
-					Palaver observable) {
+			public WritableDataReader<Palaver> createDataSource(Palaver observable) {
 				ObservableList<Palaver> list = ApplicationContext.getInstance()
 						.getRegisteredObject(PalaverProvider.class).getData();
 				return new AppDataWriter<Palaver>(list, Palaver.class);
@@ -27,8 +26,7 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 		});
 		this.setWriteBackHandler(new WriteBackHandler<Palaver>() {
 			@Override
-			public WritableDataReader<Palaver> createDataSource(
-					Palaver observable) {
+			public WritableDataReader<Palaver> createDataSource(Palaver observable) {
 				ObservableList<Palaver> list = ApplicationContext.getInstance()
 						.getRegisteredObject(PalaverProvider.class).getData();
 				return new AppDataWriter<Palaver>(list, Palaver.class);

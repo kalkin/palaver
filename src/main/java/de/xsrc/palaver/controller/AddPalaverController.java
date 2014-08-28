@@ -35,7 +35,8 @@ public class AddPalaverController {
 
 	@FXML
 	private void initialize() {
-		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+		ListProperty<Account> accounts = ApplicationContext.getInstance()
+				.getRegisteredObject(AccountProvider.class).getData();
 		accountChoice.getItems().addAll(accounts);
 		if (accounts.size() > 0) {
 			accountChoice.getSelectionModel().select(0);
@@ -50,11 +51,12 @@ public class AddPalaverController {
 		logger.finer(account.getJid() + " is starting palaver with "
 				+ jid.getText());
 		p.setAccount(account.getId());
-		ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData().add(p);
+		ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class)
+				.getData().add(p);
 		Stage stage = (Stage) back.getScene().getWindow();
 		stage.close();
 	}
-	
+
 	@FXML
 	private void close() {
 		Stage stage = (Stage) back.getScene().getWindow();

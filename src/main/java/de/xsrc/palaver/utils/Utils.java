@@ -21,8 +21,8 @@ public class Utils {
 	// private static final CrudService<EntityWithId.T>, CrudService.T> storage;
 
 	private static HashMap<Class, Storage> storage;
-	private static final Logger logger = Logger.getLogger(Storage.class
-			.getName());
+	private static final Logger logger = Logger
+			.getLogger(Storage.class.getName());
 
 	public static Stage getDialog(Flow f, ViewFlowContext flowContext)
 			throws FlowException {
@@ -47,15 +47,15 @@ public class Utils {
 	 * Loads the file containing models of the class c
 	 * 
 	 * @param c
-	 *            - Class name
+	 *          - Class name
 	 * @return
 	 * @throws IOException
 	 */
-	public static File getFile( Class<?> c) throws IOException {
+	public static File getFile(Class<?> c) throws IOException {
 		return getFile(workingDirectory(), c);
 	}
-	
-	public static File getFile(String workingDir, Class<?> c) throws IOException{
+
+	public static File getFile(String workingDir, Class<?> c) throws IOException {
 		File file = new File(workingDir + "/" + c.getSimpleName() + "s"); // Make
 
 		if (!file.exists()) {
@@ -87,7 +87,5 @@ public class Utils {
 		}
 		return workingDirectory;
 	}
-	
-	
 
 }

@@ -42,9 +42,9 @@ public class Contact {
 	public String toString() {
 		return getName();
 	}
-	
-	public boolean equal(Contact c){
+
+	public boolean equal(Contact c) {
 		return c.getJid().equals(getJid());
-		
+
 	}
 }

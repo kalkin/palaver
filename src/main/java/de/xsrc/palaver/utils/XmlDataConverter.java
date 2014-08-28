@@ -24,8 +24,8 @@ public class XmlDataConverter<T> extends InputStreamConverter<T> {
 	private int currentIndex = 0;
 	private Class<?> clazz;
 	private InputStream inputStream;
-	private static final Logger logger = Logger.getLogger(Storage.class
-			.getName());
+	private static final Logger logger = Logger
+			.getLogger(Storage.class.getName());
 
 	public XmlDataConverter(Class<?> clazz) {
 		this.clazz = clazz;

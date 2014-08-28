@@ -29,8 +29,8 @@ import de.xsrc.palaver.xmpp.UiUtils;
 
 public class Main extends Application {
 
-	private static final Logger logger = Logger.getLogger(Storage.class
-			.getName());
+	private static final Logger logger = Logger
+			.getLogger(Storage.class.getName());
 
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
@@ -51,29 +51,25 @@ public class Main extends Application {
 			accounts.retrieve();
 			palavers.retrieve();
 			handleXmpp(accounts.getData().get());
-			palavers.getData()
-					.get()
-					.addListener(
-							(Change<? extends Palaver> c) -> {
-								while (c.next()) {
-									if (c.getAddedSize() > 0) {
-										for (Palaver p : c.getAddedSubList()) {
-											String server = StringUtils
-													.parseServer(p
-															.getRecipient());
-											if (server.startsWith("muc")) {
-												ChatUtils.getMuc(p);
-											}
-										}
-									}
-								}
-							});
+			palavers.getData().get().addListener((Change<? extends Palaver> c) -> {
+				while (c.next()) {
+					if (c.getAddedSize() > 0) {
+						for (Palaver p : c.getAddedSubList()) {
+							String server = StringUtils.parseServer(p.getRecipient());
+							if (server.startsWith("muc")) {
+								ChatUtils.getMuc(p);
+							}
+						}
+					}
+				}
+			});
 		});
 	}
 
 	private void handleXmpp(ObservableList<Account> accountList) {
-		ContactProvider provider = ApplicationContext.getInstance().getRegisteredObject(ContactProvider.class);
-		
+		ContactProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(ContactProvider.class);
+
 		accountList.addListener(new ListChangeListener<Account>() {
 			@Override
 			public void onChanged(
@@ -84,7 +80,7 @@ public class Main extends Application {
 						for (Account account : list) {
 							logger.fine("Connecting to account " + account);
 							XMPPConnection con = ChatUtils.getConnection(account);
-							if(con.isAuthenticated()){
+							if (con.isAuthenticated()) {
 								logger.fine("Initializing roster for " + account);
 								provider.initRoster(account, con.getRoster());
 							}
