@@ -8,16 +8,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<HBox fillHeight="false" styleClass="history" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<fx:include source="AvatarView.fxml" />
-		<Label fx:id="body" styleClass="entry-body" text="Lore Ipsum dolores"
-			wrapText="true" BorderPane.alignment="CENTER">
-			<padding>
-				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-			</padding>
-		</Label>
-	</children>
-
-</HBox>
+<Label fx:id="body" xmlns:fx="http://javafx.com/fxml/1">
+	<padding>
+		<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+	</padding>
+</Label>

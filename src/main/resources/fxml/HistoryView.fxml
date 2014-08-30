@@ -10,7 +10,7 @@
 	<center>
 		<ScrollPane fx:id="scrollPane" fitToWidth="true">
 			<content>
-				<VBox fx:id="historyBox" fillWidth="true" />
+				<VBox fx:id="historyBox" fillWidth="true" styleClass="history" />
 			</content>
 		</ScrollPane>
 	</center>

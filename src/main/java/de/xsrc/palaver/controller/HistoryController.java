@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,9 +58,17 @@ public class HistoryController {
 			while (change.next()) {
 				logger.finer("New Msgs were added to " + p);
 				add(change.getAddedSubList());
-				requestFocus();
 			}
 		});
+		historyBox.heightProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) {
+				Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
+			}
+		});
+
 	}
 
 	private void add(List<? extends Entry> list) {
@@ -71,8 +81,9 @@ public class HistoryController {
 				context = ViewFactory.getInstance().createByController(
 						EntryController.class);
 				context.getController().setEntry(entry);
-				Platform.runLater(() -> historyBox.getChildren().add(
-						context.getRootNode()));
+				Platform.runLater(() -> {
+					historyBox.getChildren().add(context.getRootNode());
+				});
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
 				logger.severe("Could not add entry from " + entry.getFrom() + " "
@@ -107,7 +118,6 @@ public class HistoryController {
 		Platform.runLater(() -> {
 			chatInput.requestFocus();
 			chatInput.positionCaret(chatInput.getLength());
-			Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
 		});
 
 	}
