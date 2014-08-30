@@ -16,7 +16,7 @@
 						<Tooltip text="%back_button" />
 					</tooltip>
 				</Button>
-				<Button fx:id="addBuddy">
+				<Button fx:id="addBuddy" onAction="#addContactAction">
 					<tooltip>
 						<Tooltip text="%add_buddy" />
 					</tooltip>
@@ -30,7 +30,6 @@
 	<bottom>
 		<HBox>
 			<children>
-				<Label fx:id="faSearch" />
 				<TextField fx:id="searchInput" />
 				<Button text="start" onAction="#startPalaverAction"
 					defaultButton="true" fx:id="startPalaverButton" />

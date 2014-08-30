@@ -14,19 +14,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.flow.Flow;
-import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.LinkAction;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.Utils;
 
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {
@@ -38,9 +34,6 @@ public class MainController {
 	@FXML
 	@LinkAction(ContactController.class)
 	private Button showBuddyListButton;
-
-	@FXML
-	private Button addPalaverButton;
 
 	@FXML
 	private ListView<Palaver> palaverListView;
@@ -94,19 +87,8 @@ public class MainController {
 					}
 				});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
-		AwesomeDude.setIcon(addPalaverButton, AwesomeIcon.PLUS, "24");
 		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
-	}
-
-	@FXML
-	private void addPalaver() throws FxmlLoadException {
-		Flow f = new Flow(AddPalaverController.class);
-		try {
-			Utils.getDialog(f, null).show();
-		} catch (FlowException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@FXML

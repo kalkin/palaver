@@ -11,18 +11,20 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
-import org.datafx.crud.CrudException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 
 import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.provider.ContactProvider;
 
-@FXMLController("/fxml/AddPalaverView.fxml")
-public class AddPalaverController {
+@FXMLController("/fxml/AddContactView.fxml")
+public class AddContactController {
 
-	private static final Logger logger = Logger
-			.getLogger(AddPalaverController.class.getName());
+	private static final Logger logger = Logger.getLogger(AccountController.class
+			.getName());
 
 	@FXML
 	private Button back;
@@ -44,17 +46,12 @@ public class AddPalaverController {
 	}
 
 	@FXML
-	private void addPalaverAction() throws CrudException {
-		Palaver p = new Palaver();
-		p.setRecipient(jid.getText());
+	private void addContactAction() throws NotLoggedInException,
+			NoResponseException, XMPPErrorException, NotConnectedException {
+		ContactProvider provider = ApplicationContext.getInstance()
+				.getRegisteredObject(ContactProvider.class);
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
-		logger.finer(account.getJid() + " is starting palaver with "
-				+ jid.getText());
-		p.setAccount(account.getId());
-		ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class)
-				.getData().add(p);
-		Stage stage = (Stage) back.getScene().getWindow();
-		stage.close();
+		provider.addContact(account, jid.getText());
 	}
 
 	@FXML

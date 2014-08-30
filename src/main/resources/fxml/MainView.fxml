@@ -28,11 +28,6 @@
 						<Tooltip text="%budy_list" />
 					</tooltip>
 				</Button>
-				<Button fx:id="addPalaverButton" onAction="#addPalaver">
-					<tooltip>
-						<Tooltip text="%new_palaver" />
-					</tooltip>
-				</Button>
 				<Button fx:id="showAccountsButton">
 					<tooltip>
 						<Tooltip text="%account_managment" />

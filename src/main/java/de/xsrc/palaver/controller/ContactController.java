@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -18,7 +17,9 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.context.ApplicationContext;
+import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -31,6 +32,7 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ChatUtils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Contact;
@@ -49,7 +51,7 @@ public class ContactController {
 	private ViewFlowContext context;
 
 	@FXML
-	private Label faSearch;
+	private Button startPalaverButton;
 
 	@FXML
 	private TextField searchInput;
@@ -90,7 +92,7 @@ public class ContactController {
 
 		});
 
-		AwesomeDude.setIcon(faSearch, AwesomeIcon.SEARCH, "20");
+		AwesomeDude.setIcon(startPalaverButton, AwesomeIcon.SEARCH, "20");
 		Platform.runLater(() -> searchInput.requestFocus());
 	}
 
@@ -142,4 +144,15 @@ public class ContactController {
 		}
 		UiUtils.getFlowHandler(context).navigateBack();
 	}
+
+	@FXML
+	private void addContactAction() throws FxmlLoadException {
+		Flow f = new Flow(AddContactController.class);
+		try {
+			Utils.getDialog(f, null).show();
+		} catch (FlowException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

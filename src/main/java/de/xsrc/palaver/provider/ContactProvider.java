@@ -2,13 +2,19 @@ package de.xsrc.palaver.provider;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Account;
@@ -18,6 +24,9 @@ public class ContactProvider {
 	private ObservableMap<Account, Roster> accountToRoster;
 	private ObservableList<Contact> contacts;
 
+	private static final Logger logger = Logger.getLogger(ContactProvider.class
+			.getName());
+
 	public ContactProvider() {
 		accountToRoster = FXCollections
 				.observableMap(new ConcurrentHashMap<Account, Roster>());
@@ -26,6 +35,7 @@ public class ContactProvider {
 	}
 
 	public void initRoster(Account account, Roster roster) {
+		roster.setSubscriptionMode(SubscriptionMode.accept_all);
 		accountToRoster.put(account, roster);
 		for (RosterEntry r : roster.getEntries()) {
 			Contact c = new Contact();
@@ -41,6 +51,24 @@ public class ContactProvider {
 				contacts.add(c);
 			}
 		}
+	}
+
+	public void addContact(Account account, String jid)
+			throws NotLoggedInException, NoResponseException, XMPPErrorException,
+			NotConnectedException {
+		logger.fine("Adding " + jid + " to roster " + account);
+		String name = StringUtils.parseName(jid);
+		accountToRoster.get(account).createEntry(jid, name, null);
+		Contact contact = createContact(account.getJid(), jid, name);
+		contacts.add(contact);
+	}
+
+	protected static Contact createContact(String account, String jid, String name) {
+		Contact contact = new Contact();
+		contact.setJid(jid);
+		contact.setAccount(account);
+		contact.setName(name);
+		return contact;
 	}
 
 	public ObservableList<Contact> getData() {
