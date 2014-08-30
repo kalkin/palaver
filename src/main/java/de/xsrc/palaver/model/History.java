@@ -24,7 +24,7 @@ public class History {
 		return entryList.get();
 	}
 
-	public ObservableList<Entry> getEntryListProperty() {
+	public ObservableList<Entry> entryListProperty() {
 		return entryList;
 	}
 

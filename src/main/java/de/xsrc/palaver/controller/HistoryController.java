@@ -52,7 +52,7 @@ public class HistoryController {
 
 	public void setPalaver(Palaver p) {
 		this.palaver = p;
-		history = p.history.getEntryListProperty();
+		history = p.history.entryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
 			while (change.next()) {
