@@ -37,7 +37,6 @@ public class AppDataSourceTest {
 			@Override
 			public WritableDataReader<Palaver> createDataSource(
 					Palaver observable) {
-				System.out.println("Changed " + observable);
 				return null;
 			}
 		});

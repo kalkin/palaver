@@ -47,7 +47,6 @@ public class ContactProvider {
 				c.setName(StringUtils.parseName(c.getJid()));
 			}
 			if (!contacts.contains(c)) {
-				System.out.println(c);
 				contacts.add(c);
 			}
 		}

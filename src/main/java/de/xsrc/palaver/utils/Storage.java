@@ -45,7 +45,6 @@ public class Storage {
 
 				@Override
 				public WritableDataReader<T> createDataSource(T observable) {
-					System.out.println("Changed " + observable);
 					return null;
 				}
 			});

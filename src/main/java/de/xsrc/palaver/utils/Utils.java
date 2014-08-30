@@ -61,7 +61,6 @@ public class Utils {
 		if (!file.exists()) {
 			file.getParentFile().mkdirs();
 			file.createNewFile();
-			System.out.println(file.getPath());
 		}
 		return file;
 	}

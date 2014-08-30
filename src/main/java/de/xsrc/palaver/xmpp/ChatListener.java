@@ -35,14 +35,12 @@ public class ChatListener implements ChatManagerListener {
 			PalaverProvider provider = ApplicationContext.getInstance()
 					.getRegisteredObject(PalaverProvider.class);
 			Palaver palaver = provider.getById(id);
-			System.out.println(provider.getData());
 			if (palaver == null) {
 				Palaver p = new Palaver();
 				p.setAccount(account.getJid());
 				p.setRecipient(recipent);
 				Platform.runLater(() -> {
 					provider.getData().add(p);
-					System.out.println(provider.getData());
 					p.setClosed(false);
 					// TODO Find out why write back handler does not handle this.
 						ColdStorage.save(Palaver.class, provider.getData());
