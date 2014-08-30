@@ -2,40 +2,28 @@ package de.xsrc.palaver.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
+import javafx.scene.layout.StackPane;
 
 import org.datafx.controller.FXMLController;
 import org.jivesoftware.smack.util.StringUtils;
 
 import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.xmpp.UiUtils;
 
 @FXMLController("/fxml/EntryView.fxml")
 public class EntryController {
 
-	private Entry entry;
-
 	@FXML
 	private Label body;
 
-	@FXML
-	private Text from;
-
-	@FXML
-	private Rectangle r;
-
 	public void setEntry(Entry e) {
-		this.entry = e;
-		body.textProperty().bind(entry.bodyProperty());
-		from.setText(e.getFrom().substring(0, 1).toUpperCase());
+		body.setText(e.getBody());
+		if(e.getBody().length() > 5){
+			body.setWrapText(true);
+		}
 		String name = StringUtils.parseName(e.getFrom());
-		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
-				0xc84164, 0xFF00bcd4, 0x888888 };
-		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
-		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
-		r.setStyle("-fx-background-color:" + hexcolor);
-		r.setFill(Paint.valueOf(hexcolor));
+		StackPane avatar = UiUtils.getAvatar(name);
+		body.setGraphic(avatar);
 	}
 
 	@FXML
