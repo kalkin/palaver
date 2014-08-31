@@ -1,7 +1,13 @@
 package de.xsrc.palaver.controller;
 
-import java.util.logging.Logger;
-
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.ContactProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,7 +21,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.context.ApplicationContext;
@@ -27,15 +32,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
 import org.jivesoftware.smack.util.StringUtils;
 
-import de.jensd.fx.fontawesome.AwesomeDude;
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.provider.ContactProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ChatUtils;
-import de.xsrc.palaver.xmpp.UiUtils;
-import de.xsrc.palaver.xmpp.model.Contact;
+import java.util.logging.Logger;
 
 @FXMLController("/fxml/ContactView.fxml")
 public class ContactController {
@@ -60,7 +57,8 @@ public class ContactController {
 	private ListView<Contact> list;
 
 	private static final Logger logger = Logger.getLogger(ContactController.class
-			.getName());
+					.getName());
+	private ContactProvider provider;
 
 	@FXML
 	private void initialize() {
@@ -73,8 +71,8 @@ public class ContactController {
 		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addBuddy.setGraphic(hbox);
 
-		ContactProvider provider = ApplicationContext.getInstance()
-				.getRegisteredObject(ContactProvider.class);
+		provider = ApplicationContext.getInstance()
+						.getRegisteredObject(ContactProvider.class);
 		list.setItems(provider.getData());
 		list.setManaged(true);
 		list.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
@@ -86,7 +84,7 @@ public class ContactController {
 
 		searchInput.textProperty().addListener(new ChangeListener<String>() {
 			public void changed(ObservableValue<? extends String> observable,
-					String oldVal, String newVal) {
+			                    String oldVal, String newVal) {
 				handleSearchByKey(oldVal, newVal);
 			}
 
@@ -104,7 +102,7 @@ public class ContactController {
 		if (oldVal != null && (newVal.length() < oldVal.length())) {
 			// Restore the lists original set of entries
 			// and start from the beginning
-			list.setItems(ChatUtils.getContacts());
+			list.setItems(provider.getData());
 		}
 
 		// Change to upper case so that case is not an issue
@@ -127,7 +125,7 @@ public class ContactController {
 	private void startPalaverAction() throws VetoException, FlowException {
 		Contact buddy = list.getSelectionModel().getSelectedItems().get(0);
 		PalaverProvider provider = ApplicationContext.getInstance()
-				.getRegisteredObject(PalaverProvider.class);
+						.getRegisteredObject(PalaverProvider.class);
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
 			String recipient = StringUtils.parseBareAddress(buddy.getJid());
@@ -140,7 +138,7 @@ public class ContactController {
 				p.setClosed(false);
 			}
 			logger
-					.finer(p.getAccount() + " started palaver with " + p.getRecipient());
+							.finer(p.getAccount() + " started palaver with " + p.getRecipient());
 		}
 		UiUtils.getFlowHandler(context).navigateBack();
 	}
