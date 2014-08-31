@@ -1,27 +1,13 @@
 package de.xsrc.palaver.xmpp;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
@@ -30,10 +16,14 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.xmpp.model.Contact;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class ChatUtils {
 	private static final Logger logger = Logger.getLogger(ChatUtils.class
@@ -127,6 +117,7 @@ public class ChatUtils {
 							Message msg = (Message) packet;
 							Entry e = new Entry(msg.getFrom(), msg.getBody());
 							p.history.addEntry(e);
+							p.setUnread(true);
 						}
 
 					}

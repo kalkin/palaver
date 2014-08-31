@@ -1,11 +1,12 @@
 package de.xsrc.palaver.controller;
 
-import java.util.List;
-import java.util.logging.Logger;
-
+import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.utils.Storage;
+import de.xsrc.palaver.xmpp.ChatUtils;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
@@ -23,12 +23,8 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.ColdStorage;
-import de.xsrc.palaver.utils.Storage;
-import de.xsrc.palaver.xmpp.ChatUtils;
+import java.util.List;
+import java.util.logging.Logger;
 
 @FXMLController("/fxml/HistoryView.fxml")
 public class HistoryController {
@@ -56,19 +52,14 @@ public class HistoryController {
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
 			while (change.next()) {
-				logger.finer("New Msgs were added to " + p);
+				logger.finer("New Messages were added to " + p);
 				add(change.getAddedSubList());
 			}
 		});
-		historyBox.heightProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable,
-					Number oldValue, Number newValue) {
-				Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
-			}
+		historyBox.heightProperty().addListener((observable, oldValue, newValue) -> {
+			Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
+			palaver.setUnread(false);
 		});
-
 	}
 
 	private void add(List<? extends Entry> list) {
@@ -76,14 +67,12 @@ public class HistoryController {
 			Label l = new Label();
 			l.textProperty().bind(entry.bodyProperty());
 
-			ViewContext<EntryController> context;
+			final ViewContext<EntryController> context;
 			try {
 				context = ViewFactory.getInstance().createByController(
 						EntryController.class);
 				context.getController().setEntry(entry);
-				Platform.runLater(() -> {
-					historyBox.getChildren().add(context.getRootNode());
-				});
+				Platform.runLater(() -> historyBox.getChildren().add(context.getRootNode()));
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
 				logger.severe("Could not add entry from " + entry.getFrom() + " "

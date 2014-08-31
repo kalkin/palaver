@@ -4,11 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.datafx.util.EntityWithId;
 
 @XmlRootElement(name = "palaver")
 public class Palaver implements EntityWithId<String> {
@@ -25,6 +24,8 @@ public class Palaver implements EntityWithId<String> {
 	 */
 	private StringProperty account;
 
+	private BooleanProperty unread;
+
 	@XmlElement(name = "history", type = History.class)
 	public History history;
 
@@ -35,6 +36,7 @@ public class Palaver implements EntityWithId<String> {
 		this.account = new SimpleStringProperty();
 		this.history = new History();
 		this.closed = new SimpleBooleanProperty(false);
+		this.unread = new SimpleBooleanProperty(false);
 	}
 
 	public Palaver(String account, String recipient) {
@@ -42,8 +44,9 @@ public class Palaver implements EntityWithId<String> {
 		this.account = new SimpleStringProperty(account);
 		this.history = new History();
 		this.closed = new SimpleBooleanProperty(false);
-
+		this.unread = new SimpleBooleanProperty(false);
 	}
+
 
 	public String getId() {
 		return account.get() + ":" + recipient.get();
@@ -70,6 +73,7 @@ public class Palaver implements EntityWithId<String> {
 
 	}
 
+	@Override
 	public String toString() {
 		return getId();
 	}
@@ -92,5 +96,17 @@ public class Palaver implements EntityWithId<String> {
 
 	public BooleanProperty closedProperty() {
 		return closed;
+	}
+
+	public boolean getUnread() {
+		return unread.get();
+	}
+
+	public BooleanProperty unreadProperty() {
+		return unread;
+	}
+
+	public void setUnread(boolean unread) {
+		this.unread.set(unread);
 	}
 }

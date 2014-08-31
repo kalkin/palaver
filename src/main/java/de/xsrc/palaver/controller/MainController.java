@@ -1,28 +1,22 @@
 package de.xsrc.palaver.controller;
 
-import java.util.HashMap;
-
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.PalaverProvider;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
-
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.LinkAction;
 
-import de.jensd.fx.fontawesome.AwesomeDude;
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
+import java.util.HashMap;
 
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {
@@ -70,6 +64,7 @@ public class MainController {
 				(ObservableValue<? extends Palaver> observable, Palaver oldValue,
 						Palaver newValue) -> {
 					if (newValue != null) {
+						newValue.setUnread(false);
 						if (!historyMap.containsKey(newValue)) {
 							try {
 								ViewContext<HistoryController> context = ViewFactory
