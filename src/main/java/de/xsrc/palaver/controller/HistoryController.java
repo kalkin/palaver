@@ -2,10 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.ColdStorage;
-import de.xsrc.palaver.utils.Storage;
-import de.xsrc.palaver.xmpp.ChatUtils;
+import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
@@ -17,11 +14,8 @@ import javafx.scene.layout.VBox;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
-import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,7 +25,7 @@ public class HistoryController {
 	@FXML
 	private TextField chatInput;
 	private static final Logger logger = Logger
-			.getLogger(Storage.class.getName());
+			.getLogger(HistoryController.class.getName());
 	@FXML
 	private VBox historyBox;
 	@FXML
@@ -82,24 +76,9 @@ public class HistoryController {
 	}
 
 	@FXML
-	private void sendMsgAction() {
-		Entry e = new Entry(palaver.getAccount(), chatInput.getText());
-		logger.finer(historyBox.toString());
-		PalaverProvider provider = ApplicationContext.getInstance()
-				.getRegisteredObject(PalaverProvider.class);
-		// TODO Find out why write back handler does not handle this.
-		ColdStorage.save(Palaver.class, provider.getData());
-		String server = StringUtils.parseServer(palaver.getRecipient());
-		if (server.startsWith("muc")) {
-			try {
-				ChatUtils.getMuc(palaver).sendMessage(e.getBody());
-			} catch (NotConnectedException | XMPPException e1) {
-				e1.printStackTrace();
-			}
-		} else {
-			this.history.add(e);
-			ChatUtils.sendMsg(palaver, e);
-		}
+	private void sendMsgAction() throws NotConnectedException {
+		String body = chatInput.getText();
+		PalaverManager.sendMsg(this.palaver, body);
 		chatInput.clear();
 	}
 

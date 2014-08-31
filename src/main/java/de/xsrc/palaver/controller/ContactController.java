@@ -9,18 +9,14 @@ import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.context.ApplicationContext;
@@ -75,26 +71,13 @@ public class ContactController {
 						.getRegisteredObject(ContactProvider.class);
 		list.setItems(provider.getData());
 		list.setManaged(true);
-		list.setCellFactory(new Callback<ListView<Contact>, ListCell<Contact>>() {
-			@Override
-			public ListCell<Contact> call(ListView<Contact> listView) {
-				return new BuddyCell();
-			}
-		});
+		list.setCellFactory(listView -> new BuddyCell());
 
-		searchInput.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue<? extends String> observable,
-			                    String oldVal, String newVal) {
-				handleSearchByKey(oldVal, newVal);
-			}
-
-		});
+		searchInput.textProperty().addListener((observable, oldVal, newVal) -> handleSearchByKey(oldVal, newVal));
 
 		AwesomeDude.setIcon(startPalaverButton, AwesomeIcon.SEARCH, "20");
-		Platform.runLater(() -> searchInput.requestFocus());
+		Platform.runLater(searchInput::requestFocus);
 	}
-
-	ObservableList<String> entries = FXCollections.observableArrayList();
 
 	public void handleSearchByKey(String oldVal, String newVal) {
 		// If the number of characters in the text box is less than last time
@@ -109,14 +92,13 @@ public class ContactController {
 		newVal = newVal.toUpperCase();
 
 		// Filter out the entries that don't contain the entered text
-		ObservableList<Contact> subentries = FXCollections.observableArrayList();
+		ObservableList<Contact> sublist = FXCollections.observableArrayList();
 		for (Contact entry : list.getItems()) {
-			Contact entryText = entry;
-			if (entryText.toString().toUpperCase().contains(newVal)) {
-				subentries.add(entryText);
+			if (entry.toString().toUpperCase().contains(newVal)) {
+				sublist.add(entry);
 			}
 		}
-		list.setItems(subentries);
+		list.setItems(sublist);
 		list.getSelectionModel().select(0);
 
 	}
@@ -124,21 +106,12 @@ public class ContactController {
 	@FXML
 	private void startPalaverAction() throws VetoException, FlowException {
 		Contact buddy = list.getSelectionModel().getSelectedItems().get(0);
-		PalaverProvider provider = ApplicationContext.getInstance()
-						.getRegisteredObject(PalaverProvider.class);
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
 			String recipient = StringUtils.parseBareAddress(buddy.getJid());
-			Palaver p = provider.getById(buddy.getAccount(), recipient);
-			if (p == null) {
-				logger.finer("Palaver does not exists");
-				p = new Palaver(buddy.getAccount(), recipient);
-				provider.getData().add(p);
-			} else {
-				p.setClosed(false);
-			}
-			logger
-							.finer(p.getAccount() + " started palaver with " + p.getRecipient());
+			Palaver p = PalaverProvider.getById(buddy.getAccount(), recipient);
+			p.setClosed(false);
+
 		}
 		UiUtils.getFlowHandler(context).navigateBack();
 	}
