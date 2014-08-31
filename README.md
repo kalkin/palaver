@@ -1,6 +1,6 @@
 #Palaver
 
-A modern desktop chat client
+A Modern XMPP Chat Client
 
 ## Development 
 You need maven for building the project.
