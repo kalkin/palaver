@@ -25,7 +25,7 @@
 		</ButtonBar>
 	</top>
 	<center>
-		<ListView fx:id="list" />
+		<ListView fx:id="list" onMouseClicked="#startPalaverAction" />
 	</center>
 	<bottom>
 		<HBox>
