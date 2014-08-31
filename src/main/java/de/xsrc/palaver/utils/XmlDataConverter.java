@@ -1,9 +1,9 @@
 package de.xsrc.palaver.utils;
 
-import java.beans.Introspector;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
+import org.datafx.reader.converter.InputStreamConverter;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -12,20 +12,19 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.datafx.reader.converter.InputStreamConverter;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.beans.Introspector;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 public class XmlDataConverter<T> extends InputStreamConverter<T> {
 
+	private static final Logger logger = Logger
+					.getLogger(Storage.class.getName());
 	private NodeList dataList;
 	private int currentIndex = 0;
 	private Class<?> clazz;
 	private InputStream inputStream;
-	private static final Logger logger = Logger
-			.getLogger(Storage.class.getName());
 
 	public XmlDataConverter(Class<?> clazz) {
 		this.clazz = clazz;
@@ -64,7 +63,7 @@ public class XmlDataConverter<T> extends InputStreamConverter<T> {
 			currentIndex++;
 			@SuppressWarnings("unchecked")
 			JAXBElement<T> element = (JAXBElement<T>) u.unmarshal(
-					dataList.item(oldIndex), clazz);
+							dataList.item(oldIndex), clazz);
 			return element.getValue();
 		} catch (JAXBException e) {
 			e.printStackTrace();

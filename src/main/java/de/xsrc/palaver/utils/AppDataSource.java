@@ -1,23 +1,23 @@
 package de.xsrc.palaver.utils;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
 import org.datafx.reader.AbstractDataReader;
 import org.datafx.reader.DataReader;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 public class AppDataSource<T> extends AbstractDataReader<T> {
 
-	private DataReader<T> converter;
 	private static final Logger logger = Logger.getLogger(ColdStorage.class
-			.getName());
+					.getName());
+	private DataReader<T> converter;
 
 	public AppDataSource(String workingDir, Class<T> clazz) {
 		try {
 			converter = new XmlDataSource<T>(workingDir, clazz);
 		} catch (IOException e) {
 			logger.info("Save file for class  " + clazz.getSimpleName()
-					+ " contained no data");
+							+ " contained no data");
 		}
 
 	}
@@ -27,7 +27,7 @@ public class AppDataSource<T> extends AbstractDataReader<T> {
 			converter = new XmlDataSource<T>(clazz);
 		} catch (IOException e) {
 			logger.info("Save file for class  " + clazz.getSimpleName()
-					+ " contained no data");
+							+ " contained no data");
 		}
 
 	}

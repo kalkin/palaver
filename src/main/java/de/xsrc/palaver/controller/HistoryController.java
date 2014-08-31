@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 
 @FXMLController("/fxml/HistoryView.fxml")
 public class HistoryController {
+	private static final Logger logger = Logger
+					.getLogger(HistoryController.class.getName());
 	@FXML
 	private TextField chatInput;
-	private static final Logger logger = Logger
-			.getLogger(HistoryController.class.getName());
 	@FXML
 	private VBox historyBox;
 	@FXML
@@ -64,13 +64,13 @@ public class HistoryController {
 			final ViewContext<EntryController> context;
 			try {
 				context = ViewFactory.getInstance().createByController(
-						EntryController.class);
+								EntryController.class);
 				context.getController().setEntry(entry);
 				Platform.runLater(() -> historyBox.getChildren().add(context.getRootNode()));
 			} catch (FxmlLoadException e) {
 				e.printStackTrace();
 				logger.severe("Could not add entry from " + entry.getFrom() + " "
-						+ entry);
+								+ entry);
 			}
 		}
 	}

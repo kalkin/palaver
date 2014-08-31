@@ -2,16 +2,14 @@ package de.xsrc.palaver.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.datafx.util.EntityWithId;
-
 /**
  * Represents a user account with jid and password
- * 
- * @author kalkin
  *
+ * @author kalkin
  */
 @XmlRootElement(name = "account")
 public class Account implements EntityWithId<String> {
@@ -35,10 +33,6 @@ public class Account implements EntityWithId<String> {
 		return getJid();
 	}
 
-	public void setJid(String jid) {
-		this.jid.set(jid);
-	}
-
 	public String getPassword() {
 		return password.get();
 	}
@@ -49,6 +43,10 @@ public class Account implements EntityWithId<String> {
 
 	public String getJid() {
 		return jid.get();
+	}
+
+	public void setJid(String jid) {
+		this.jid.set(jid);
 	}
 
 	public String toString() {

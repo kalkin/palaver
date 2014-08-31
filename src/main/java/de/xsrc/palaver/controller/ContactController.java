@@ -33,27 +33,21 @@ import java.util.logging.Logger;
 @FXMLController("/fxml/ContactView.fxml")
 public class ContactController {
 
+	private static final Logger logger = Logger.getLogger(ContactController.class
+					.getName());
 	@FXML
 	@BackAction
 	private Button back;
-
 	@FXML
 	private Button addBuddy;
-
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
-
 	@FXML
 	private Button startPalaverButton;
-
 	@FXML
 	private TextField searchInput;
-
 	@FXML
 	private ListView<Contact> list;
-
-	private static final Logger logger = Logger.getLogger(ContactController.class
-					.getName());
 	private ContactProvider provider;
 
 	@FXML

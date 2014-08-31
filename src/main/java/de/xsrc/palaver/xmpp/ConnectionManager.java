@@ -24,9 +24,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class ConnectionManager {
-	private static ConcurrentHashMap<String, XMPPConnection> conMap;
 	private static final Logger logger = Logger.getLogger(ConnectionManager.class
 					.getName());
+	private static ConcurrentHashMap<String, XMPPConnection> conMap;
 	private static ConnectionManager instance;
 
 	private ConnectionManager(ObservableList<Account> accounts) {

@@ -5,16 +5,15 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.datafx.util.EntityWithId;
 
 @XmlRootElement(name = "entry")
 public class Entry implements EntityWithId<String> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private LongProperty receivedAt;

@@ -1,7 +1,11 @@
 package de.xsrc.palaver.controller;
 
-import java.util.ResourceBundle;
-
+import de.jensd.fx.fontawesome.AwesomeDude;
+import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -10,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
@@ -23,12 +26,7 @@ import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
-import de.jensd.fx.fontawesome.AwesomeDude;
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.utils.ColdStorage;
-import de.xsrc.palaver.utils.Utils;
+import java.util.ResourceBundle;
 
 @FXMLController("/fxml/AccountView.fxml")
 public class AccountController {
@@ -49,7 +47,7 @@ public class AccountController {
 	public void initialize() {
 
 		ObservableList<Account> all = ApplicationContext.getInstance()
-				.getRegisteredObject(AccountProvider.class).getData();
+						.getRegisteredObject(AccountProvider.class).getData();
 		accountList.setItems(all);
 		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(addAccountButton, AwesomeIcon.PLUS, "24");
@@ -75,7 +73,7 @@ public class AccountController {
 			ViewConfiguration config = new ViewConfiguration();
 			config.setResources(b);
 			ViewContext<AddAccountController> context = ViewFactory.getInstance()
-					.createByController(AddAccountController.class, null, config);
+							.createByController(AddAccountController.class, null, config);
 			context.register("account", acc);
 			context.getController().setContext(context);
 			Scene scene = new Scene((Parent) context.getRootNode());

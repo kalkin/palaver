@@ -1,14 +1,12 @@
 package de.xsrc.palaver.provider;
 
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.AppDataSource;
 import javafx.collections.ObservableList;
-
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
-
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.utils.AppDataSource;
 
 public class AccountProvider extends ListDataProvider<Account> {
 
@@ -20,7 +18,7 @@ public class AccountProvider extends ListDataProvider<Account> {
 			@Override
 			public WritableDataReader<Account> createDataSource(Account observable) {
 				ObservableList<Account> list = ApplicationContext.getInstance()
-						.getRegisteredObject(AccountProvider.class).getData();
+								.getRegisteredObject(AccountProvider.class).getData();
 				return new AppDataWriter<>(list, Account.class);
 			}
 		});
@@ -28,7 +26,7 @@ public class AccountProvider extends ListDataProvider<Account> {
 			@Override
 			public WritableDataReader<Account> createDataSource(Account observable) {
 				ObservableList<Account> list = ApplicationContext.getInstance()
-						.getRegisteredObject(AccountProvider.class).getData();
+								.getRegisteredObject(AccountProvider.class).getData();
 				return new AppDataWriter<>(list, Account.class);
 			}
 		});

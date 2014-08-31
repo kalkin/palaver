@@ -45,42 +45,42 @@ public class MainController {
 	@FXML
 	private void initialize() {
 		PalaverProvider provider = ApplicationContext.getInstance()
-				.getRegisteredObject(PalaverProvider.class);
+						.getRegisteredObject(PalaverProvider.class);
 
 		palaverListView.setItems(provider.getData());
 		palaverListView
-				.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
-					@Override
-					public ListCell<Palaver> call(ListView<Palaver> listView) {
-						return new PalaverCell();
-					}
-				});
+						.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
+							@Override
+							public ListCell<Palaver> call(ListView<Palaver> listView) {
+								return new PalaverCell();
+							}
+						});
 		MultipleSelectionModel<Palaver> selModel = palaverListView
-				.getSelectionModel();
+						.getSelectionModel();
 
 		selModel.setSelectionMode(SelectionMode.SINGLE);
 
 		selModel.selectedItemProperty().addListener(
-				(ObservableValue<? extends Palaver> observable, Palaver oldValue,
-						Palaver newValue) -> {
-					if (newValue != null) {
-						newValue.setUnread(false);
-						if (!historyMap.containsKey(newValue)) {
-							try {
-								ViewContext<HistoryController> context = ViewFactory
-										.getInstance().createByController(HistoryController.class);
-								context.getController().setPalaver(newValue);
-								historyMap.put(newValue, context);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+						(ObservableValue<? extends Palaver> observable, Palaver oldValue,
+						 Palaver newValue) -> {
+							if (newValue != null) {
+								newValue.setUnread(false);
+								if (!historyMap.containsKey(newValue)) {
+									try {
+										ViewContext<HistoryController> context = ViewFactory
+														.getInstance().createByController(HistoryController.class);
+										context.getController().setPalaver(newValue);
+										historyMap.put(newValue, context);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 
-						borderPane.setCenter(historyMap.get(newValue).getRootNode());
-						historyMap.get(newValue).getController().requestFocus();
-					}
-				});
+								borderPane.setCenter(historyMap.get(newValue).getRootNode());
+								historyMap.get(newValue).getController().requestFocus();
+							}
+						});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
@@ -92,12 +92,12 @@ public class MainController {
 			palaverListTmp = borderPane.getLeft();
 			borderPane.setLeft(null);
 			hidePalaverButton.setGraphic(AwesomeDude
-					.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
+							.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
 		} else {
 			borderPane.setLeft(palaverListTmp);
 			palaverListTmp = null;
 			hidePalaverButton.setGraphic(AwesomeDude
-					.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+							.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
 		}
 	}
 
