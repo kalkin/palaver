@@ -104,7 +104,7 @@ public class ContactController {
 		if (oldVal != null && (newVal.length() < oldVal.length())) {
 			// Restore the lists original set of entries
 			// and start from the beginning
-			list.setItems(ChatUtils.getBuddys());
+			list.setItems(ChatUtils.getContacts());
 		}
 
 		// Change to upper case so that case is not an issue

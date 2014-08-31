@@ -10,7 +10,6 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.carbons.CarbonManager;
@@ -35,20 +34,20 @@ public class ChatUtils {
 
 	private static synchronized ConcurrentHashMap<Palaver, Chat> getChatMap() {
 		if (chatMap == null) {
-			chatMap = new ConcurrentHashMap<Palaver, Chat>();
+			chatMap = new ConcurrentHashMap<>();
 		}
 		return chatMap;
 	}
 
 	private static synchronized ConcurrentHashMap<String, XMPPConnection> getConMap() {
 		if (conMap == null) {
-			conMap = new ConcurrentHashMap<String, XMPPConnection>();
+			conMap = new ConcurrentHashMap<>();
 		}
 		return conMap;
 	}
 
 	public synchronized static XMPPConnection getConnection(Account account) {
-		XMPPConnection connection = getConMap().get(account);
+		XMPPConnection connection = getConMap().get(account.getJid());
 		if (connection == null) {
 			try {
 				connection = connectAccount(account);
@@ -183,7 +182,8 @@ public class ChatUtils {
 	 * particular keyStore
 	 */
 	protected static TrustManager[] getTrustManager() {
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+
+		return new TrustManager[] { new X509TrustManager() {
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 				return null;
 			}
@@ -196,14 +196,12 @@ public class ChatUtils {
 					java.security.cert.X509Certificate[] certs, String authType) {
 			}
 		} };
-
-		return trustAllCerts;
 	}
 
-	public static ObservableList<Contact> getBuddys() {
+	public static ObservableList<Contact> getContacts() {
 		Collection<XMPPConnection> values = getConMap().values();
 		ObservableList<Contact> result = FXCollections
-				.observableList(new LinkedList<Contact>());
+				.observableList(new LinkedList<>());
 		for (XMPPConnection con : values) {
 			Collection<RosterEntry> allEntries = con.getRoster().getEntries();
 			for (RosterEntry rosterEntry : allEntries) {
@@ -223,7 +221,7 @@ public class ChatUtils {
 
 	protected synchronized static ConcurrentHashMap<String, MultiUserChat> getMucMap() {
 		if (mucMap == null) {
-			mucMap = new ConcurrentHashMap<String, MultiUserChat>();
+			mucMap = new ConcurrentHashMap<>();
 		}
 		return mucMap;
 	}
