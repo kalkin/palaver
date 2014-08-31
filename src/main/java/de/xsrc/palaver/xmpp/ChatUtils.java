@@ -108,19 +108,17 @@ public class ChatUtils {
 			muc = new MultiUserChat(connection, p.getRecipient());
 			try {
 				muc.createOrJoin(StringUtils.parseName(p.getAccount()));
-				muc.addMessageListener(new PacketListener() {
-
-					@Override
-					public void processPacket(Packet packet) throws NotConnectedException {
-						// TODO Auto-generated method stub
-						if (packet instanceof Message) {
-							Message msg = (Message) packet;
+				muc.addMessageListener(packet -> {
+					if (packet instanceof Message) {
+						Message msg = (Message) packet;
+						if(msg.getBody().length() > 0) {
 							Entry e = new Entry(msg.getFrom(), msg.getBody());
 							p.history.addEntry(e);
 							p.setUnread(true);
 						}
 
 					}
+
 				});
 			} catch (XMPPErrorException | SmackException e) {
 				e.printStackTrace();
