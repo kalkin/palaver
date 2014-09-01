@@ -15,4 +15,4 @@ You need maven for building the project.
 
 ## Features
 - Notifications-Support
-
+- Sync messages between devices (XEP-0280)
