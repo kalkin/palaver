@@ -59,7 +59,7 @@ public class ContactController {
 
 	@FXML
 	private void initialize() {
-		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "20");
+		AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
