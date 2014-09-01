@@ -1,9 +1,11 @@
 package de.xsrc.palaver;
 
+
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.UiUtils;
 import javafx.application.Application;
@@ -36,6 +38,7 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
+		primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
 		Platform.runLater(() -> {
 							accounts.retrieve();
 							palavers.retrieve();

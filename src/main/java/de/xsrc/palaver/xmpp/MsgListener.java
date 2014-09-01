@@ -4,6 +4,7 @@ import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
@@ -42,6 +43,7 @@ public class MsgListener implements PacketListener {
 				} else if (toJid.equals(account.getJid())) {
 					palaver = PalaverProvider.getById(account.getJid(), fromJid);
 					entry.setFrom(fromJid);
+					Notifications.notify(StringUtils.parseName(fromJid), body);
 				} else {
 					logger.severe("Server is sending garbage? " + message.toString());
 					return;
