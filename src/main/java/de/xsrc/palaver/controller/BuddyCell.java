@@ -1,10 +1,10 @@
 package de.xsrc.palaver.controller;
 
+import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
-import de.xsrc.palaver.xmpp.UiUtils;
-import de.xsrc.palaver.xmpp.model.Contact;
 
 public class BuddyCell extends ListCell<Contact> {
 	@Override

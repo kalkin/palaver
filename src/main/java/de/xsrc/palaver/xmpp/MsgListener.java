@@ -1,47 +1,80 @@
 package de.xsrc.palaver.xmpp;
 
+import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.ColdStorage;
-import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
+import de.xsrc.palaver.utils.Notifications;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 
 import java.util.logging.Logger;
 
-public class MsgListener implements MessageListener {
-	private static final Logger logger = Logger.getLogger(MessageListener.class
-			.getName());
+public class MsgListener implements PacketListener {
+	private static final Logger logger = Logger.getLogger(MsgListener.class
+					.getName());
 
-	private String accountJid;
+	private Account account;
 
-	public MsgListener(String accountJid) {
-		this.accountJid = accountJid;
+	public MsgListener(Account account) {
+		this.account = account;
 	}
 
-	public void processMessage(Chat chat, Message message) {
-		logger.finest(message.toString());
-		String body = message.getBody();
-		if (body == null || body.length() == 0) {
-			logger.finer("Empty message from " + message.getFrom());
-			return;
+	@Override
+	public void processPacket(Packet packet) throws SmackException.NotConnectedException {
+		if (packet instanceof Message) {
+			Message message = (Message) packet;
+			String body = message.getBody();
+			logger.finest(message.toString());
+
+			if (body != null && body.length() >= 0) {
+				Entry entry = new Entry();
+				entry.setBody(message.getBody());
+
+				String fromJid = StringUtils.parseBareAddress(message.getFrom());
+				String toJid = StringUtils.parseBareAddress(message.getTo());
+
+				if (fromJid == null || fromJid.equals(account.getJid())) {
+					// Messages send by us
+					entry.setFrom(account.getJid());
+					saveEntry(account.getJid(), toJid, entry);
+				} else if (toJid.equals(account.getJid())) {
+					// Messages sent to us
+					entry.setFrom(fromJid);
+					saveEntry(account.getJid(), fromJid, entry);
+					Notifications.notify(StringUtils.parseName(fromJid), body);
+				} else {
+					logger.severe("Server is sending garbage? " + message.toString());
+				}
+			} else if (CarbonManager.getCarbon(message) != null) {
+				handleCarbon(message);
+			} else {
+				logger.warning(String.format("Strange Message %s", message.toString()));
+			}
+
 		}
-		String id = accountJid + ":"
-				+ StringUtils.parseBareAddress(chat.getParticipant());
-
-		Entry e = new Entry(StringUtils.parseBareAddress(message.getFrom()),
-				message.getBody());
-		PalaverProvider provider = ApplicationContext.getInstance()
-				.getRegisteredObject(PalaverProvider.class);
-		Palaver palaver = provider.getById(id);
-		palaver.history.addEntry(e);
-		palaver.setClosed(false);
-		palaver.setUnread(true);
-			// TODO Why does write back handler do not handle this?
-		ColdStorage.save(Palaver.class, provider.getData());
 	}
 
+	private void saveEntry(String account, String recipient, Entry entry) {
+		Palaver palaver = PalaverProvider.getById(account, recipient);
+		palaver.history.addEntry(entry);
+		if (!account.equals(entry.getFrom())) {
+			palaver.setUnread(true);
+		}
+		palaver.setClosed(false);
+	}
+
+	private void handleCarbon(Message message) throws SmackException.NotConnectedException {
+		CarbonExtension extension = CarbonManager.getCarbon(message);
+		if (extension.getDirection() == CarbonExtension.Direction.sent) {
+			logger.finer(String.format("Found Carbon Message %s", message.toString()));
+			Packet packet = extension.getForwarded().getForwardedPacket();
+			processPacket(packet);
+		}
+	}
 }

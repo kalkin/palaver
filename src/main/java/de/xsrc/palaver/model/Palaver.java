@@ -1,9 +1,8 @@
 package de.xsrc.palaver.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import de.xsrc.palaver.provider.AccountProvider;
+import javafx.beans.property.*;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -13,22 +12,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Palaver implements EntityWithId<String> {
 
 	private static final long serialVersionUID = 1L;
-
+	@XmlElement(name = "history", type = History.class)
+	public History history;
 	/**
 	 * Who should receive user send the msgs
 	 */
 	private StringProperty recipient;
-
 	/**
 	 * Which account should send msgs
 	 */
 	private StringProperty account;
-
 	private BooleanProperty unread;
-
-	@XmlElement(name = "history", type = History.class)
-	public History history;
-
 	private BooleanProperty closed;
 
 	public Palaver() {
@@ -56,21 +50,21 @@ public class Palaver implements EntityWithId<String> {
 		return recipient.get();
 	}
 
-	public String getAccount() {
-		return account.get();
-	}
-
 	public void setRecipient(String s) {
 		recipient.set(s);
 	}
 
-	public void setAccount(String s) {
-		account.set(s);
+	public String getAccount() {
+		return account.get();
 	}
 
 	public void setAccount(Account a) {
 		account.set(a.getId());
 
+	}
+
+	public void setAccount(String s) {
+		account.set(s);
 	}
 
 	@Override
@@ -102,11 +96,20 @@ public class Palaver implements EntityWithId<String> {
 		return unread.get();
 	}
 
+	public void setUnread(boolean unread) {
+		this.unread.set(unread);
+	}
+
 	public BooleanProperty unreadProperty() {
 		return unread;
 	}
 
-	public void setUnread(boolean unread) {
-		this.unread.set(unread);
+	public Account accountInstance() throws IllegalStateException {
+		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+		for (Account account : accounts.get())
+			if (account.getJid().equalsIgnoreCase(getAccount())) {
+				return account;
+			}
+		throw new IllegalStateException("Account with jid " + getAccount() + "does not exists");
 	}
 }

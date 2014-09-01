@@ -1,21 +1,7 @@
 package de.xsrc.palaver.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.datafx.util.EntityWithId;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,23 +10,33 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * This is the lowest part of the storage. It only provides methods to reading
  * list of EntitiesWithId and saving them.
- * 
- * @author kalkin
  *
+ * @author kalkin
  */
 public class ColdStorage {
 
 	private static final Logger logger = Logger.getLogger(ColdStorage.class
-			.getName());
+					.getName());
 
 	/**
 	 * Reads the model data from xml file
-	 * 
+	 *
 	 * @param <T>
-	 * 
 	 * @param c
 	 * @return
 	 * @throws IOException
@@ -65,33 +61,33 @@ public class ColdStorage {
 
 	/**
 	 * Saves a list of models to xml file. It overwrites it's previous content!
-	 * 
+	 *
 	 * @param clazz
 	 * @param list
 	 */
 	public static <T extends EntityWithId<?>> void save(Class<T> clazz,
-			List<T> list) {
+	                                                    List<T> list) {
 		Service service = new Service() {
 			@Override
 			protected Task createTask() {
 				Task task = new Task() {
 					@Override
 					protected Object call() throws ParserConfigurationException,
-							JAXBException, ClassNotFoundException, InstantiationException,
-							IllegalAccessException, ClassCastException, IOException {
+									JAXBException, ClassNotFoundException, InstantiationException,
+									IllegalAccessException, ClassCastException, IOException {
 
 						logger.finer("Saving XML file for model" + clazz.getSimpleName());
 						Document doc = DocumentBuilderFactory.newInstance()
-								.newDocumentBuilder().newDocument();
+										.newDocumentBuilder().newDocument();
 
 						// Create wrapper root element to wrap the beans iE
 						// Account -> Accounts
 						Element rootElement = doc.createElement(clazz.getSimpleName()
-								.toLowerCase() + "s");
+										.toLowerCase() + "s");
 						Marshaller m = JAXBContext.newInstance(clazz).createMarshaller();
 						doc.appendChild(rootElement);
 						m.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
-								Boolean.TRUE);
+										Boolean.TRUE);
 
 						for (T t : list) {
 							// attach all nodes to the root wrapper
@@ -99,14 +95,14 @@ public class ColdStorage {
 						}
 
 						DOMImplementationRegistry registry = DOMImplementationRegistry
-								.newInstance();
+										.newInstance();
 
 						DOMImplementationLS impl = (DOMImplementationLS) registry
-								.getDOMImplementation("LS");
+										.getDOMImplementation("LS");
 
 						LSSerializer writer = impl.createLSSerializer();
 						writer.getDomConfig().setParameter("format-pretty-print",
-								Boolean.TRUE);
+										Boolean.TRUE);
 						LSOutput output = impl.createLSOutput();
 						File file = Utils.getFile(clazz);
 						output.setByteStream(new FileOutputStream(file));

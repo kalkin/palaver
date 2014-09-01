@@ -1,8 +1,5 @@
 package de.xsrc.palaver.xmpp;
 
-import java.util.HashMap;
-import java.util.ResourceBundle;
-
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
@@ -10,21 +7,20 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
+import java.util.HashMap;
+import java.util.ResourceBundle;
+
 public class UiUtils {
 
-	private static HashMap<ViewFlowContext, FlowHandler> fh = new HashMap<ViewFlowContext, FlowHandler>(
-			4);
-
 	public static StackPane getAvatar(String name) {
-		int modena_colors[] = { 0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
-				0xc84164, 0xFF00bcd4, 0x888888 };
+		int modena_colors[] = {0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
+						0xc84164, 0xFF00bcd4, 0x888888};
 		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
 		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
 		Rectangle r = new Rectangle(64, 64);
@@ -42,7 +38,7 @@ public class UiUtils {
 	}
 
 	public static synchronized Scene prepareFlow(Flow f,
-			ViewFlowContext flowContext) throws FlowException {
+	                                             ViewFlowContext flowContext) throws FlowException {
 		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
 
 		DefaultFlowContainer container = new DefaultFlowContainer();
@@ -52,7 +48,6 @@ public class UiUtils {
 		} else {
 			flowHandler = f.createHandler();
 		}
-		fh.put(flowHandler.getFlowContext(), flowHandler);
 		flowHandler.getViewConfiguration().setResources(b);
 		flowHandler.start(container);
 		Scene scene = new Scene(container.getView());
@@ -60,7 +55,4 @@ public class UiUtils {
 		return scene;
 	}
 
-	public static FlowHandler getFlowHandler(ViewFlowContext context) {
-		return fh.get(context);
-	}
 }

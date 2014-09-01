@@ -1,16 +1,15 @@
 package de.xsrc.palaver.provider;
 
+import de.xsrc.palaver.utils.ColdStorage;
+import org.datafx.reader.WritableDataReader;
+import org.datafx.util.EntityWithId;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.datafx.reader.WritableDataReader;
-import org.datafx.util.EntityWithId;
-
-import de.xsrc.palaver.utils.ColdStorage;
-
 public class AppDataWriter<T extends EntityWithId<?>> implements
-		WritableDataReader<T> {
+				WritableDataReader<T> {
 
 	private List<T> data;
 	private Class<T> clazz;

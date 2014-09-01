@@ -1,13 +1,10 @@
 package de.xsrc.palaver.provider;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
-
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
@@ -17,21 +14,29 @@ import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
 
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.xmpp.model.Contact;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 public class ContactProvider {
+	private static final Logger logger = Logger.getLogger(ContactProvider.class
+					.getName());
 	private ObservableMap<Account, Roster> accountToRoster;
 	private ObservableList<Contact> contacts;
 
-	private static final Logger logger = Logger.getLogger(ContactProvider.class
-			.getName());
-
 	public ContactProvider() {
 		accountToRoster = FXCollections
-				.observableMap(new ConcurrentHashMap<Account, Roster>());
+						.observableMap(new ConcurrentHashMap<Account, Roster>());
 		contacts = FXCollections
-				.observableList(new CopyOnWriteArrayList<Contact>());
+						.observableList(new CopyOnWriteArrayList<Contact>());
+	}
+
+	protected static Contact createContact(String account, String jid, String name) {
+		Contact contact = new Contact();
+		contact.setJid(jid);
+		contact.setAccount(account);
+		contact.setName(name);
+		return contact;
 	}
 
 	public void initRoster(Account account, Roster roster) {
@@ -53,21 +58,13 @@ public class ContactProvider {
 	}
 
 	public void addContact(Account account, String jid)
-			throws NotLoggedInException, NoResponseException, XMPPErrorException,
-			NotConnectedException {
+					throws NotLoggedInException, NoResponseException, XMPPErrorException,
+					NotConnectedException {
 		logger.fine("Adding " + jid + " to roster " + account);
 		String name = StringUtils.parseName(jid);
 		accountToRoster.get(account).createEntry(jid, name, null);
 		Contact contact = createContact(account.getJid(), jid, name);
 		contacts.add(contact);
-	}
-
-	protected static Contact createContact(String account, String jid, String name) {
-		Contact contact = new Contact();
-		contact.setJid(jid);
-		contact.setAccount(account);
-		contact.setName(name);
-		return contact;
 	}
 
 	public ObservableList<Contact> getData() {

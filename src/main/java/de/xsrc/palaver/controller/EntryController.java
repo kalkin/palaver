@@ -1,14 +1,12 @@
 package de.xsrc.palaver.controller;
 
+import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.xmpp.UiUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-
 import org.datafx.controller.FXMLController;
 import org.jivesoftware.smack.util.StringUtils;
-
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.xmpp.UiUtils;
 
 @FXMLController("/fxml/EntryView.fxml")
 public class EntryController {
@@ -18,7 +16,7 @@ public class EntryController {
 
 	public void setEntry(Entry e) {
 		body.setText(e.getBody());
-		if(e.getBody().length() > 5){
+		if (e.getBody().length() > 5) {
 			body.setWrapText(true);
 		}
 		String name = StringUtils.parseName(e.getFrom());

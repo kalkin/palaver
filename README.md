@@ -12,7 +12,7 @@ You need maven for building the project.
 * `mvn clean compile jfx:run` - Run the Application
 * `mvn clean compile jfx:native` - Build standalone native packages (produces exe,rpm,deb,dmg)
 
-## Supported XMPP Features
-- XEP-0280
 
-
+## Features
+- Notifications-Support
+- Sync messages between devices (XEP-0280)
