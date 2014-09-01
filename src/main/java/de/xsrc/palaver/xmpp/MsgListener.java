@@ -10,6 +10,8 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 
 import java.util.logging.Logger;
 
@@ -29,33 +31,50 @@ public class MsgListener implements PacketListener {
 			Message message = (Message) packet;
 			String body = message.getBody();
 			logger.finest(message.toString());
-			if (body != null && body.length() >= 0) { // TODO carbon messages should be catched here
+
+			if (body != null && body.length() >= 0) {
 				Entry entry = new Entry();
 				entry.setBody(message.getBody());
 
 				String fromJid = StringUtils.parseBareAddress(message.getFrom());
 				String toJid = StringUtils.parseBareAddress(message.getTo());
-				Palaver palaver;
+
 				if (fromJid == null || fromJid.equals(account.getJid())) {
-					palaver = PalaverProvider.getById(account.getJid(), toJid);
+					// Messages send by us
 					entry.setFrom(account.getJid());
+					saveEntry(account.getJid(), toJid, entry);
 				} else if (toJid.equals(account.getJid())) {
-					palaver = PalaverProvider.getById(account.getJid(), fromJid);
+					// Messages sent to us
 					entry.setFrom(fromJid);
+					saveEntry(account.getJid(), fromJid, entry);
 					Notifications.notify(StringUtils.parseName(fromJid), body);
 				} else {
 					logger.severe("Server is sending garbage? " + message.toString());
-					return;
 				}
-
-				palaver.history.addEntry(entry);
-				palaver.setUnread(true);
-				palaver.setClosed(false);
-//				PalaverProvider.save();
+			} else if (CarbonManager.getCarbon(message) != null) {
+				handleCarbon(message);
 			} else {
-				logger.warning("Message does not contain a body" + message.toString());
+				logger.warning(String.format("Strange Message %s", message.toString()));
 			}
 
+		}
+	}
+
+	private void saveEntry(String account, String recipient, Entry entry) {
+		Palaver palaver = PalaverProvider.getById(account, recipient);
+		palaver.history.addEntry(entry);
+		if (!account.equals(entry.getFrom())) {
+			palaver.setUnread(true);
+		}
+		palaver.setClosed(false);
+	}
+
+	private void handleCarbon(Message message) throws SmackException.NotConnectedException {
+		CarbonExtension extension = CarbonManager.getCarbon(message);
+		if (extension.getDirection() == CarbonExtension.Direction.sent) {
+			logger.finer(String.format("Found Carbon Message %s", message.toString()));
+			Packet packet = extension.getForwarded().getForwardedPacket();
+			processPacket(packet);
 		}
 	}
 }
