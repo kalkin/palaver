@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import org.controlsfx.control.ButtonBar?>
-<?import javafx.scene.control.Button?>
-
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-	<top>
-		<ButtonBar>
-			<buttons>
-				<Button fx:id="back" cancelButton="true">
-					<tooltip>
-						<Tooltip text="%back_button" />
-					</tooltip>
-				</Button>
-				<Button fx:id="addBuddy" onAction="#addContactAction">
-					<tooltip>
-						<Tooltip text="%add_buddy" />
-					</tooltip>
-				</Button>
-			</buttons>
-		</ButtonBar>
-	</top>
-	<center>
-		<ListView fx:id="list" onMouseClicked="#startPalaverAction" />
-	</center>
-	<bottom>
-		<HBox>
-			<children>
-				<TextField fx:id="searchInput" />
-				<Button text="start" onAction="#startPalaverAction"
-					defaultButton="true" fx:id="startPalaverButton" />
-			</children>
-		</HBox>
-	</bottom>
+    <top>
+        <ButtonBar>
+            <buttons>
+                <Button fx:id="back" cancelButton="true">
+                    <tooltip>
+                        <Tooltip text="%back_button"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="addBuddy" onAction="#addContactAction">
+                    <tooltip>
+                        <Tooltip text="%add_buddy"/>
+                    </tooltip>
+                </Button>
+            </buttons>
+        </ButtonBar>
+    </top>
+    <center>
+        <ListView fx:id="contactListView"/>
+    </center>
+    <bottom>
+        <HBox>
+            <children>
+                <TextField fx:id="searchInput"/>
+                <Button text="start" defaultButton="true" fx:id="startPalaverButton"/>
+            </children>
+        </HBox>
+    </bottom>
 </BorderPane>

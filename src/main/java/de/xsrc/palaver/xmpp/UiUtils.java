@@ -18,9 +18,6 @@ import java.util.ResourceBundle;
 
 public class UiUtils {
 
-	private static HashMap<ViewFlowContext, FlowHandler> fh = new HashMap<ViewFlowContext, FlowHandler>(
-					4);
-
 	public static StackPane getAvatar(String name) {
 		int modena_colors[] = {0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
 						0xc84164, 0xFF00bcd4, 0x888888};
@@ -51,7 +48,6 @@ public class UiUtils {
 		} else {
 			flowHandler = f.createHandler();
 		}
-		fh.put(flowHandler.getFlowContext(), flowHandler);
 		flowHandler.getViewConfiguration().setResources(b);
 		flowHandler.start(container);
 		Scene scene = new Scene(container.getView());
@@ -59,7 +55,4 @@ public class UiUtils {
 		return scene;
 	}
 
-	public static FlowHandler getFlowHandler(ViewFlowContext context) {
-		return fh.get(context);
-	}
 }

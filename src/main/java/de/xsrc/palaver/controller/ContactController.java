@@ -6,7 +6,6 @@ import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.UiUtils;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -22,6 +21,8 @@ import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.action.ActionMethod;
+import org.datafx.controller.flow.action.ActionTrigger;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
@@ -38,16 +39,22 @@ public class ContactController {
 	@FXML
 	@BackAction
 	private Button back;
+
 	@FXML
 	private Button addBuddy;
+
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
+
 	@FXML
+	@ActionTrigger("startPalaverButton")
 	private Button startPalaverButton;
+
 	@FXML
 	private TextField searchInput;
 	@FXML
-	private ListView<Contact> list;
+	@ActionTrigger("contactListView")
+	private ListView<Contact> contactListView;
 	private ContactProvider provider;
 
 	@FXML
@@ -63,9 +70,9 @@ public class ContactController {
 
 		provider = ApplicationContext.getInstance()
 						.getRegisteredObject(ContactProvider.class);
-		list.setItems(provider.getData());
-		list.setManaged(true);
-		list.setCellFactory(listView -> new BuddyCell());
+		contactListView.setItems(provider.getData());
+		contactListView.setManaged(true);
+		contactListView.setCellFactory(listView -> new BuddyCell());
 
 		searchInput.textProperty().addListener((observable, oldVal, newVal) -> handleSearchByKey(oldVal, newVal));
 
@@ -79,7 +86,7 @@ public class ContactController {
 		if (oldVal != null && (newVal.length() < oldVal.length())) {
 			// Restore the lists original set of entries
 			// and start from the beginning
-			list.setItems(provider.getData());
+			contactListView.setItems(provider.getData());
 		}
 
 		// Change to upper case so that case is not an issue
@@ -87,19 +94,20 @@ public class ContactController {
 
 		// Filter out the entries that don't contain the entered text
 		ObservableList<Contact> sublist = FXCollections.observableArrayList();
-		for (Contact entry : list.getItems()) {
+		for (Contact entry : contactListView.getItems()) {
 			if (entry.toString().toUpperCase().contains(newVal)) {
 				sublist.add(entry);
 			}
 		}
-		list.setItems(sublist);
-		list.getSelectionModel().select(0);
+		contactListView.setItems(sublist);
+		contactListView.getSelectionModel().select(0);
 
 	}
 
 	@FXML
-	private void startPalaverAction() throws VetoException, FlowException {
-		Contact buddy = list.getSelectionModel().getSelectedItems().get(0);
+	@ActionMethod("startPalaverAction")
+	public void startPalaverAction() throws VetoException, FlowException {
+		Contact buddy = contactListView.getSelectionModel().getSelectedItems().get(0);
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
 			String recipient = StringUtils.parseBareAddress(buddy.getJid());
@@ -107,7 +115,6 @@ public class ContactController {
 			p.setClosed(false);
 
 		}
-		UiUtils.getFlowHandler(context).navigateBack();
 	}
 
 	@FXML

@@ -1,6 +1,7 @@
 package de.xsrc.palaver;
 
 
+import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
@@ -15,6 +16,9 @@ import javafx.stage.Stage;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.action.FlowActionChain;
+import org.datafx.controller.flow.action.FlowLink;
+import org.datafx.controller.flow.action.FlowMethodAction;
 
 public class Main extends Application {
 
@@ -33,6 +37,9 @@ public class Main extends Application {
 		ApplicationContext.getInstance().register(contacts);
 
 		Flow flow = new Flow(MainController.class);
+
+		flow.withAction(ContactController.class, "startPalaverButton", new FlowActionChain(new FlowMethodAction("startPalaverAction"), new FlowLink<MainController>(MainController.class)));
+		flow.withAction(ContactController.class, "contactListView", new FlowActionChain(new FlowMethodAction("startPalaverAction"), new FlowLink<MainController>(MainController.class)));
 		Scene scene = UiUtils.prepareFlow(flow, null);
 
 		primaryStage.setScene(scene);
