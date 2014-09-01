@@ -92,12 +92,12 @@ public class MainController {
 			palaverListTmp = borderPane.getLeft();
 			borderPane.setLeft(null);
 			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_RIGHT));
+							.createIconLabel(AwesomeIcon.CHEVRON_RIGHT, "24"));
 		} else {
 			borderPane.setLeft(palaverListTmp);
 			palaverListTmp = null;
 			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_LEFT));
+							.createIconLabel(AwesomeIcon.CHEVRON_LEFT, "24"));
 		}
 	}
 
