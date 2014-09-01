@@ -95,7 +95,7 @@ public class ConnectionManager {
 
 		ConnectionConfiguration config = configureConnection(StringUtils
 						.parseServer(jid));
-		config.setDebuggerEnabled(true);
+//		config.setDebuggerEnabled(true);
 
 
 		if (c == null) {
