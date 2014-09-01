@@ -35,7 +35,6 @@ public class MsgListener implements PacketListener {
 
 				String fromJid = StringUtils.parseBareAddress(message.getFrom());
 				String toJid = StringUtils.parseBareAddress(message.getTo());
-				logger.severe(message.getTo());
 				Palaver palaver;
 				if (fromJid == null || fromJid.equals(account.getJid())) {
 					palaver = PalaverProvider.getById(account.getJid(), toJid);
