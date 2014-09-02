@@ -1,6 +1,6 @@
 package de.xsrc.palaver.provider;
 
-import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.utils.AppDataSource;
 import javafx.collections.ObservableList;
 import org.datafx.controller.context.ApplicationContext;

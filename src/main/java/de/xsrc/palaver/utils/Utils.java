@@ -1,8 +1,8 @@
 package de.xsrc.palaver.utils;
 
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ConnectionManager;
@@ -26,7 +26,6 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;

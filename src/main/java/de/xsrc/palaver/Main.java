@@ -3,7 +3,7 @@ package de.xsrc.palaver;
 
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;

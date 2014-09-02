@@ -1,6 +1,5 @@
-package de.xsrc.palaver.model;
+package de.xsrc.palaver.beans;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.beans.property.*;
 import org.datafx.controller.context.ApplicationContext;

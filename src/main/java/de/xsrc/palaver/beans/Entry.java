@@ -1,4 +1,4 @@
-package de.xsrc.palaver.model;
+package de.xsrc.palaver.beans;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;

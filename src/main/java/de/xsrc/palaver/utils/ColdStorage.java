@@ -34,7 +34,7 @@ public class ColdStorage {
 					.getName());
 
 	/**
-	 * Reads the model data from xml file
+	 * Reads the beans data from xml file
 	 *
 	 * @param <T>
 	 * @param c
@@ -42,7 +42,7 @@ public class ColdStorage {
 	 * @throws IOException
 	 */
 	public static <T extends EntityWithId<?>> LinkedList<T> get(Class<?> c) {
-		logger.finer("Reading XML file for model" + c.getSimpleName());
+		logger.finer("Reading XML file for beans" + c.getSimpleName());
 		LinkedList<T> result = new LinkedList<T>();
 		XmlDataSource<T> source;
 		try {
@@ -76,7 +76,7 @@ public class ColdStorage {
 									JAXBException, ClassNotFoundException, InstantiationException,
 									IllegalAccessException, ClassCastException, IOException {
 
-						logger.finer("Saving XML file for model" + clazz.getSimpleName());
+						logger.finer("Saving XML file for beans" + clazz.getSimpleName());
 						Document doc = DocumentBuilderFactory.newInstance()
 										.newDocumentBuilder().newDocument();
 

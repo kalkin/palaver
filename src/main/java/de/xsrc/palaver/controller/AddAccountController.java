@@ -1,6 +1,6 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

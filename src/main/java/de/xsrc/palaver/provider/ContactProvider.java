@@ -1,6 +1,6 @@
 package de.xsrc.palaver.provider;
 
-import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.model.Contact;

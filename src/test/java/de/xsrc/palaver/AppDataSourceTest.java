@@ -17,7 +17,7 @@ import org.datafx.writer.WriteBackHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 
 public class AppDataSourceTest {

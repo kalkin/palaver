@@ -1,6 +1,6 @@
 package de.xsrc.palaver.provider;
 
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Utils;

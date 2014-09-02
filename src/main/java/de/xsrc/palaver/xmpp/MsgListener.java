@@ -1,8 +1,8 @@
 package de.xsrc.palaver.xmpp;
 
-import de.xsrc.palaver.model.Account;
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;

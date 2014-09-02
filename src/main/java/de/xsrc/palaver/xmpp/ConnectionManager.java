@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp;
 
-import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import javafx.collections.ListChangeListener;

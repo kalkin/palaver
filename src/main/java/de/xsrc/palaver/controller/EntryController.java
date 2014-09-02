@@ -1,12 +1,11 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.model.Entry;
+import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.xmpp.UiUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.FXMLController;
-import org.jivesoftware.smack.util.StringUtils;
 
 @FXMLController("/fxml/EntryView.fxml")
 public class EntryController {

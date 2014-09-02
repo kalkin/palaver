@@ -2,7 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import javafx.beans.value.ObservableValue;

@@ -1,7 +1,7 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.model.Entry;
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;

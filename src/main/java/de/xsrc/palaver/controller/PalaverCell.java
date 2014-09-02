@@ -1,6 +1,6 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.xmpp.UiUtils;
 import javafx.application.Platform;
 import javafx.scene.control.ListCell;

@@ -2,10 +2,8 @@ package de.xsrc.palaver.controller;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
@@ -30,7 +28,6 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
 
