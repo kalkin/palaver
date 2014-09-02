@@ -11,7 +11,9 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -45,7 +47,7 @@ public class ContactProvider {
 	}
 
 
-	public void initRoster(Account account, Roster roster) {
+	public void initRoster(Account account, Roster roster) throws XMPPException, SmackException {
 		roster.setSubscriptionMode(SubscriptionMode.accept_all);
 		accountToRoster.put(account, roster);
 		for (RosterEntry r : roster.getEntries()) {
@@ -54,6 +56,14 @@ public class ContactProvider {
 				contacts.add(c);
 			}
 		}
+		BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
+		Collection<BookmarkedConference> bookmarkedConferences = bookmarkManager.getBookmarkedConferences();
+		for (BookmarkedConference bookmarkedConference : bookmarkedConferences) {
+			Contact c = createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
+			contacts.add(c);
+		}
+
+
 	}
 
 	public Contact addContact(Account account, String jid)
