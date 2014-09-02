@@ -16,3 +16,10 @@ You need maven for building the project.
 ## Features
 - Notifications-Support
 - Sync messages between devices (XEP-0280)
+- Basic MUS Support
+
+
+## Help
+### Muc
+- Room Bookmarks are shown in the contacts list. 
+- Adding a conference room instead of a contact in contact list joins the room and creates a bookmark.
