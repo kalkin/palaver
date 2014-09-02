@@ -3,6 +3,8 @@ package de.xsrc.palaver.provider;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
@@ -10,6 +12,8 @@ import org.datafx.controller.context.ApplicationContext;
 import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 
 import java.util.logging.Logger;
 
@@ -50,13 +54,37 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 				return palaver;
 			}
 		}
+		return null;
+	}
 
+	public static Palaver createPalaver(String account, String recipient){
 		// No previous Palaver found
 		logger.finer(String.format("Starting new palaver between %s %s", account, recipient));
 		Palaver palaver = new Palaver(account, recipient);
 		palaver.setClosed(false);
-		Platform.runLater(() -> data.add(palaver));
 		return palaver;
+	}
+
+
+	public static void openPalaver(Contact contact) throws XMPPException.XMPPErrorException, SmackException {
+		Palaver palaver = getById(contact.getAccount(), contact.getJid());
+		if(palaver != null ){
+			palaver.setClosed(false);
+		}else {
+			logger.info("Opening new Palaver with " + contact.getConference());
+			palaver = createPalaver(contact.getAccount(), contact.getJid());
+			palaver.setClosed(false);
+			if (contact.isConference()) {
+				Utils.joinMuc(palaver);
+				palaver.setConference(true);
+			}
+			final Palaver finalPalaver = palaver;
+			Platform.runLater(() -> {
+				ApplicationContext.getInstance()
+								.getRegisteredObject(PalaverProvider.class).getData().add(finalPalaver);
+				save();
+			} );
+		}
 	}
 
 	// TODO Why does write back handler do not handle this?

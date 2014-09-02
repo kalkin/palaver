@@ -3,6 +3,8 @@ package de.xsrc.palaver.controller;
 import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,10 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
 
@@ -31,6 +36,9 @@ public class AddContactController {
 	private TextField jid;
 
 	@FXML
+	private Button saveButton;
+
+	@FXML
 	private ChoiceBox<Account> accountChoice;
 
 	@FXML
@@ -41,15 +49,22 @@ public class AddContactController {
 		if (accounts.size() > 0) {
 			accountChoice.getSelectionModel().select(0);
 		}
+
+		jid.textProperty().addListener(observable -> {
+			boolean isJid = StringUtils.isFullJID(jid.textProperty().get() + "/Foo");
+			saveButton.setDisable(!isJid);
+		});
 	}
 
 	@FXML
-	private void addContactAction() throws NotLoggedInException,
-					NoResponseException, XMPPErrorException, NotConnectedException {
+	private void addContactAction() throws SmackException,
+					XMPPException {
 		ContactProvider provider = ApplicationContext.getInstance()
 						.getRegisteredObject(ContactProvider.class);
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
-		provider.addContact(account, jid.getText());
+		Contact contact = provider.addContact(account, jid.getText());
+		PalaverProvider.openPalaver(contact);
+		close();
 	}
 
 	@FXML

@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.ButtonBar?>
-<?import javafx.scene.control.Button?>
-
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" prefWidth="320">
 	<center>
 		<GridPane>
-			<children>
-				<Label text="%choose_account" />
-				<ChoiceBox GridPane.columnIndex="1" fx:id="accountChoice"/>
-				<Label text="%jid" GridPane.rowIndex="1" />
-				<TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="jid"/>
-			</children>
-		</GridPane>
+    <children>
+        <Label text="%choose_account"/>
+        <ChoiceBox fx:id="accountChoice" prefHeight="25.0" prefWidth="180" GridPane.columnIndex="1"/>
+        <Label text="%jid" GridPane.rowIndex="1"/>
+        <TextField fx:id="jid" prefHeight="25.0" prefWidth="180" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+    <padding>
+        <Insets left="10.0" right="10.0"/>
+    </padding>
+</GridPane>
+
 	</center>
 	<bottom>
 		<ButtonBar>
 			<buttons>
 				<Button fx:id="back" onAction="#close" text="%back_button" cancelButton="true"/>
-				<Button text="%save" onAction="#addContactAction" defaultButton="true" />
+				<Button text="%save" fx:id="saveButton" onAction="#addContactAction" defaultButton="true" disable="true"/>
 			</buttons>
+            <padding>
+                <Insets left="10.0" top="10.0" right="10.0"/>
+            </padding>
 		</ButtonBar>
 	</bottom>
+    <padding>
+        <Insets bottom="10.0" top="10.0"/>
+    </padding>
 </BorderPane>

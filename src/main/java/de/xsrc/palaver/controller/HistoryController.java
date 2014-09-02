@@ -16,6 +16,7 @@ import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -76,7 +77,7 @@ public class HistoryController {
 	}
 
 	@FXML
-	private void sendMsgAction() throws NotConnectedException {
+	private void sendMsgAction() throws NotConnectedException, XMPPException {
 		String body = chatInput.getText();
 		PalaverManager.sendMsg(this.palaver, body);
 		chatInput.clear();

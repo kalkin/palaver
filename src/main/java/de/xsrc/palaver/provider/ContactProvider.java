@@ -1,19 +1,19 @@
 package de.xsrc.palaver.provider;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.SmackException.NoResponseException;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.SmackException.NotLoggedInException;
-import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -31,41 +31,71 @@ public class ContactProvider {
 						.observableList(new CopyOnWriteArrayList<Contact>());
 	}
 
-	protected static Contact createContact(String account, String jid, String name) {
+	protected static Contact createContact(String account, String jid, String name, Boolean conference) {
 		Contact contact = new Contact();
-		contact.setJid(jid);
 		contact.setAccount(account);
-		contact.setName(name);
+		contact.setJid(jid);
+		if (name != null && name.length() > 0) {
+			contact.setName(name);
+		} else {
+			contact.setName(StringUtils.parseName(contact.getJid()));
+		}
+		if (conference) {
+			contact.setConference(true);
+		}
 		return contact;
 	}
 
-	public void initRoster(Account account, Roster roster) {
+
+	public void initRoster(Account account, Roster roster) throws XMPPException, SmackException {
 		roster.setSubscriptionMode(SubscriptionMode.accept_all);
 		accountToRoster.put(account, roster);
 		for (RosterEntry r : roster.getEntries()) {
-			Contact c = new Contact();
-			c.setAccount(account.getId());
-			c.setJid(r.getUser());
-			if (r.getName() != null && r.getName().length() > 0) {
-				c.setName(r.getName());
-			} else {
-				c.setName(StringUtils.parseName(c.getJid()));
-			}
+			Contact c = createContact(account.getJid(), r.getUser(), null, false);
 			if (!contacts.contains(c)) {
 				contacts.add(c);
 			}
 		}
+		BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
+		Collection<BookmarkedConference> bookmarkedConferences = bookmarkManager.getBookmarkedConferences();
+		for (BookmarkedConference bookmarkedConference : bookmarkedConferences) {
+			Contact c = createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
+			contacts.add(c);
+		}
+
+
 	}
 
-	public void addContact(Account account, String jid)
-					throws NotLoggedInException, NoResponseException, XMPPErrorException,
-					NotConnectedException {
-		logger.fine("Adding " + jid + " to roster " + account);
+	public Contact addContact(Account account, String jid)
+	throws SmackException, XMPPException {
+		XMPPConnection connection = ConnectionManager.getConnection(account);
 		String name = StringUtils.parseName(jid);
-		accountToRoster.get(account).createEntry(jid, name, null);
-		Contact contact = createContact(account.getJid(), jid, name);
+		Contact contact = createContact(account.getJid(), jid, name, false);
+		if (Utils.isMuc(connection, jid)) {
+			logger.info(String.format("Adding MUC Bookmark %s to %s", jid, account.getJid()));
+			BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
+			bookmarkManager.addBookmarkedConference(jid, jid, true, StringUtils.parseName(account.getJid()), null);
+			contact.setConference(true);
+		} else {
+			logger.info(String.format("Adding %s to roster %s", jid, account));
+
+			accountToRoster.get(account).createEntry(jid, name, null);
+		}
+
 		contacts.add(contact);
+		return contact;
 	}
+
+
+	public Contact get(String accountJid, String contactJid) {
+		for (Contact contact : contacts) {
+			if (contact.getAccount().equals(accountJid) && contact.getJid().equals(contactJid)) {
+				return contact;
+			}
+		}
+		return null;
+	}
+
 
 	public ObservableList<Contact> getData() {
 		return contacts;

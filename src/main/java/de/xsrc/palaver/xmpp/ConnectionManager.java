@@ -1,6 +1,7 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -41,7 +42,11 @@ public class ConnectionManager {
 						XMPPConnection con = ConnectionManager.getConnection(account);
 						if (con.isAuthenticated()) {
 							logger.fine("Initializing roster for " + account);
-							provider.initRoster(account, con.getRoster());
+							try {
+								provider.initRoster(account, con.getRoster());
+							} catch (XMPPException | SmackException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -69,8 +74,10 @@ public class ConnectionManager {
 		}
 		return conMap;
 	}
-
-
+	public static XMPPConnection getConnection(String accountJid) {
+		Account account = AccountProvider.getByJid(accountJid);
+		return ConnectionManager.getConnection(account);
+	}
 	public synchronized static XMPPConnection getConnection(Account account) {
 		XMPPConnection connection = getConMap().get(account.getJid());
 		if (connection == null) {
@@ -107,7 +114,7 @@ public class ConnectionManager {
 			c.login(StringUtils.parseName(jid), a.getPassword());
 			CarbonManager.getInstanceFor(c).enableCarbons();
 		}
-		// TODO add fix MsgListner
+
 		c.addPacketListener(new MsgListener(a), new MessageTypeFilter(Message.Type.chat));
 		c.addPacketSendingListener(new MsgListener(a), new MessageTypeFilter(Message.Type.chat));
 		getConMap().put(a.getJid(), c);

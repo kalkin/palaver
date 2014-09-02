@@ -1,5 +1,7 @@
 package de.xsrc.palaver.xmpp.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -8,11 +10,13 @@ public class Contact {
 	private StringProperty name;
 	private StringProperty jid;
 	private StringProperty account;
+	private BooleanProperty conference;
 
 	public Contact() {
 		this.name = new SimpleStringProperty();
 		this.jid = new SimpleStringProperty();
 		this.account = new SimpleStringProperty();
+		this.conference = new SimpleBooleanProperty(false);
 	}
 
 	public String getJid() {
@@ -43,8 +47,33 @@ public class Contact {
 		return getName();
 	}
 
-	public boolean equal(Contact c) {
-		return c.getJid().equals(getJid());
+	@Override
+	public boolean equals(Object o) {
 
+		if (o == this)
+			return true;
+
+		if (!(o instanceof Contact))
+			return false;
+		Contact c = (Contact) o;
+		return c.getJid().equals(getJid()) && c.getAccount().equals(getAccount());
+
+	}
+
+	@Override
+	public int hashCode(){
+		return (getAccount() + ":" + getJid()).hashCode();
+	}
+
+	public boolean getConference() {
+		return conference.get();
+	}
+
+	public void setConference(boolean conference) {
+		this.conference.setValue(conference);
+	}
+
+	public boolean isConference() {
+		return getConference();
 	}
 }
