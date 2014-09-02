@@ -64,7 +64,7 @@ public class MsgListener implements PacketListener {
 		Palaver palaver = PalaverProvider.getById(account, recipient);
 		if(palaver == null) {
 			logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
-			palaver = PalaverProvider.createPalaver(account, recipient);
+			palaver = PalaverProvider.createPalaver(account, StringUtils.parseName(recipient));
 		}
 		palaver.history.addEntry(entry);
 		if (!account.equals(entry.getFrom())) {

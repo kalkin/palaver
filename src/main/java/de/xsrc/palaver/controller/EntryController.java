@@ -19,7 +19,7 @@ public class EntryController {
 		if (e.getBody().length() > 5) {
 			body.setWrapText(true);
 		}
-		String name = StringUtils.parseName(e.getFrom());
+		String name = e.getFrom();
 		StackPane avatar = UiUtils.getAvatar(name);
 		body.setGraphic(avatar);
 	}

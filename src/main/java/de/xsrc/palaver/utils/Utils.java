@@ -1,6 +1,10 @@
 package de.xsrc.palaver.utils;
 
+import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.model.Entry;
 import de.xsrc.palaver.model.Palaver;
+import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -13,6 +17,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -23,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class Utils {
@@ -31,7 +37,8 @@ public class Utils {
 
 	private static final Logger logger = Logger
 					.getLogger(Storage.class.getName());
-	private static HashMap<Class, Storage> storage;
+
+	private static ConcurrentHashMap<Palaver, MultiUserChat> joinedMucs = new ConcurrentHashMap<>();
 
 	public static Stage getDialog(Flow f, ViewFlowContext flowContext)
 					throws FlowException {
@@ -56,7 +63,7 @@ public class Utils {
 	 * Loads the file containing models of the class c
 	 *
 	 * @param c - Class name
-	 * @return
+	 * @return file object
 	 * @throws IOException
 	 */
 	public static File getFile(Class<?> c) throws IOException {
@@ -112,5 +119,25 @@ public class Utils {
 		XMPPConnection connection = ConnectionManager.getConnection(palaver.getAccount());
 		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 		muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
+		Account account = AccountProvider.getByJid(palaver.getAccount());
+		muc.addMessageListener(packet -> {
+			if (packet instanceof Message) {
+				Message message = (Message) packet;
+				logger.finer("Received muc message");
+				String body = message.getBody();
+				logger.finest(message.toString());
+
+				if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
+					Entry entry = new Entry(StringUtils.parseResource(message.getFrom()), message.getBody());
+					palaver.history.addEntry(entry);
+					PalaverProvider.save();
+				}
+			}
+		});
+		joinedMucs.put(palaver, muc);
+	}
+
+	public static MultiUserChat getMuc(Palaver palaver) {
+		return joinedMucs.get(palaver);
 	}
 }
