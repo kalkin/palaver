@@ -59,6 +59,10 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 		return palaver;
 	}
 
+	public static void openPalaver(String account, String recipient) {
+		getById(account, recipient);
+	}
+
 	// TODO Why does write back handler do not handle this?
 	public static void save() {
 		ListProperty<Palaver> data = ApplicationContext.getInstance()

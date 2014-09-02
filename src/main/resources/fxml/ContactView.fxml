@@ -13,7 +13,7 @@
                         <Tooltip text="%back_button"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="addBuddy" onAction="#addContactAction">
+                <Button fx:id="addContactButton">
                     <tooltip>
                         <Tooltip text="%add_buddy"/>
                     </tooltip>

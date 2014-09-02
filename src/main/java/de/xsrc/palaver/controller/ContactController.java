@@ -41,7 +41,9 @@ public class ContactController {
 	private Button back;
 
 	@FXML
-	private Button addBuddy;
+	@ActionTrigger("addContactButton")
+	private Button addContactButton;
+
 
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
@@ -66,7 +68,7 @@ public class ContactController {
 
 		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
 		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
-		addBuddy.setGraphic(hbox);
+		addContactButton.setGraphic(hbox);
 
 		provider = ApplicationContext.getInstance()
 						.getRegisteredObject(ContactProvider.class);
@@ -117,11 +119,11 @@ public class ContactController {
 		}
 	}
 
-	@FXML
-	private void addContactAction() throws FxmlLoadException {
+	@ActionMethod("addContactAction")
+	public void addContactAction() throws FxmlLoadException {
 		Flow f = new Flow(AddContactController.class);
 		try {
-			Utils.getDialog(f, null).show();
+			Utils.getDialog(f, null).showAndWait();
 		} catch (FlowException e) {
 			e.printStackTrace();
 		}
