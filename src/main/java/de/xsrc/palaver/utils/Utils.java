@@ -129,6 +129,7 @@ public class Utils {
 
 				if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
 					Entry entry = new Entry(StringUtils.parseResource(message.getFrom()), message.getBody());
+					Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
 					palaver.history.addEntry(entry);
 					PalaverProvider.save();
 				}
