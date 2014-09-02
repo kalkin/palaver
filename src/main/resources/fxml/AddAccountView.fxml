@@ -22,7 +22,7 @@
 		<ButtonBar>
 			<buttons>
 				<Button fx:id="back" onAction="#close" text="%back_button" cancelButton="true"/>
-				<Button text="%add_account" onAction="#saveAccount"  defaultButton="true"/>
+				<Button text="%add_account" onAction="#saveAccount"  defaultButton="true" fx:id="saveButton" disable="true"/>
 			</buttons>
 		</ButtonBar>
 	</bottom>

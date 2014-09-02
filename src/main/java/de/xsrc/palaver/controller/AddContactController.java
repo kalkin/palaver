@@ -15,6 +15,7 @@ import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
 
@@ -31,6 +32,9 @@ public class AddContactController {
 	private TextField jid;
 
 	@FXML
+	private Button saveButton;
+
+	@FXML
 	private ChoiceBox<Account> accountChoice;
 
 	@FXML
@@ -41,6 +45,11 @@ public class AddContactController {
 		if (accounts.size() > 0) {
 			accountChoice.getSelectionModel().select(0);
 		}
+
+		jid.textProperty().addListener(observable -> {
+			boolean isJid = StringUtils.isFullJID(jid.textProperty().get() + "/Foo");
+			saveButton.setDisable(!isJid);
+		});
 	}
 
 	@FXML

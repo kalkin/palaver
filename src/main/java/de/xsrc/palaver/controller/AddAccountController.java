@@ -12,6 +12,7 @@ import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
 
@@ -36,7 +37,14 @@ public class AddAccountController {
 	private PasswordField passwordField;
 
 	@FXML
+	private Button saveButton;
+
+	@FXML
 	private void initialize() {
+		jidField.textProperty().addListener(observable -> {
+			boolean isJid = StringUtils.isFullJID(jidField.textProperty().get() + "/Foo");
+			saveButton.setDisable(!isJid);
+		});
 	}
 
 	@FXML
