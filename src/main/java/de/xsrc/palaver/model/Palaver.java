@@ -1,5 +1,6 @@
 package de.xsrc.palaver.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.beans.property.*;
 import org.datafx.controller.context.ApplicationContext;
@@ -24,6 +25,8 @@ public class Palaver implements EntityWithId<String> {
 	private StringProperty account;
 	private BooleanProperty unread;
 	private BooleanProperty closed;
+	private BooleanProperty conference  = new SimpleBooleanProperty(false);
+
 
 	public Palaver() {
 		this.recipient = new SimpleStringProperty();
@@ -31,6 +34,7 @@ public class Palaver implements EntityWithId<String> {
 		this.history = new History();
 		this.closed = new SimpleBooleanProperty(false);
 		this.unread = new SimpleBooleanProperty(false);
+
 	}
 
 	public Palaver(String account, String recipient) {
@@ -111,5 +115,13 @@ public class Palaver implements EntityWithId<String> {
 				return account;
 			}
 		throw new IllegalStateException("Account with jid " + getAccount() + "does not exists");
+	}
+
+	public Boolean getConference() {
+		return conference.get();
+	}
+
+	public void setConference(Boolean conference) {
+		this.conference.set(conference);
 	}
 }
