@@ -12,9 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -54,8 +56,8 @@ public class AddContactController {
 	}
 
 	@FXML
-	private void addContactAction() throws NotLoggedInException,
-					NoResponseException, XMPPErrorException, NotConnectedException {
+	private void addContactAction() throws SmackException,
+					XMPPException {
 		ContactProvider provider = ApplicationContext.getInstance()
 						.getRegisteredObject(ContactProvider.class);
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
