@@ -4,6 +4,7 @@ import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Utils;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,6 +16,8 @@ import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.LinkAction;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.HashMap;
 
@@ -104,6 +107,14 @@ public class MainController {
 	@FXML
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
+		if (p.getConference()){
+			MultiUserChat muc = Utils.getMuc(p);
+			try {
+				muc.leave();
+			} catch (SmackException.NotConnectedException e) {
+				e.printStackTrace();
+			}
+		}
 		palaverListView.getItems().remove(p);
 		historyMap.remove(p);
 		p.setClosed(true);
