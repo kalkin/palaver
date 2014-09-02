@@ -5,6 +5,7 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.model.Palaver;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.application.Platform;
@@ -27,6 +28,8 @@ import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
@@ -108,15 +111,12 @@ public class ContactController {
 
 	@FXML
 	@ActionMethod("startPalaverAction")
-	public void startPalaverAction() throws VetoException, FlowException {
+	public void startPalaverAction() throws VetoException, FlowException, XMPPException.XMPPErrorException, SmackException {
 		Contact buddy = contactListView.getSelectionModel().getSelectedItems().get(0);
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
-			String recipient = StringUtils.parseBareAddress(buddy.getJid());
-			Palaver p = PalaverProvider.getById(buddy.getAccount(), recipient);
-			p.setClosed(false);
-
-		}
+			PalaverProvider.openPalaver(buddy);
+			}
 	}
 
 	@ActionMethod("addContactAction")

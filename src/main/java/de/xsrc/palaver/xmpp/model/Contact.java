@@ -72,4 +72,8 @@ public class Contact {
 	public void setConference(boolean conference) {
 		this.conference.setValue(conference);
 	}
+
+	public boolean isConference() {
+		return getConference();
+	}
 }

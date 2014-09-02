@@ -1,6 +1,7 @@
 package de.xsrc.palaver.provider;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.collections.FXCollections;
@@ -8,13 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
-import org.jivesoftware.smack.SmackException.NoResponseException;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
-import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
-import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -48,11 +44,6 @@ public class ContactProvider {
 		return contact;
 	}
 
-	private static boolean isMuc(XMPPConnection connection, String jid) throws NotConnectedException, XMPPErrorException, NoResponseException {
-		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
-		DiscoverInfo info = discoManager.discoverInfo(StringUtils.parseServer(jid));
-		return info.containsFeature("http://jabber.org/protocol/muc/");
-	}
 
 	public void initRoster(Account account, Roster roster) {
 		roster.setSubscriptionMode(SubscriptionMode.accept_all);
@@ -65,14 +56,14 @@ public class ContactProvider {
 		}
 	}
 
-	public void addContact(Account account, String jid)
-					throws SmackException, XMPPException {
+	public Contact addContact(Account account, String jid)
+	throws SmackException, XMPPException {
 		XMPPConnection connection = ConnectionManager.getConnection(account);
 		String name = StringUtils.parseName(jid);
 		Contact contact = createContact(account.getJid(), jid, name, false);
-		if (isMuc(connection, jid)) {
-			logger.info(String.format("Joining MUC %s with account %s", jid, account.getJid()));
-			BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
+		if (Utils.isMuc(connection, jid)) {
+			logger.info(String.format("Adding MUC Bookmark %s to %s", jid, account.getJid()));
+			BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
 			bookmarkManager.addBookmarkedConference(jid, jid, true, StringUtils.parseName(account.getJid()), null);
 			contact.setConference(true);
 		} else {
@@ -82,7 +73,19 @@ public class ContactProvider {
 		}
 
 		contacts.add(contact);
+		return contact;
 	}
+
+
+	public Contact get(String accountJid, String contactJid) {
+		for (Contact contact : contacts) {
+			if (contact.getAccount().equals(accountJid) && contact.getJid().equals(contactJid)) {
+				return contact;
+			}
+		}
+		return null;
+	}
+
 
 	public ObservableList<Contact> getData() {
 		return contacts;

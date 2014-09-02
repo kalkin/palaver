@@ -1,6 +1,7 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.model.Account;
+import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -69,8 +70,10 @@ public class ConnectionManager {
 		}
 		return conMap;
 	}
-
-
+	public static XMPPConnection getConnection(String accountJid) {
+		Account account = AccountProvider.getByJid(accountJid);
+		return ConnectionManager.getConnection(account);
+	}
 	public synchronized static XMPPConnection getConnection(Account account) {
 		XMPPConnection connection = getConMap().get(account.getJid());
 		if (connection == null) {

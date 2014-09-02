@@ -4,6 +4,7 @@ import de.xsrc.palaver.model.Account;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -61,8 +62,8 @@ public class AddContactController {
 		ContactProvider provider = ApplicationContext.getInstance()
 						.getRegisteredObject(ContactProvider.class);
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
-		provider.addContact(account, jid.getText());
-		PalaverProvider.openPalaver(account.getJid(), jid.getText());
+		Contact contact = provider.addContact(account, jid.getText());
+		PalaverProvider.openPalaver(contact);
 		close();
 	}
 

@@ -108,6 +108,7 @@ public class Utils {
 	}
 
 	public static void joinMuc(Palaver palaver) throws XMPPException.XMPPErrorException, SmackException {
+		logger.info("joining muc " + palaver.getRecipient());
 		XMPPConnection connection = ConnectionManager.getConnection(palaver.getAccount());
 		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 		muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
