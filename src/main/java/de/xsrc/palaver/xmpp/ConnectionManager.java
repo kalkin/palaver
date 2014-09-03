@@ -16,6 +16,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 
 import javax.net.ssl.SSLContext;
@@ -103,19 +105,6 @@ public class ConnectionManager {
 		DirectoryRosterStore directoryRosterStore = Utils.getRosterStore(account);
 		config.setRosterStore(directoryRosterStore);
 		// TODO: move this logic some where else
-		for (RosterPacket.Item item : directoryRosterStore.getEntries()) {
-			Contact contact = new Contact();
-			contact.setConference(false);
-			contact.setAccount(account.getJid());
-			contact.setJid(item.getUser());
-			if (item.getName() != null) {
-				contact.setName(item.getName());
-			} else {
-				contact.setName(StringUtils.parseName(item.getUser()));
-			}
-			ContactModel.getInstance().addContact(contact);
-		}
-
 
 		if (c == null) {
 			c = new XMPPTCPConnection(config);
@@ -127,6 +116,18 @@ public class ConnectionManager {
 		c.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");
 		CarbonManager.getInstanceFor(c).enableCarbons();
 		c.getRoster().addRosterListener(new PalaverRosterListener(account));
+		for (RosterPacket.Item item : directoryRosterStore.getEntries()) {
+			Contact contact = Utils.createContact(account.getJid(), item.getUser(), item.getName(), false
+			);
+			ContactModel.getInstance().addContact(contact);
+		}
+		BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(c);
+		for (BookmarkedConference bookmarkedConference : bookmarkManager.getBookmarkedConferences()) {
+			Contact contact= Utils.createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
+			ContactModel.getInstance().addContact(contact);
+		}
+
+
 		c.addPacketListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
 		c.addPacketSendingListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
 		getConMap().put(account.getJid(), c);
