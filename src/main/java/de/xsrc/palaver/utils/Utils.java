@@ -6,6 +6,7 @@ import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ConnectionManager;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -149,5 +150,20 @@ public class Utils {
 			return DirectoryRosterStore.init(dir);
 		}
 		return DirectoryRosterStore.open(dir);
+	}
+
+	public static Contact createContact(String account, String jid, String name, Boolean conference) {
+		Contact contact = new Contact();
+		contact.setAccount(account);
+		contact.setJid(jid);
+		if (name != null && name.length() > 0) {
+			contact.setName(name);
+		} else {
+			contact.setName(StringUtils.parseName(contact.getJid()));
+		}
+		if (conference) {
+			contact.setConference(true);
+		}
+		return contact;
 	}
 }

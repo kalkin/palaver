@@ -2,6 +2,7 @@ package de.xsrc.palaver.listeners;
 
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.model.Contact;
 import org.jivesoftware.smack.RosterEntry;
@@ -58,12 +59,6 @@ public class PalaverRosterListener implements RosterListener {
 
 	private Contact getContact(String address) {
 		RosterEntry entry = ConnectionManager.getConnection(this.account).getRoster().getEntry(address);
-		Contact contact = new Contact();
-		contact.setConference(false);
-		contact.setAccount(account.getJid());
-		contact.setJid(entry.getUser());
-		contact.setName(entry.getName());
-		return contact;
-
+		return Utils.createContact(account.getJid(), address, entry.getName(), false);
 	}
 }

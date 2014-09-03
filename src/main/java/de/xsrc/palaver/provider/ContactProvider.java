@@ -18,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+import static de.xsrc.palaver.utils.Utils.createContact;
+
 public class ContactProvider {
 	private static final Logger logger = Logger.getLogger(ContactProvider.class
 					.getName());
@@ -30,22 +32,6 @@ public class ContactProvider {
 		contacts = FXCollections
 						.observableList(new CopyOnWriteArrayList<Contact>());
 	}
-
-	protected static Contact createContact(String account, String jid, String name, Boolean conference) {
-		Contact contact = new Contact();
-		contact.setAccount(account);
-		contact.setJid(jid);
-		if (name != null && name.length() > 0) {
-			contact.setName(name);
-		} else {
-			contact.setName(StringUtils.parseName(contact.getJid()));
-		}
-		if (conference) {
-			contact.setConference(true);
-		}
-		return contact;
-	}
-
 
 	public void initRoster(Account account, Roster roster) throws XMPPException, SmackException {
 		roster.setSubscriptionMode(SubscriptionMode.accept_all);
