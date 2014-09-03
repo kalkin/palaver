@@ -1,12 +1,11 @@
 package de.xsrc.palaver.utils;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.beans.Contact;
+import de.xsrc.palaver.xmpp.listeners.MucListener;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,7 +18,6 @@ import org.jivesoftware.smack.DirectoryRosterStore;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -121,21 +119,7 @@ public class Utils {
 		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 		muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
 		Account account = AccountProvider.getByJid(palaver.getAccount());
-		muc.addMessageListener(packet -> {
-			if (packet instanceof Message) {
-				Message message = (Message) packet;
-				logger.finer("Received muc message");
-				String body = message.getBody();
-				logger.finest(message.toString());
-
-				if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
-					Entry entry = new Entry(StringUtils.parseResource(message.getFrom()), message.getBody());
-					Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
-					palaver.history.addEntry(entry);
-					PalaverProvider.save();
-				}
-			}
-		});
+		muc.addMessageListener(new MucListener(palaver));
 		joinedMucs.put(palaver, muc);
 	}
 
