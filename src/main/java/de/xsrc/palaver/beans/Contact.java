@@ -1,4 +1,4 @@
-package de.xsrc.palaver.xmpp.model;
+package de.xsrc.palaver.beans;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -61,7 +61,7 @@ public class Contact {
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return getId().hashCode();
 	}
 
@@ -69,12 +69,12 @@ public class Contact {
 		return conference.get();
 	}
 
-	public void setConference(boolean conference) {
-		this.conference.setValue(conference);
-	}
-
 	public boolean isConference() {
 		return getConference();
+	}
+
+	public void setConference(boolean conference) {
+		this.conference.setValue(conference);
 	}
 
 	public String getId() {

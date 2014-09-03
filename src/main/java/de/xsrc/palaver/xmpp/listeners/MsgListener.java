@@ -1,4 +1,4 @@
-package de.xsrc.palaver.xmpp;
+package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Entry;
@@ -62,7 +62,7 @@ public class MsgListener implements PacketListener {
 
 	private void saveEntry(String account, String recipient, Entry entry) {
 		Palaver palaver = PalaverProvider.getById(account, recipient);
-		if(palaver == null) {
+		if (palaver == null) {
 			logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
 			palaver = PalaverProvider.createPalaver(account, StringUtils.parseName(recipient));
 		}

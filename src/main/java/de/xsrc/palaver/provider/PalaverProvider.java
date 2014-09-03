@@ -4,7 +4,7 @@ import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.model.Contact;
+import de.xsrc.palaver.beans.Contact;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
@@ -57,7 +57,7 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 		return null;
 	}
 
-	public static Palaver createPalaver(String account, String recipient){
+	public static Palaver createPalaver(String account, String recipient) {
 		// No previous Palaver found
 		logger.finer(String.format("Starting new palaver between %s %s", account, recipient));
 		Palaver palaver = new Palaver(account, recipient);
@@ -68,9 +68,9 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 
 	public static void openPalaver(Contact contact) throws XMPPException.XMPPErrorException, SmackException {
 		Palaver palaver = getById(contact.getAccount(), contact.getJid());
-		if(palaver != null ){
+		if (palaver != null) {
 			palaver.setClosed(false);
-		}else {
+		} else {
 			logger.info("Opening new Palaver with " + contact.getConference());
 			palaver = createPalaver(contact.getAccount(), contact.getJid());
 			palaver.setClosed(false);
@@ -83,7 +83,7 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 				ApplicationContext.getInstance()
 								.getRegisteredObject(PalaverProvider.class).getData().add(finalPalaver);
 				save();
-			} );
+			});
 		}
 	}
 

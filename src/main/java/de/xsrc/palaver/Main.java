@@ -1,16 +1,15 @@
 package de.xsrc.palaver;
 
 
+import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
-import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.utils.UiUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -43,9 +42,6 @@ public class Main extends Application {
 		ApplicationContext.getInstance().register(accounts);
 		PalaverProvider palavers = new PalaverProvider();
 		ApplicationContext.getInstance().register(palavers);
-		ContactProvider contacts = new ContactProvider();
-		ApplicationContext.getInstance().register(contacts);
-
 		Flow flow = new Flow(MainController.class);
 
 		flow.withAction(ContactController.class, "startPalaverButton", new FlowActionChain(new FlowMethodAction("startPalaverAction"), new FlowLink<>(MainController.class)));

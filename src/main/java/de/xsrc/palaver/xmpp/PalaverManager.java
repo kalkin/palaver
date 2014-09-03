@@ -19,8 +19,7 @@ public class PalaverManager {
 		logger.finest(String.format("Sending msg from %s to %s: %s", palaver.getAccount(), palaver.getRecipient(), body));
 
 
-
-		if(palaver.getConference()){
+		if (palaver.getConference()) {
 			MultiUserChat muc = Utils.getMuc(palaver);
 			muc.sendMessage(body);
 		} else {

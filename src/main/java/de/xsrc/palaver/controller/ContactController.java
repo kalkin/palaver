@@ -5,7 +5,7 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.model.Contact;
+import de.xsrc.palaver.beans.Contact;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -112,7 +112,7 @@ public class ContactController {
 		if (buddy != null) {
 			logger.fine("Starting palaver with " + buddy.getJid());
 			PalaverProvider.openPalaver(buddy);
-			}
+		}
 	}
 
 	@ActionMethod("addContactAction")

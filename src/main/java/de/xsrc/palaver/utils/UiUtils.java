@@ -1,4 +1,4 @@
-package de.xsrc.palaver.xmpp;
+package de.xsrc.palaver.utils;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -13,7 +13,6 @@ import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class UiUtils {

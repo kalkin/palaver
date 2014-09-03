@@ -24,7 +24,7 @@ public class Palaver implements EntityWithId<String> {
 	private StringProperty account;
 	private BooleanProperty unread;
 	private BooleanProperty closed;
-	private BooleanProperty conference  = new SimpleBooleanProperty(false);
+	private BooleanProperty conference = new SimpleBooleanProperty(false);
 
 
 	public Palaver() {
@@ -61,13 +61,13 @@ public class Palaver implements EntityWithId<String> {
 		return account.get();
 	}
 
+	public void setAccount(String s) {
+		account.set(s);
+	}
+
 	public void setAccount(Account a) {
 		account.set(a.getId());
 
-	}
-
-	public void setAccount(String s) {
-		account.set(s);
 	}
 
 	@Override

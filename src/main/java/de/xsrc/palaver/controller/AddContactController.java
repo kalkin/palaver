@@ -1,10 +1,10 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.xmpp.model.Contact;
+import de.xsrc.palaver.beans.Contact;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -55,10 +55,9 @@ public class AddContactController {
 	@FXML
 	private void addContactAction() throws SmackException,
 					XMPPException {
-		ContactProvider provider = ApplicationContext.getInstance()
-						.getRegisteredObject(ContactProvider.class);
+
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
-		Contact contact = provider.addContact(account, jid.getText());
+		Contact contact = ContactModel.getInstance().addContact(account, jid.getText());
 		PalaverProvider.openPalaver(contact);
 		close();
 	}

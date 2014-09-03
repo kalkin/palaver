@@ -1,15 +1,14 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.listeners.PalaverRosterListener;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.ContactProvider;
 import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.model.Contact;
+import de.xsrc.palaver.xmpp.listeners.MsgListener;
+import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -36,8 +35,6 @@ public class ConnectionManager {
 
 	private ConnectionManager(ObservableList<Account> accounts) {
 		accounts.addListener((ListChangeListener.Change<? extends Account> c) -> {
-			ContactProvider provider = ApplicationContext.getInstance()
-							.getRegisteredObject(ContactProvider.class);
 			while (c.next()) {
 				if (c.getAddedSize() > 0) {
 					List<? extends Account> list = c.getAddedSubList();
@@ -70,10 +67,12 @@ public class ConnectionManager {
 		}
 		return conMap;
 	}
+
 	public static XMPPConnection getConnection(String accountJid) {
 		Account account = AccountProvider.getByJid(accountJid);
 		return ConnectionManager.getConnection(account);
 	}
+
 	public synchronized static XMPPConnection getConnection(Account account) {
 		XMPPConnection connection = getConMap().get(account.getJid());
 		if (connection == null) {
@@ -123,7 +122,7 @@ public class ConnectionManager {
 		}
 		BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(c);
 		for (BookmarkedConference bookmarkedConference : bookmarkManager.getBookmarkedConferences()) {
-			Contact contact= Utils.createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
+			Contact contact = Utils.createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
 			ContactModel.getInstance().addContact(contact);
 		}
 

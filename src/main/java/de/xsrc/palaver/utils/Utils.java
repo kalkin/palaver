@@ -6,7 +6,7 @@ import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.xmpp.model.Contact;
+import de.xsrc.palaver.beans.Contact;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -145,7 +145,7 @@ public class Utils {
 
 	public static DirectoryRosterStore getRosterStore(Account account) {
 		File dir = new File(Utils.workingDirectory() + "/roster/" + account.getJid());
-		if(!dir.exists()) {
+		if (!dir.exists()) {
 			dir.mkdirs();
 			return DirectoryRosterStore.init(dir);
 		}

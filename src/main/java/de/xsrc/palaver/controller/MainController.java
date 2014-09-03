@@ -107,7 +107,7 @@ public class MainController {
 	@FXML
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
-		if (p.getConference()){
+		if (p.getConference()) {
 			MultiUserChat muc = Utils.getMuc(p);
 			try {
 				muc.leave();

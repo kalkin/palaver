@@ -1,7 +1,7 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Entry;
-import de.xsrc.palaver.xmpp.UiUtils;
+import de.xsrc.palaver.utils.UiUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;

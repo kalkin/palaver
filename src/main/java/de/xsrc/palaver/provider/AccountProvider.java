@@ -32,12 +32,12 @@ public class AccountProvider extends ListDataProvider<Account> {
 		});
 	}
 
-	public static Account getByJid(String jid){
+	public static Account getByJid(String jid) {
 		ObservableList<Account> accounts = ApplicationContext.getInstance()
 						.getRegisteredObject(AccountProvider.class).getData().get();
-		for (Account account: accounts) {
-			if(account.getJid().equals(jid))
-			return account;
+		for (Account account : accounts) {
+			if (account.getJid().equals(jid))
+				return account;
 		}
 		return null;
 	}
