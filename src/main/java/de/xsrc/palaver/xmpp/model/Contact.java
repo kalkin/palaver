@@ -62,7 +62,7 @@ public class Contact {
 
 	@Override
 	public int hashCode(){
-		return (getAccount() + ":" + getJid()).hashCode();
+		return getId().hashCode();
 	}
 
 	public boolean getConference() {
@@ -75,5 +75,9 @@ public class Contact {
 
 	public boolean isConference() {
 		return getConference();
+	}
+
+	public String getId() {
+		return getAccount() + ":" + getJid();
 	}
 }

@@ -14,6 +14,7 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
+import org.jivesoftware.smack.DirectoryRosterStore;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -139,5 +140,14 @@ public class Utils {
 
 	public static MultiUserChat getMuc(Palaver palaver) {
 		return joinedMucs.get(palaver);
+	}
+
+	public static DirectoryRosterStore getRosterStore(Account account) {
+		File dir = new File(Utils.workingDirectory() + "/roster/" + account.getJid());
+		if(!dir.exists()) {
+			dir.mkdirs();
+			return DirectoryRosterStore.init(dir);
+		}
+		return DirectoryRosterStore.open(dir);
 	}
 }

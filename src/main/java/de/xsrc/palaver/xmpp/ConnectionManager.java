@@ -1,17 +1,19 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.listeners.PalaverRosterListener;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ContactProvider;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.model.Contact;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.carbons.CarbonManager;
@@ -39,15 +41,7 @@ public class ConnectionManager {
 					List<? extends Account> list = c.getAddedSubList();
 					for (Account account : list) {
 						logger.fine("Connecting to account " + account);
-						XMPPConnection con = ConnectionManager.getConnection(account);
-						if (con.isAuthenticated()) {
-							logger.fine("Initializing roster for " + account);
-							try {
-								provider.initRoster(account, con.getRoster());
-							} catch (XMPPException | SmackException e) {
-								e.printStackTrace();
-							}
-						}
+						ConnectionManager.getConnection(account);
 					}
 				}
 			}
@@ -95,31 +89,47 @@ public class ConnectionManager {
 		return connectAccount(account, null);
 	}
 
-	private static XMPPConnection connectAccount(Account a, XMPPConnection c)
+	private static XMPPConnection connectAccount(Account account, XMPPConnection c)
 					throws SmackException, IOException, XMPPException {
-		logger.finer("Connecting to account " + a);
-		String jid = a.getJid();
+		logger.finer("Connecting to account " + account);
+		String jid = account.getJid();
 
 		ConnectionConfiguration config = configureConnection(StringUtils
 						.parseServer(jid));
+		config.setRosterLoadedAtLogin(true);
 //		config.setDebuggerEnabled(true);
+
+
+		DirectoryRosterStore directoryRosterStore = Utils.getRosterStore(account);
+		config.setRosterStore(directoryRosterStore);
+		// TODO: move this logic some where else
+		for (RosterPacket.Item item : directoryRosterStore.getEntries()) {
+			Contact contact = new Contact();
+			contact.setConference(false);
+			contact.setAccount(account.getJid());
+			contact.setJid(item.getUser());
+			if (item.getName() != null) {
+				contact.setName(item.getName());
+			} else {
+				contact.setName(StringUtils.parseName(item.getUser()));
+			}
+			ContactModel.getInstance().addContact(contact);
+		}
 
 
 		if (c == null) {
 			c = new XMPPTCPConnection(config);
 
 		}
+
 		c.connect();
-		if (c.isConnected()) {
-			c.login(StringUtils.parseName(jid), a.getPassword());
-			CarbonManager.getInstanceFor(c).enableCarbons();
-		}
 
-		c.addPacketListener(new MsgListener(a), new MessageTypeFilter(Message.Type.chat));
-		c.addPacketSendingListener(new MsgListener(a), new MessageTypeFilter(Message.Type.chat));
-		getConMap().put(a.getJid(), c);
-
-
+		c.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");
+		CarbonManager.getInstanceFor(c).enableCarbons();
+		c.getRoster().addRosterListener(new PalaverRosterListener(account));
+		c.addPacketListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
+		c.addPacketSendingListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
+		getConMap().put(account.getJid(), c);
 		return c;
 	}
 

@@ -2,7 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.provider.ContactProvider;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.model.Contact;
@@ -17,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
-import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.ActionMethod;
@@ -57,7 +56,8 @@ public class ContactController {
 	@FXML
 	@ActionTrigger("contactListView")
 	private ListView<Contact> contactListView;
-	private ContactProvider provider;
+
+	private ContactModel model = ContactModel.getInstance();
 
 	@FXML
 	private void initialize() {
@@ -69,10 +69,9 @@ public class ContactController {
 		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
 		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
 		addContactButton.setGraphic(hbox);
+		ObservableList<Contact> data = model.getData();
 
-		provider = ApplicationContext.getInstance()
-						.getRegisteredObject(ContactProvider.class);
-		contactListView.setItems(provider.getData());
+		contactListView.setItems(data);
 		contactListView.setManaged(true);
 		contactListView.setCellFactory(listView -> new BuddyCell());
 
@@ -88,7 +87,7 @@ public class ContactController {
 		if (oldVal != null && (newVal.length() < oldVal.length())) {
 			// Restore the lists original set of entries
 			// and start from the beginning
-			contactListView.setItems(provider.getData());
+			contactListView.setItems(model.getData());
 		}
 
 		// Change to upper case so that case is not an issue
