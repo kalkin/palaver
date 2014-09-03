@@ -69,8 +69,8 @@ public class ContactModel {
 		Contact contact = createContact(account.getJid(), jid, name, false);
 		if (Utils.isMuc(connection, jid)) {
 			logger.info(String.format("Adding MUC Bookmark %s to %s", jid, account.getJid()));
-			BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
-			bookmarkManager.addBookmarkedConference(jid, jid, true, StringUtils.parseName(account.getJid()), null);
+//			BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
+//			bookmarkManager.addBookmarkedConference(jid, jid, true, StringUtils.parseName(account.getJid()), null);
 			contact.setConference(true);
 		} else {
 			logger.info(String.format("Adding %s to roster %s", jid, account));

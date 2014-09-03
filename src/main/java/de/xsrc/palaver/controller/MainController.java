@@ -6,11 +6,16 @@ import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
+import org.datafx.concurrent.ObservableExecutor;
+import org.datafx.control.cell.ServiceListCellFactory;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
@@ -47,17 +52,13 @@ public class MainController {
 
 	@FXML
 	private void initialize() {
+
 		PalaverProvider provider = ApplicationContext.getInstance()
 						.getRegisteredObject(PalaverProvider.class);
-
-		palaverListView.setItems(provider.getData());
+				palaverListView.setItems(provider.getData());
 		palaverListView
-						.setCellFactory(new Callback<ListView<Palaver>, ListCell<Palaver>>() {
-							@Override
-							public ListCell<Palaver> call(ListView<Palaver> listView) {
-								return new PalaverCell();
-							}
-						});
+						.setCellFactory(listView -> new PalaverCell());
+
 		MultipleSelectionModel<Palaver> selModel = palaverListView
 						.getSelectionModel();
 
@@ -87,6 +88,7 @@ public class MainController {
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
 		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
+
 	}
 
 	@FXML

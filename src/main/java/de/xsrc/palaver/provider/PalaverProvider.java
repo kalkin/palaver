@@ -1,10 +1,9 @@
 package de.xsrc.palaver.provider;
 
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 import de.xsrc.palaver.utils.ColdStorage;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.beans.Contact;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
@@ -75,7 +74,9 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 			palaver = createPalaver(contact.getAccount(), contact.getJid());
 			palaver.setClosed(false);
 			if (contact.isConference()) {
-				Utils.joinMuc(palaver);
+
+				// TODO Fix this
+				//	Utils.joinMuc(palaver);
 				palaver.setConference(true);
 			}
 			final Palaver finalPalaver = palaver;

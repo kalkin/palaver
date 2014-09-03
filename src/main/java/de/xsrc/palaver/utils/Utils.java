@@ -102,8 +102,7 @@ public class Utils {
 	}
 
 
-	public static BookmarkManager getBookmarkManager(String accountJid) throws XMPPException, SmackException {
-		XMPPConnection connection = ConnectionManager.getConnection(accountJid);
+	public static BookmarkManager getBookmarkManager(String accountJid, XMPPConnection connection) throws XMPPException, SmackException {
 		return BookmarkManager.getBookmarkManager(connection);
 	}
 
@@ -113,9 +112,8 @@ public class Utils {
 		return info.containsFeature("http://jabber.org/protocol/muc");
 	}
 
-	public static void joinMuc(Palaver palaver) throws XMPPException.XMPPErrorException, SmackException {
+	public static void joinMuc(Palaver palaver, XMPPConnection connection) throws XMPPException.XMPPErrorException, SmackException {
 		logger.info("joining muc " + palaver.getRecipient());
-		XMPPConnection connection = ConnectionManager.getConnection(palaver.getAccount());
 		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 		muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
 		Account account = AccountProvider.getByJid(palaver.getAccount());
