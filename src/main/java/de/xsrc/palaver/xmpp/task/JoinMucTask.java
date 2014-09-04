@@ -45,28 +45,37 @@ public class JoinMucTask extends DataFxTask {
 			muc.addMessageListener(new MucListener(palaver));
 			// TODO Implement Subject fetching and setting as Contact name
 			Utils.getJoinedMucs().put(palaver, muc);
-			try {
-				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
-				String name;
-				if (muc.getSubject() != null) {
-					name = muc.getSubject();
-				} else {
-					name = StringUtils.parseName(palaver.getRecipient());
-				}
-				bookmarkManager.addBookmarkedConference(name, palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
-
-			} catch (XMPPException e) {
-				logger.warning("Could not could not get bookmarks");
-			}
-
 			logger.info(String.format("Joined %s with account %s", palaver.getRecipient(), palaver.getAccount()));
 
-			return true;
 		} catch (XMPPException.XMPPErrorException | SmackException e) {
 			e.printStackTrace();
 			logger.warning(String.format("Failed joining %s with account %s", palaver.getRecipient(), palaver.getAccount()));
 			return false;
 		}
 
+		try {
+			BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
+			String name;
+				if (muc.getSubject() != null) {
+					name = muc.getSubject();
+				} else {
+					name = StringUtils.parseName(palaver.getRecipient());
+				}
+				bookmarkManager.addBookmarkedConference(name, palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
+			return true;
+
+
+		} catch (XMPPException e) {
+			logger.warning("Could not could not get bookmarks");
+
+		} catch (SmackException.NotConnectedException e) {
+			e.printStackTrace();
+		} catch (SmackException.NoResponseException e) {
+			 // Do nothing
+		} catch (SmackException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 }
