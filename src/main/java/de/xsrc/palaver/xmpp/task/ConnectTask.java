@@ -6,6 +6,7 @@ import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.listeners.MsgListener;
+import de.xsrc.palaver.xmpp.listeners.PalaverConnectionListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import org.datafx.concurrent.DataFxTask;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -98,8 +99,8 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		// TODO: move this logic some where else
 
 		XMPPConnection connection = new XMPPTCPConnection(config);
-
-
+		ConnectionManager.getConMap().put(account, connection);
+		connection.addConnectionListener(new PalaverConnectionListener());
 		connection.connect();
 
 		connection.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");

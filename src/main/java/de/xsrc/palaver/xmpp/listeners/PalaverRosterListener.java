@@ -1,10 +1,10 @@
 package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.beans.Contact;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;

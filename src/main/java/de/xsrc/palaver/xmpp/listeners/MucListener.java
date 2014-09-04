@@ -13,7 +13,7 @@ import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.logging.Logger;
 
-public class MucListener implements PacketListener{
+public class MucListener implements PacketListener {
 
 	private static final Logger logger = Logger
 					.getLogger(MucListener.class.getName());

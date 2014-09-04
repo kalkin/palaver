@@ -56,12 +56,12 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
-		showDebug();
+//		showDebug();
 		primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
 		Platform.runLater(() -> {
 			accounts.retrieve();
 			palavers.retrieve();
-			ConnectionManager.start(accounts.getData().get());
+
 			palavers.getData().addListener((ListChangeListener<Palaver>) c -> {
 				while (c.next()) if (c.wasAdded()) {
 					c.getAddedSubList().stream().filter(palaver -> palaver.getConference() && !palaver.getClosed()).forEach((t) -> {
@@ -75,6 +75,7 @@ public class Main extends Application {
 			});
 
 		});
+		ConnectionManager.start(accounts.getData().get());
 	}
 
 	private void showDebug() {
@@ -90,7 +91,7 @@ public class Main extends Application {
 		Stage stage = new Stage();
 		stage.setScene(scene);
 		stage.setMinHeight(400);
-		stage.setMaxHeight(400);
+		stage.setMinWidth(200);
 		stage.show();
 
 	}

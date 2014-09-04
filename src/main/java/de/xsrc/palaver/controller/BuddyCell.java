@@ -1,7 +1,7 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.beans.Contact;
+import de.xsrc.palaver.utils.UiUtils;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;

@@ -61,13 +61,13 @@ public class Palaver implements EntityWithId<String> {
 		return account.get();
 	}
 
-	public void setAccount(String s) {
-		account.set(s);
-	}
-
 	public void setAccount(Account a) {
 		account.set(a.getId());
 
+	}
+
+	public void setAccount(String s) {
+		account.set(s);
 	}
 
 	@Override
@@ -85,10 +85,6 @@ public class Palaver implements EntityWithId<String> {
 
 	public void setClosed(boolean b) {
 		this.closed.set(b);
-	}
-
-	public boolean equals(Palaver p) {
-		return p.getId().equals(getId());
 	}
 
 	public BooleanProperty closedProperty() {
@@ -117,6 +113,14 @@ public class Palaver implements EntityWithId<String> {
 	}
 
 	public Boolean getConference() {
+		return conference.get();
+	}
+
+	public boolean isOpen() {
+		return !closed.get();
+	}
+
+	public boolean isConference() {
 		return conference.get();
 	}
 

@@ -3,7 +3,6 @@ package de.xsrc.palaver.xmpp;
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.concurrent.ObservableExecutor;
@@ -45,15 +44,6 @@ public class ConnectionManager {
 
 	}
 
-	private ConnectTask getConnectTask(Account account) {
-		ConnectTask connectTask = new ConnectTask(account);
-		connectTask.setOnSucceeded(event -> {
-			XMPPConnection connection = (XMPPConnection) event.getSource().getValue();
-			conMap.put(account, connection);
-		});
-		return connectTask;
-	}
-
 	public static void start(ObservableList<Account> accounts) {
 		if (instance == null) {
 			instance = new ConnectionManager(accounts);
@@ -68,5 +58,18 @@ public class ConnectionManager {
 
 	public static XMPPConnection getConnection(Account account) {
 		return conMap.get(account);
+	}
+
+	public static ConcurrentHashMap<Account, XMPPConnection> getConMap() {
+		return conMap;
+	}
+
+	private ConnectTask getConnectTask(Account account) {
+		ConnectTask connectTask = new ConnectTask(account);
+		connectTask.setOnSucceeded(event -> {
+			XMPPConnection connection = (XMPPConnection) event.getSource().getValue();
+			conMap.put(account, connection);
+		});
+		return connectTask;
 	}
 }

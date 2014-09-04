@@ -1,10 +1,10 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.beans.Contact;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

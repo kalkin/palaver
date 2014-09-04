@@ -4,9 +4,11 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.AppDataSource;
 import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.xmpp.task.JoinMucTask;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
+import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.WritableDataReader;
@@ -69,15 +71,15 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 		Palaver palaver = getById(contact.getAccount(), contact.getJid());
 		if (palaver != null) {
 			palaver.setClosed(false);
+			palaver.setConference(contact.isConference());
 		} else {
 			logger.info("Opening new Palaver with " + contact.getConference());
 			palaver = createPalaver(contact.getAccount(), contact.getJid());
 			palaver.setClosed(false);
 			if (contact.isConference()) {
-
-				// TODO Fix this
-				//	Utils.joinMuc(palaver);
 				palaver.setConference(true);
+				ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class).submit(new JoinMucTask(palaver));
+
 			}
 			final Palaver finalPalaver = palaver;
 			Platform.runLater(() -> {

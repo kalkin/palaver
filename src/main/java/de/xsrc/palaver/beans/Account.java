@@ -51,7 +51,7 @@ public class Account implements EntityWithId<String> {
 		return jid.get();
 	}
 
-	public BoundPropertySupport credentialsChangedProperty(){
+	public BoundPropertySupport credentialsChangedProperty() {
 		return this.credentialsChanged;
 	}
 }

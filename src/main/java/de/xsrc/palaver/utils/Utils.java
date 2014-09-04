@@ -1,11 +1,8 @@
 package de.xsrc.palaver.utils;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.xmpp.listeners.MucListener;
+import de.xsrc.palaver.beans.Palaver;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,7 +16,6 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -107,17 +103,8 @@ public class Utils {
 		return info.containsFeature("http://jabber.org/protocol/muc");
 	}
 
-	public static void joinMuc(Palaver palaver, XMPPConnection connection) throws XMPPException.XMPPErrorException, SmackException {
-		logger.info("joining muc " + palaver.getRecipient());
-		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
-		muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
-		Account account = AccountProvider.getByJid(palaver.getAccount());
-		muc.addMessageListener(new MucListener(palaver));
-		joinedMucs.put(palaver, muc);
-	}
-
 	public static MultiUserChat getMuc(Palaver palaver) {
-		return joinedMucs.get(palaver);
+		return getJoinedMucs().get(palaver);
 	}
 
 	public static DirectoryRosterStore getRosterStore(Account account) {
@@ -142,5 +129,13 @@ public class Utils {
 			contact.setConference(true);
 		}
 		return contact;
+	}
+
+	public static ConcurrentHashMap<Palaver, MultiUserChat> getJoinedMucs() {
+		return joinedMucs;
+	}
+
+	public static void setJoinedMucs(ConcurrentHashMap<Palaver, MultiUserChat> joinedMucs) {
+		Utils.joinedMucs = joinedMucs;
 	}
 }

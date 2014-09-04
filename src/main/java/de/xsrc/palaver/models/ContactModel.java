@@ -1,9 +1,9 @@
 package de.xsrc.palaver.models;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.beans.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -12,7 +12,6 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.concurrent.ConcurrentHashMap;
