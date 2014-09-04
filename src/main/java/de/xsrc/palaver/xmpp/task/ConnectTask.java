@@ -121,7 +121,7 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 			String message = String.format("Syncing %s", conference.getJid());
 			this.updateMessage(message);
 			logger.finer(String.format("Adding %s", conference.getJid()));
-			Contact contact = Utils.createContact(connection.getUser(), conference.getJid(), conference.getName(), true);
+			Contact contact = Utils.createContact(StringUtils.parseBareAddress(connection.getUser()), conference.getJid(), conference.getName(), true);
 			model.addContact(contact);
 		}
 
