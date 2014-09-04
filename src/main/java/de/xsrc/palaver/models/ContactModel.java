@@ -36,7 +36,7 @@ public class ContactModel {
 			if (change.wasAdded()) {
 				Platform.runLater(() -> data.add(change.getValueAdded()));
 			} else if (change.wasRemoved()) {
-				Platform.runLater(() ->data.remove(change.getValueRemoved()));
+				Platform.runLater(() -> data.remove(change.getValueRemoved()));
 			}
 		});
 
@@ -90,9 +90,6 @@ public class ContactModel {
 		String name = StringUtils.parseName(jid);
 		Contact contact = createContact(account.getJid(), jid, name, false);
 		if (Utils.isMuc(connection, jid)) {
-			logger.info(String.format("Adding MUC Bookmark %s to %s", jid, account.getJid()));
-//			BookmarkManager bookmarkManager = Utils.getBookmarkManager(account.getJid());
-//			bookmarkManager.addBookmarkedConference(jid, jid, true, StringUtils.parseName(account.getJid()), null);
 			contact.setConference(true);
 		} else {
 			logger.info(String.format("Adding %s to roster %s", jid, account));
