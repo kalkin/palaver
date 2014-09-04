@@ -8,10 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +49,7 @@ public class ContactModel {
 
 
 	public void addContact(Contact contact) {
-		accountContactObservableMap.put(contact.getId(), contact);
+		accountContactObservableMap.put(contact.getJid(), contact);
 	}
 
 	public void updateContact(Contact contact) {
@@ -58,7 +57,26 @@ public class ContactModel {
 	}
 
 	public void removeContact(Contact contact) {
-		accountContactObservableMap.remove(contact.getId());
+		logger.info("Removing " + contact.getJid());
+		accountContactObservableMap.remove(contact.getJid());
+		XMPPConnection connection = ConnectionManager.getConnection(contact.getAccount());
+		try {
+			if (contact.isConference()) {
+				BookmarkManager.getBookmarkManager(connection).removeBookmarkedConference(contact.getJid());
+			} else {
+				Roster roster = connection.getRoster();
+				RosterEntry entry = roster.getEntry(contact.getJid());
+				roster.removeEntry(entry);
+
+			}
+		} catch (XMPPException e) {
+			e.printStackTrace();
+		} catch (SmackException e) {
+			e.printStackTrace();
+
+
+		}
+
 	}
 
 	public Contact addContact(Account account, String jid)
@@ -76,7 +94,7 @@ public class ContactModel {
 			connection.getRoster().createEntry(contact.getJid(), contact.getName(), null);
 		}
 
-		accountContactObservableMap.put(contact.getId(), contact);
+		accountContactObservableMap.put(contact.getJid(), contact);
 		return contact;
 	}
 

@@ -53,6 +53,10 @@ public class ContactController {
 
 	@FXML
 	private TextField searchInput;
+
+	@FXML
+	private Button deleteContactButton;
+
 	@FXML
 	@ActionTrigger("contactListView")
 	private ListView<Contact> contactListView;
@@ -66,9 +70,9 @@ public class ContactController {
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
 
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
-		hbox.getChildren().add(AwesomeDude.createIconLabel(AwesomeIcon.USER, "24"));
-		addContactButton.setGraphic(hbox);
+
+		addContactButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.PLUS, "24"));
+		deleteContactButton.setGraphic(AwesomeDude.createIconLabel(AwesomeIcon.TRASH_ALT, "24"));
 		ObservableList<Contact> data = model.getData();
 
 		contactListView.setItems(data);
@@ -123,6 +127,13 @@ public class ContactController {
 		} catch (FlowException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@FXML
+	private void deleteContactAction() {
+		Contact contact = contactListView.getSelectionModel().getSelectedItems().get(0);
+		logger.info("Removing " + contact.getJid());
+		model.removeContact(contact);
 	}
 
 }

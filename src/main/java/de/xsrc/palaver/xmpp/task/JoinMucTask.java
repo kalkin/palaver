@@ -1,8 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.listeners.MucListener;
@@ -50,12 +48,12 @@ public class JoinMucTask extends DataFxTask {
 			try {
 				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
 				String name;
-				if(muc.getSubject() != null) {
+				if (muc.getSubject() != null) {
 					name = muc.getSubject();
 				} else {
 					name = StringUtils.parseName(palaver.getRecipient());
 				}
-				bookmarkManager.addBookmarkedConference(name,palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null );
+				bookmarkManager.addBookmarkedConference(name, palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
 
 			} catch (XMPPException e) {
 				logger.warning("Could not could not get bookmarks");

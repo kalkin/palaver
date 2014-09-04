@@ -3,3 +3,7 @@
 	-fx-background-color: -fx-control-inner-background;
 	-fx-font-size: 16;
 }
+
+.button {
+    -fx-font-size: 17;
+    }

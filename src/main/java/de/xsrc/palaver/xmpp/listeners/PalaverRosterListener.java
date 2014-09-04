@@ -46,6 +46,9 @@ public class PalaverRosterListener implements RosterListener {
 		logger.fine(String.format("Roster %s deleted %s", account.getJid(), addresses));
 		for (String address : addresses) {
 			Contact contact = getContact(address);
+			if (contact == null) {
+				return;
+			}
 			ContactModel.getInstance().removeContact(contact);
 		}
 
@@ -59,6 +62,9 @@ public class PalaverRosterListener implements RosterListener {
 
 	private Contact getContact(String address) {
 		RosterEntry entry = ConnectionManager.getConnection(this.account).getRoster().getEntry(address);
+		if (entry == null) {
+			return null;
+		}
 		return Utils.createContact(account.getJid(), address, entry.getName(), false);
 	}
 }

@@ -13,11 +13,8 @@
                         <Tooltip text="%back_button"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="addContactButton">
-                    <tooltip>
-                        <Tooltip text="%add_buddy"/>
-                    </tooltip>
-                </Button>
+                <Button fx:id="addContactButton" text="%add"/>
+                <Button fx:id="deleteContactButton"  onAction="#deleteContactAction" text="%delete"/>
             </buttons>
         </ButtonBar>
     </top>

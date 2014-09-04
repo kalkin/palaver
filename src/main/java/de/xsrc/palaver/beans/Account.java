@@ -26,9 +26,10 @@ public class Account implements EntityWithId<String> {
 		this.credentialsChanged.raisePropertyChangeEventFor(jid);
 		this.credentialsChanged.raisePropertyChangeEventFor(password);
 	}
+
 	@Override
-	public int hashCode(){
-		return getId().hashCode() *23;
+	public int hashCode() {
+		return getId().hashCode() * 23;
 	}
 
 	public String getId() {

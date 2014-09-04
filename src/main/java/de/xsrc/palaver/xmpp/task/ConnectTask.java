@@ -99,7 +99,7 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		// TODO: move this logic some where else
 
 		XMPPConnection connection = new XMPPTCPConnection(config);
-		ConnectionManager.getConMap().put(account, connection);
+		ConnectionManager.getConMap().put(account.getJid(), connection);
 		connection.addConnectionListener(new PalaverConnectionListener());
 		connection.connect();
 
