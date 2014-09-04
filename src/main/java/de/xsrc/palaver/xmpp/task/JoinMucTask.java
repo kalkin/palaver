@@ -34,8 +34,7 @@ public class JoinMucTask extends DataFxTask {
 	public JoinMucTask(Palaver palaver) {
 		this.palaver = palaver;
 		this.updateTitle("Joining Conference " + palaver.getRecipient());
-		Account account = AccountProvider.getByJid(palaver.getAccount());
-		this.connection = ConnectionManager.getConnection(account);
+		this.connection = ConnectionManager.getConnection(palaver.getAccount());
 	}
 
 

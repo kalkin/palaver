@@ -1,8 +1,10 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
+import javafx.beans.property.ListProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.concurrent.ObservableExecutor;
@@ -16,10 +18,19 @@ import java.util.logging.Logger;
 public class ConnectionManager {
 	private static final Logger logger = Logger.getLogger(ConnectionManager.class
 					.getName());
-	private static ConcurrentHashMap<Account, XMPPConnection> conMap = new ConcurrentHashMap<>();
-	private static ConnectionManager instance;
+	private static ConcurrentHashMap<Account, XMPPConnection> conMap;
 
-	private ConnectionManager(ObservableList<Account> accounts) {
+	public static XMPPConnection getConnection(String account) {
+			return conMap.get(account);
+	}
+
+	private static final class InstanceHolder {
+		static final ConnectionManager INSTANCE = new ConnectionManager();
+	}
+
+	private ConnectionManager() {
+		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+		conMap = new ConcurrentHashMap<>();
 		accounts.addListener((ListChangeListener.Change<? extends Account> c) -> {
 			ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 			while (c.next()) {
@@ -44,19 +55,12 @@ public class ConnectionManager {
 
 	}
 
-	public static void start(ObservableList<Account> accounts) {
-		if (instance == null) {
-			instance = new ConnectionManager(accounts);
-			return;
-		}
-		throw new IllegalStateException("Connection Manager is already started");
-	}
-
 	public static ConnectionManager getInstance() {
-		return instance;
+		return InstanceHolder.INSTANCE;
 	}
 
 	public static XMPPConnection getConnection(Account account) {
+		System.out.println(conMap);
 		return conMap.get(account);
 	}
 
@@ -66,10 +70,6 @@ public class ConnectionManager {
 
 	private ConnectTask getConnectTask(Account account) {
 		ConnectTask connectTask = new ConnectTask(account);
-		connectTask.setOnSucceeded(event -> {
-			XMPPConnection connection = (XMPPConnection) event.getSource().getValue();
-			conMap.put(account, connection);
-		});
 		return connectTask;
 	}
 }

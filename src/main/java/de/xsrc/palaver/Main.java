@@ -61,6 +61,7 @@ public class Main extends Application {
 		Platform.runLater(() -> {
 			accounts.retrieve();
 			palavers.retrieve();
+			ConnectionManager.getInstance();
 
 			palavers.getData().addListener((ListChangeListener<Palaver>) c -> {
 				while (c.next()) if (c.wasAdded()) {
@@ -75,7 +76,7 @@ public class Main extends Application {
 			});
 
 		});
-		ConnectionManager.start(accounts.getData().get());
+
 	}
 
 	private void showDebug() {
