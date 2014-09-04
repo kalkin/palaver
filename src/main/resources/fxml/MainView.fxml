@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.ScrollPane?>
-<?import org.controlsfx.control.ButtonBar?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
+
 <?import javafx.geometry.Insets?>
-
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
 	prefHeight="480" fx:id="borderPane">
-	<top>
-		<ButtonBar>
-			<buttons>
-				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList"
-					cancelButton="true">
-					<tooltip>
-						<Tooltip text="%hide_palaver_list" />
-					</tooltip>
-				</Button>
-				<Button fx:id="showBuddyListButton">
-					<tooltip>
-						<Tooltip text="%budy_list" />
-					</tooltip>
-				</Button>
-				<Button fx:id="showAccountsButton">
-					<tooltip>
-						<Tooltip text="%account_managment" />
-					</tooltip>
-				</Button>
-			</buttons>
-			<padding>
-				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-			</padding>
-		</ButtonBar>
-	</top>
-	<left>
-		<ListView fx:id="palaverListView">
-			<contextMenu>
-				<ContextMenu>
-					<items>
-						<MenuItem text="%remove" onAction="#removeAction" />
-					</items>
-				</ContextMenu>
-			</contextMenu>
-		</ListView>
-	</left>
+    <top>
+        <Button fx:id="showPalaverButton" visible="false" managed="false" onAction="#hidePalaverList">
+            <tooltip>
+                <Tooltip text="%show_palaver"/>
+            </tooltip>
+        </Button>
+    </top>
+    <left>
+        <BorderPane>
+            <top>
+                <BorderPane>
+                    <left>
+                        <HBox>
+                            <children>
+                                <Button fx:id="hidePalaverButton" onAction="#hidePalaverList"
+                                        cancelButton="true">
+                                    <tooltip>
+                                        <Tooltip text="%hide_palaver_list"/>
+                                    </tooltip>
+                                </Button>
+                                <Button fx:id="showBuddyListButton">
+                                    <tooltip>
+                                        <Tooltip text="%budy_list"/>
+                                    </tooltip>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </left>
+                    <right>
+                        <Button fx:id="showAccountsButton">
+                            <tooltip>
+                                <Tooltip text="%account_managment"/>
+                            </tooltip>
+                        </Button>
+
+                    </right>
+                    <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                    </padding>
+                </BorderPane>
+            </top>
+            <center>
+                <ListView fx:id="palaverListView">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem text="%remove" onAction="#removeAction"/>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
+            </center>
+        </BorderPane>
+    </left>
 </BorderPane>
 

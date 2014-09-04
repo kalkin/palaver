@@ -8,7 +8,6 @@ import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -54,7 +53,10 @@ public class MainController {
 	@FXML
 	private Button hidePalaverButton;
 
-	private Node palaverListTmp;
+	private BorderPane palaverListTmp;
+
+	@FXML
+	private Button showPalaverButton;
 
 	@FXML
 	private void initialize() {
@@ -93,22 +95,29 @@ public class MainController {
 						});
 		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
 		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
-		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
+		AwesomeDude.setIcon(showPalaverButton, AwesomeIcon.CHEVRON_RIGHT, "24");
+		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.PLUS, "24");
+
 
 	}
 
 	@FXML
 	private void hidePalaverList() {
 		if (palaverListTmp == null) {
-			palaverListTmp = borderPane.getLeft();
+			palaverListTmp = (BorderPane) borderPane.getLeft();
 			borderPane.setLeft(null);
-			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_RIGHT, "24"));
+			showPalaverButton.setVisible(true);
+			showPalaverButton.setManaged(true);
+			showPalaverButton.setCancelButton(true);
+			hidePalaverButton.setCancelButton(false);
+
 		} else {
 			borderPane.setLeft(palaverListTmp);
 			palaverListTmp = null;
-			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_LEFT, "24"));
+			showPalaverButton.setVisible(false);
+			showPalaverButton.setManaged(false);
+			showPalaverButton.setCancelButton(false);
+			hidePalaverButton.setCancelButton(true);
 		}
 	}
 

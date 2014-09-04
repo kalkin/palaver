@@ -10,10 +10,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
@@ -55,6 +52,7 @@ public class PalaverConnectionListener implements ConnectionListener {
 				logger.finer(String.format("Adding %s", conference.getJid()));
 				Contact contact = Utils.createContact(StringUtils.parseBareAddress(connection.getUser()), conference.getJid(), conference.getName(), true);
 				model.addContact(contact);
+
 				if (conference.isAutoJoin()) {
 					Palaver palaver = PalaverProvider.getById(contact.getAccount(), contact.getJid());
 					if (palaver == null || palaver.getClosed()) {
