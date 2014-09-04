@@ -56,7 +56,9 @@ public class AddAccountController {
 	@FXML
 	public void saveAccount() {
 		if (account == null) {
-			account = new Account(jidField.getText(), passwordField.getText());
+			account = new Account();
+			account.setJid(jidField.getText());
+			account.setPassword(passwordField.getText());
 			logger.fine("Saving Account " + account);
 			AccountProvider provider = ApplicationContext.getInstance()
 							.getRegisteredObject(AccountProvider.class);

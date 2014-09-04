@@ -16,17 +16,15 @@ public class Account implements EntityWithId<String> {
 
 	private static final long serialVersionUID = 1L;
 
-	private StringProperty jid;
+	private StringProperty jid = new SimpleStringProperty();
 
-	private StringProperty password;
+	private StringProperty password = new SimpleStringProperty();
+
+	private BoundPropertySupport credentialsChanged = new BoundPropertySupport(this);
 
 	public Account() {
-		this(null, null);
-	}
-
-	public Account(String jid, String password) {
-		this.jid = new SimpleStringProperty(jid);
-		this.password = new SimpleStringProperty(password);
+		this.credentialsChanged.raisePropertyChangeEventFor(jid);
+		this.credentialsChanged.raisePropertyChangeEventFor(password);
 	}
 
 	public String getId() {
@@ -51,5 +49,9 @@ public class Account implements EntityWithId<String> {
 
 	public String toString() {
 		return jid.get();
+	}
+
+	public BoundPropertySupport credentialsChangedProperty(){
+		return this.credentialsChanged;
 	}
 }

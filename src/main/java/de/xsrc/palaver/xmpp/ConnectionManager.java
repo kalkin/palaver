@@ -27,15 +27,15 @@ public class ConnectionManager {
 				if (c.getAddedSize() > 0) {
 					List<? extends Account> list = c.getAddedSubList();
 					for (Account account : list) {
-						ConnectTask connectTask = getConnectTask(account);
-						executor.submit(connectTask);
-						account.jidProperty().addListener(observable -> System.out.prinln(observable));
+						executor.submit(getConnectTask(account));
+						account.credentialsChangedProperty().addChangeListener(evt -> {
+							executor.submit(new DisconnectTask(conMap.get(account)));
+							executor.submit(getConnectTask(account));
+						});
 					}
 				} else if (c.wasRemoved()) {
 					for (Account account : c.getRemoved()) {
-						DisconnectTask disconnectTask = new DisconnectTask(conMap.get(account));
-						executor.submit(disconnectTask);
-						conMap.remove(account);
+						executor.submit(new DisconnectTask(conMap.get(account)));
 					}
 
 				}
