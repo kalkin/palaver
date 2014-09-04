@@ -1,20 +1,25 @@
 package de.xsrc.palaver.xmpp.listeners;
 
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.task.JoinMucTask;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 
 import java.util.logging.Logger;
 
-/**
- * Created by user on 04.09.14.
- */
 public class PalaverConnectionListener implements ConnectionListener {
 
 	private static final Logger logger = Logger.getLogger(PalaverConnectionListener.class.getName());
@@ -30,15 +35,39 @@ public class PalaverConnectionListener implements ConnectionListener {
 		ListProperty<Palaver> data = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData();
 
 		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		data.stream().filter(palaver -> palaver.isOpen())
-						.filter(palaver -> palaver.isConference())
-						.forEach(palaver -> Platform.runLater(() -> {
-															executor.submit(
-																			new JoinMucTask(palaver, connection)
-															);
-														}
-										)
-						);
+		data.stream().parallel().filter(Palaver::isOpen)
+						.filter(Palaver::isConference)
+						.forEach(palaver -> Platform.runLater(() -> executor.submit(new JoinMucTask(palaver, connection)
+						)));
+
+		syncBookmarks(connection);
+	}
+
+	private void syncBookmarks(XMPPConnection connection) {
+
+		logger.info(String.format("Syncing Bookmarks for %s", connection.getUser()));
+		BookmarkManager bm = null;
+
+		try {
+			bm = BookmarkManager.getBookmarkManager(connection);
+			ContactModel model = ContactModel.getInstance();
+			for (BookmarkedConference conference : bm.getBookmarkedConferences()) {
+				logger.finer(String.format("Adding %s", conference.getJid()));
+				Contact contact = Utils.createContact(StringUtils.parseBareAddress(connection.getUser()), conference.getJid(), conference.getName(), true);
+				model.addContact(contact);
+				if (conference.isAutoJoin()) {
+					Palaver palaver = PalaverProvider.getById(contact.getAccount(), contact.getJid());
+					if (palaver == null || palaver.getClosed()) {
+						PalaverProvider.openPalaver(contact);
+					}
+				}
+
+			}
+		} catch (XMPPException | SmackException e) {
+			e.printStackTrace();
+			logger.warning("Syncing bookmarks for failed");
+		}
+
 	}
 
 	@Override
