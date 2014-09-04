@@ -101,11 +101,6 @@ public class Utils {
 		return workingDirectory;
 	}
 
-
-	public static BookmarkManager getBookmarkManager(String accountJid, XMPPConnection connection) throws XMPPException, SmackException {
-		return BookmarkManager.getBookmarkManager(connection);
-	}
-
 	public static boolean isMuc(XMPPConnection connection, String jid) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
 		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
 		DiscoverInfo info = discoManager.discoverInfo(StringUtils.parseServer(jid));

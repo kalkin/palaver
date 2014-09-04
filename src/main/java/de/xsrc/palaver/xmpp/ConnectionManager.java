@@ -1,8 +1,9 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.xmpp.service.ConnectTask;
+import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.concurrent.ObservableExecutor;
@@ -21,25 +22,20 @@ public class ConnectionManager {
 
 	private ConnectionManager(ObservableList<Account> accounts) {
 		accounts.addListener((ListChangeListener.Change<? extends Account> c) -> {
+			ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 			while (c.next()) {
 				if (c.getAddedSize() > 0) {
 					List<? extends Account> list = c.getAddedSubList();
 					for (Account account : list) {
-						ConnectTask connectTask = new ConnectTask(account);
-						connectTask.setOnSucceeded(event -> {
-							XMPPConnection connection = (XMPPConnection) event.getSource().getValue();
-							if (connection.isAuthenticated()) {
-								conMap.put(account, connection);
-							}
-						});
-						ObservableExecutor registeredObject = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-						registeredObject.submit(connectTask);
+						ConnectTask connectTask = getConnectTask(account);
+						executor.submit(connectTask);
+						account.jidProperty().addListener(observable -> System.out.prinln(observable));
 					}
-				} else if (c.wasRemoved()){
+				} else if (c.wasRemoved()) {
 					for (Account account : c.getRemoved()) {
 						DisconnectTask disconnectTask = new DisconnectTask(conMap.get(account));
-						ObservableExecutor registeredObject = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-						registeredObject.submit(disconnectTask);
+						executor.submit(disconnectTask);
+						conMap.remove(account);
 					}
 
 				}
@@ -47,6 +43,15 @@ public class ConnectionManager {
 
 		});
 
+	}
+
+	private ConnectTask getConnectTask(Account account) {
+		ConnectTask connectTask = new ConnectTask(account);
+		connectTask.setOnSucceeded(event -> {
+			XMPPConnection connection = (XMPPConnection) event.getSource().getValue();
+			conMap.put(account, connection);
+		});
+		return connectTask;
 	}
 
 	public static void start(ObservableList<Account> accounts) {

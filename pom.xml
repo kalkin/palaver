@@ -75,6 +75,11 @@
             <version>8.0b5</version>
         </dependency>
         <dependency>
+            <groupId>org.javafxdata</groupId>
+            <artifactId>datafx-cell</artifactId>
+            <version>8.0b1</version>
+        </dependency>
+        <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>8.0.6</version>

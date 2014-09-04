@@ -4,6 +4,7 @@ import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.listeners.MsgListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import org.datafx.concurrent.DataFxTask;
@@ -15,6 +16,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 
 import javax.net.ssl.SSLContext;
@@ -110,11 +113,17 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 			);
 			ContactModel.getInstance().addContact(contact);
 		}
-//				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
-//				for (BookmarkedConference bookmarkedConference : bookmarkManager.getBookmarkedConferences()) {
-//					Contact contact = Utils.createContact(account.getJid(), bookmarkedConference.getJid(), bookmarkedConference.getName(), true);
-//					ContactModel.getInstance().addContact(contact);
-//				}
+		logger.info(String.format("Syncing Bookmarks for %s", connection.getUser()));
+		BookmarkManager bm = BookmarkManager.getBookmarkManager(connection);
+		ContactModel model = ContactModel.getInstance();
+		for (BookmarkedConference conference : bm.getBookmarkedConferences()) {
+			String message = String.format("Syncing %s", conference.getJid());
+			this.updateMessage(message);
+			logger.finer(String.format("Adding %s", conference.getJid()));
+			Contact contact = Utils.createContact(connection.getUser(), conference.getJid(), conference.getName(), true);
+			model.addContact(contact);
+		}
+
 		return connection;
 	}
 }
