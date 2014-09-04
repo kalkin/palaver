@@ -11,13 +11,12 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.logging.Logger;
 
-/**
- * Created by user on 04.09.14.
- */
+
 public class JoinMucTask extends DataFxTask {
 
 	private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
@@ -49,7 +48,20 @@ public class JoinMucTask extends DataFxTask {
 			muc.addMessageListener(new MucListener(palaver));
 			// TODO Implement Subject fetching and setting as Contact name
 			Utils.getJoinedMucs().put(palaver, muc);
-			
+			try {
+				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
+				String name;
+				if(muc.getSubject() != null) {
+					name = muc.getSubject();
+				} else {
+					name = StringUtils.parseName(palaver.getRecipient());
+				}
+				bookmarkManager.addBookmarkedConference(name,palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null );
+
+			} catch (XMPPException e) {
+				logger.warning("Could not could not get bookmarks");
+			}
+
 			logger.info(String.format("Joined %s with account %s", palaver.getRecipient(), palaver.getAccount()));
 
 			return true;
