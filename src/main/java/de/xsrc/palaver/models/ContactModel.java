@@ -4,10 +4,13 @@ import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import org.datafx.concurrent.ObservableExecutor;
+import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
@@ -31,9 +34,9 @@ public class ContactModel {
 	private ContactModel() {
 		accountContactObservableMap.addListener((MapChangeListener<String, Contact>) change -> {
 			if (change.wasAdded()) {
-				data.addAll(change.getValueAdded());
+				Platform.runLater(() -> data.add(change.getValueAdded()));
 			} else if (change.wasRemoved()) {
-				data.removeAll(change.getValueRemoved());
+				Platform.runLater(() ->data.remove(change.getValueRemoved()));
 			}
 		});
 
@@ -59,24 +62,26 @@ public class ContactModel {
 	public void removeContact(Contact contact) {
 		logger.info("Removing " + contact.getJid());
 		accountContactObservableMap.remove(contact.getJid());
+		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 		XMPPConnection connection = ConnectionManager.getConnection(contact.getAccount());
-		try {
-			if (contact.isConference()) {
-				BookmarkManager.getBookmarkManager(connection).removeBookmarkedConference(contact.getJid());
-			} else {
-				Roster roster = connection.getRoster();
-				RosterEntry entry = roster.getEntry(contact.getJid());
-				roster.removeEntry(entry);
+		executor.submit(() -> {
+			try {
+				if (contact.isConference()) {
+					BookmarkManager.getBookmarkManager(connection).removeBookmarkedConference(contact.getJid());
+				} else {
+					Roster roster = connection.getRoster();
+					RosterEntry entry = roster.getEntry(contact.getJid());
+					roster.removeEntry(entry);
+
+				}
+			} catch (XMPPException e) {
+				e.printStackTrace();
+			} catch (SmackException e) {
+				e.printStackTrace();
+
 
 			}
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		} catch (SmackException e) {
-			e.printStackTrace();
-
-
-		}
-
+		});
 	}
 
 	public Contact addContact(Account account, String jid)

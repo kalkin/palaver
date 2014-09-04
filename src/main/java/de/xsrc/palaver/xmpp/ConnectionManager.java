@@ -55,7 +55,6 @@ public class ConnectionManager {
 	}
 
 	public static XMPPConnection getConnection(Account account) {
-		System.out.println(conMap);
 		return conMap.get(account.getJid());
 	}
 
