@@ -33,7 +33,7 @@ public class Utils {
 	private static final Logger logger = Logger
 					.getLogger(Storage.class.getName());
 
-	private static ConcurrentHashMap<Palaver, MultiUserChat> joinedMucs = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, MultiUserChat> joinedMucs = new ConcurrentHashMap<>();
 
 	public static Stage getDialog(Flow f, ViewFlowContext flowContext)
 					throws FlowException {
@@ -104,7 +104,7 @@ public class Utils {
 	}
 
 	public static MultiUserChat getMuc(Palaver palaver) {
-		return getJoinedMucs().get(palaver);
+		return getJoinedMucs().get(palaver.getId());
 	}
 
 	public static DirectoryRosterStore getRosterStore(Account account) {
@@ -131,11 +131,11 @@ public class Utils {
 		return contact;
 	}
 
-	public static ConcurrentHashMap<Palaver, MultiUserChat> getJoinedMucs() {
+	public static ConcurrentHashMap<String, MultiUserChat> getJoinedMucs() {
 		return joinedMucs;
 	}
 
-	public static void setJoinedMucs(ConcurrentHashMap<Palaver, MultiUserChat> joinedMucs) {
+	public static void setJoinedMucs(ConcurrentHashMap<String, MultiUserChat> joinedMucs) {
 		Utils.joinedMucs = joinedMucs;
 	}
 }

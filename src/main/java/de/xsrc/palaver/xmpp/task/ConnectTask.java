@@ -9,9 +9,7 @@ import de.xsrc.palaver.xmpp.listeners.MsgListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverConnectionListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import org.datafx.concurrent.DataFxTask;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.DirectoryRosterStore;
-import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.RosterPacket;
@@ -22,6 +20,7 @@ import org.jivesoftware.smackx.carbons.CarbonManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class ConnectTask extends DataFxTask<XMPPConnection> {
@@ -85,7 +84,7 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 	}
 
 	@Override
-	protected XMPPConnection call() throws Exception {
+	protected XMPPConnection call() {
 		logger.finer("Connecting to account " + account);
 		String jid = account.getJid();
 
@@ -99,10 +98,19 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		XMPPConnection connection = new XMPPTCPConnection(config);
 		ConnectionManager.getConMap().put(account.getJid(), connection);
 		connection.addConnectionListener(new PalaverConnectionListener());
-		connection.connect();
+		try {
+			connection.connect();
+			connection.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");
+		} catch (SmackException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XMPPException e) {
+			e.printStackTrace();
+		}
 
-		connection.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");
-		CarbonManager.getInstanceFor(connection).enableCarbons();
+
+
 		connection.getRoster().addRosterListener(new PalaverRosterListener(account));
 		connection.addPacketListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
 		connection.addPacketSendingListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));

@@ -14,6 +14,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
+import org.jivesoftware.smackx.carbons.CarbonManager;
 
 import java.util.logging.Logger;
 
@@ -28,15 +29,17 @@ public class PalaverConnectionListener implements ConnectionListener {
 
 	@Override
 	public void authenticated(XMPPConnection connection) {
+		try {
+			CarbonManager.getInstanceFor(connection).enableCarbons();
+		} catch (XMPPException e) {
+			e.printStackTrace();
+		} catch (SmackException e) {
+			e.printStackTrace();
+		}
 		logger.fine(String.format("Authenticated to %s", connection.getUser()));
 		ListProperty<Palaver> data = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData();
 
 		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		data.stream().parallel().filter(Palaver::isOpen)
-						.filter(Palaver::isConference)
-						.forEach(palaver -> Platform.runLater(() -> executor.submit(new JoinMucTask(palaver, connection)
-						)));
-
 		syncBookmarks(connection);
 	}
 
@@ -56,8 +59,9 @@ public class PalaverConnectionListener implements ConnectionListener {
 				if (conference.isAutoJoin()) {
 					Palaver palaver = PalaverProvider.getById(contact.getAccount(), contact.getJid());
 					if (palaver == null || palaver.getClosed()) {
-						PalaverProvider.openPalaver(contact);
+						palaver = PalaverProvider.openPalaver(contact);
 					}
+					ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class).submit(new JoinMucTask(palaver));
 				}
 
 			}

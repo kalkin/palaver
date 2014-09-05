@@ -67,7 +67,7 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 	}
 
 
-	public static void openPalaver(Contact contact) throws XMPPException.XMPPErrorException, SmackException {
+	public static Palaver openPalaver(Contact contact) throws XMPPException.XMPPErrorException, SmackException {
 		Palaver palaver = getById(contact.getAccount(), contact.getJid());
 		if (palaver != null) {
 			palaver.setClosed(false);
@@ -78,8 +78,6 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 			palaver.setClosed(false);
 			if (contact.isConference()) {
 				palaver.setConference(true);
-				ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class).submit(new JoinMucTask(palaver));
-
 			}
 			final Palaver finalPalaver = palaver;
 			Platform.runLater(() -> {
@@ -88,6 +86,8 @@ public class PalaverProvider extends ListDataProvider<Palaver> {
 				save();
 			});
 		}
+
+		return palaver;
 	}
 
 	// TODO Why does write back handler do not handle this?
