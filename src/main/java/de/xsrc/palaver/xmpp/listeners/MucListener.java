@@ -20,6 +20,7 @@ public class MucListener implements PacketListener {
 
 	public MucListener(Palaver palaver) {
 		this.palaver = palaver;
+		logger.severe("Create MucListener for " + palaver );
 	}
 
 	@Override

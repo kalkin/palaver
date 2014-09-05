@@ -10,6 +10,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
+import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.logging.Logger;
@@ -41,16 +42,21 @@ public class JoinMucTask extends DataFxTask {
 
 		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 		try {
-			muc.createOrJoin(StringUtils.parseName(palaver.getRecipient()));
+			muc.createOrJoin(StringUtils.parseName(palaver.getAccount()));
 			muc.addMessageListener(new MucListener(palaver));
 			// TODO Implement Subject fetching and setting as Contact name
 			Utils.getJoinedMucs().put(palaver.getId(), muc);
 			logger.info(String.format("Joined %s with account %s", palaver.getRecipient(), palaver.getAccount()));
 			try {
 				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
-				bookmarkManager.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
+				for (BookmarkedConference bookmarkedConference : bookmarkManager.getBookmarkedConferences()) {
+					if (bookmarkedConference.getJid().equals(palaver.getRecipient()) && !bookmarkedConference.isAutoJoin()) {
+						bookmarkManager.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
+					}
+				}
+
 			} catch (XMPPException e) {
-				e.printStackTrace();
+				//	e.printStackTrace();
 			}
 			return muc;
 		} catch (XMPPException.XMPPErrorException | SmackException e) {

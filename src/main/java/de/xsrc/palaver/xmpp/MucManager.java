@@ -3,18 +3,24 @@ package de.xsrc.palaver.xmpp;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.xmpp.task.JoinMucTask;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
+import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
 public class MucManager {
+
+	private static final Logger logger = Logger
+					.getLogger(MucManager.class.getName());
 
 	private final ObservableList<Palaver> openPalavers;
 	private ConcurrentHashMap<Palaver, MultiUserChat> joinedMucMap;
@@ -27,13 +33,11 @@ public class MucManager {
 		joinedMucMap = new ConcurrentHashMap<>();
 
 		openPalavers = PalaverModel.getInstance().getOpenPalavers();
-		joinMucs(openPalavers);
 		openPalavers.addListener((ListChangeListener<Palaver>) change -> {
 			while (change.next()) {
 				if (change.wasAdded()) {
 					joinMucs(change.getAddedSubList());
 				} else if (change.wasRemoved()) {
-
 				}
 			}
 		});
@@ -44,7 +48,7 @@ public class MucManager {
 		list.forEach(palaver -> {
 							if (palaver.isConference()) {
 								JoinMucTask task = new JoinMucTask(palaver);
-								task.setOnSucceeded(event -> joinedMucMap.put(palaver, (MultiUserChat) task.getValue())	);
+								Platform.runLater(() -> task.setOnSucceeded(event -> joinedMucMap.put(palaver, (MultiUserChat) task.getValue())));
 
 								executor.submit(task);
 							}
@@ -61,8 +65,9 @@ public class MucManager {
 	}
 
 	public void reconnect(String accountJid) {
+
 		List<Palaver> mucsToRejoin = openPalavers.parallelStream().filter(palaver -> palaver.isConference() && palaver.getAccount().equals(accountJid)).collect(Collectors.toList());
-		System.out.println(mucsToRejoin);
+		logger.info(String.format("Rejoining the mucs %s", mucsToRejoin.toString()));
 		joinMucs(mucsToRejoin);
 	}
 
