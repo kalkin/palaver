@@ -5,6 +5,7 @@ import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.ColdStorage;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -49,14 +50,14 @@ public class PalaverModel {
 
 					// auto add to openPalaversList if a palaver closedProperty changes to true
 					c.getAddedSubList().forEach(palaver -> palaver.closedProperty().addListener((observable, oldValue, newValue) -> {
-						System.out.println("State changed");
 						if (oldValue && !newValue) {
 							// Palaver changed state to open
-							openPalaverList.add(palaver);
+							Platform.runLater(() ->
+							openPalaverList.add(palaver));
 							save();
 						} else if (!oldValue && newValue) {
 							// Palaver changed state to closed
-							openPalaverList.remove(palaver);
+							Platform.runLater(() -> openPalaverList.remove(palaver));
 							save();
 						}
 					}));

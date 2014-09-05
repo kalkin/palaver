@@ -96,7 +96,6 @@ public class MucManager {
 	}
 
 	public MultiUserChat getMuc(Palaver palaver) {
-		System.out.println(joinedMucMap);
 		return joinedMucMap.get(palaver);
 	}
 
