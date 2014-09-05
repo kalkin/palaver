@@ -8,6 +8,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
@@ -38,6 +41,23 @@ public class MucManager {
 				if (change.wasAdded()) {
 					joinMucs(change.getAddedSubList());
 				} else if (change.wasRemoved()) {
+					ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
+					change.getRemoved().parallelStream().filter(palaver -> palaver.isConference()).forEach(palaver -> {
+						executor.submit(() -> {
+							try {
+								BookmarkManager bm = BookmarkManager.getBookmarkManager(ConnectionManager.getConnection(palaver.getAccount()));
+							bm.getBookmarkedConferences().parallelStream().filter(bookmarkedConference -> bookmarkedConference.getJid().equals(palaver.getRecipient())&& bookmarkedConference.isAutoJoin()).forEach(bookmarkedConference -> {
+								try {
+									bm.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), false, StringUtils.parseName(palaver.getAccount()), null );
+								} catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
+									logger.warning(String.format("Could not remove autjoin on %s", palaver.toString()));
+								}
+							});
+						} catch (XMPPException | SmackException e) {
+							logger.warning(String.format("Could not get Bookmark manager on %s", palaver.toString()));
+							}
+						});
+					});
 				}
 			}
 		});
