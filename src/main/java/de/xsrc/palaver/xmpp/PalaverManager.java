@@ -20,13 +20,13 @@ public class PalaverManager {
 
 
 		if (palaver.getConference()) {
-			MultiUserChat muc = Utils.getMuc(palaver);
+			MultiUserChat muc = MucManager.getInstance().getMuc(palaver);
 			muc.sendMessage(body);
 		} else {
 			Message message = new Message(palaver.getRecipient());
 			message.setType(Message.Type.chat);
 			message.setBody(body);
-			XMPPConnection connection = ConnectionManager.getConnection(palaver.accountInstance());
+			XMPPConnection connection = ConnectionManager.getConnection(palaver.getAccount());
 			connection.sendPacket(message);
 		}
 

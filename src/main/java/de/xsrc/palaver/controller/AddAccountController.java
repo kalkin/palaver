@@ -2,6 +2,8 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.utils.ColdStorage;
+import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -67,6 +69,8 @@ public class AddAccountController {
 			account.setJid(jidField.getText());
 			account.setPassword(passwordField.getText());
 		}
+		ListProperty<Account> data = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+		ColdStorage.save(Account.class, data);
 		close();
 
 	}

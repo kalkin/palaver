@@ -3,7 +3,7 @@ package de.xsrc.palaver.xmpp.listeners;
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
@@ -61,17 +61,17 @@ public class MsgListener implements PacketListener {
 	}
 
 	private void saveEntry(String account, String recipient, Entry entry) {
-		Palaver palaver = PalaverProvider.getById(account, recipient);
+		Palaver palaver = PalaverModel.getInstance().getById(account, recipient);
 		if (palaver == null) {
 			logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
-			palaver = PalaverProvider.createPalaver(account, StringUtils.parseName(recipient));
+			palaver = PalaverModel.getInstance().openPalaver(account, StringUtils.parseBareAddress(recipient), false);
 		}
 		palaver.history.addEntry(entry);
 		if (!account.equals(entry.getFrom())) {
 			palaver.setUnread(true);
 		}
 		palaver.setClosed(false);
-		PalaverProvider.save();
+
 	}
 
 	private void handleCarbon(Message message) throws SmackException.NotConnectedException {
