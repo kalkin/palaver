@@ -3,6 +3,7 @@ package de.xsrc.palaver.controller;
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.PalaverProvider;
 import javafx.beans.property.ListProperty;
@@ -58,7 +59,8 @@ public class AddContactController {
 
 		Account account = accountChoice.getSelectionModel().getSelectedItem();
 		Contact contact = ContactModel.getInstance().addContact(account, jid.getText());
-		PalaverProvider.openPalaver(contact);
+		PalaverModel palaverModel = PalaverModel.getInstance();
+		palaverModel.openPalaver(contact);
 		close();
 	}
 

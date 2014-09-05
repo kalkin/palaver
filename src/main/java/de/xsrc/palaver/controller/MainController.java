@@ -3,6 +3,7 @@ package de.xsrc.palaver.controller;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
@@ -58,12 +59,12 @@ public class MainController {
 	@FXML
 	private Button showPalaverButton;
 
+	private PalaverModel model = PalaverModel.getInstance();
+
 	@FXML
 	private void initialize() {
 
-		PalaverProvider provider = ApplicationContext.getInstance()
-						.getRegisteredObject(PalaverProvider.class);
-		palaverListView.setItems(provider.getData());
+				palaverListView.setItems(model.getOpenPalavers());
 		palaverListView
 						.setCellFactory(listView -> new PalaverCell());
 
@@ -124,35 +125,6 @@ public class MainController {
 	@FXML
 	private void removeAction() {
 		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
-		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		if (p.getConference()) {
-			executor.submit(() -> {
-				MultiUserChat muc = Utils.getMuc(p);
-				try {
-					muc.leave();
-				} catch (SmackException.NotConnectedException e) {
-					e.printStackTrace();
-				}
-			});
-			executor.submit(() -> {
-				XMPPConnection connection = ConnectionManager.getConnection(p.getAccount());
-				try {
-					Collection<BookmarkedConference> bookmarkedConferences = BookmarkManager.getBookmarkManager(connection).getBookmarkedConferences();
-					for (BookmarkedConference bookmarkedConference : bookmarkedConferences) {
-						if (bookmarkedConference.getJid().equals(p.getRecipient()) && bookmarkedConference.isAutoJoin()) {
-							BookmarkManager.getBookmarkManager(connection).addBookmarkedConference(bookmarkedConference.getName(), bookmarkedConference.getJid(), false, bookmarkedConference.getNickname(), bookmarkedConference.getPassword()
-							);
-						}
-					}
-
-				} catch (XMPPException | SmackException e) {
-					e.printStackTrace();
-					logger.warning(String.format("Disabling autojoin on %s failed", p.getRecipient()));
-				}
-			});
-		}
-		palaverListView.getItems().remove(p);
-		historyMap.remove(p);
 		p.setClosed(true);
 	}
 }

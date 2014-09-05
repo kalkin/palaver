@@ -3,7 +3,6 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
@@ -33,9 +32,11 @@ public class MucListener implements PacketListener {
 
 			if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
 				Entry entry = new Entry(StringUtils.parseResource(message.getFrom()), message.getBody());
-				Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
 				palaver.history.addEntry(entry);
-				PalaverProvider.save();
+				if (!message.getFrom().equals(StringUtils.parseName(palaver.getAccount())))
+					palaver.setUnread(true);
+					Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
+
 			}
 		}
 	}

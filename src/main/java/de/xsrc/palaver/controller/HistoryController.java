@@ -2,6 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
@@ -32,8 +33,9 @@ public class HistoryController {
 	@FXML
 	private ScrollPane scrollPane;
 
-	private Palaver palaver;
+	private Palaver Mpalaver;
 	private ObservableList<Entry> history;
+	private Palaver palaver;
 
 	@FXML
 	private void initialize() {
@@ -41,13 +43,13 @@ public class HistoryController {
 
 	}
 
-	public void setPalaver(Palaver p) {
-		this.palaver = p;
-		history = p.history.entryListProperty();
+	public void setPalaver(Palaver palaver) {
+		this.palaver =palaver;
+		history = palaver.history.entryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
 			while (change.next()) {
-				logger.finer("New Messages were added to " + p);
+				logger.finer("New Messages were added to " + palaver);
 				add(change.getAddedSubList());
 			}
 		});
@@ -79,6 +81,7 @@ public class HistoryController {
 	@FXML
 	private void sendMsgAction() throws NotConnectedException, XMPPException {
 		String body = chatInput.getText();
+
 		PalaverManager.sendMsg(this.palaver, body);
 		chatInput.clear();
 	}

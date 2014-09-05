@@ -1,8 +1,9 @@
 package de.xsrc.palaver.beans;
 
-import de.xsrc.palaver.provider.AccountProvider;
-import javafx.beans.property.*;
-import org.datafx.controller.context.ApplicationContext;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -101,15 +102,6 @@ public class Palaver implements EntityWithId<String> {
 
 	public BooleanProperty unreadProperty() {
 		return unread;
-	}
-
-	public Account accountInstance() throws IllegalStateException {
-		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
-		for (Account account : accounts.get())
-			if (account.getJid().equalsIgnoreCase(getAccount())) {
-				return account;
-			}
-		throw new IllegalStateException("Account with jid " + getAccount() + "does not exists");
 	}
 
 	public Boolean getConference() {

@@ -3,8 +3,10 @@ package de.xsrc.palaver.xmpp.listeners;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.MucManager;
 import de.xsrc.palaver.xmpp.task.JoinMucTask;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -21,14 +23,18 @@ import java.util.logging.Logger;
 public class PalaverConnectionListener implements ConnectionListener {
 
 	private static final Logger logger = Logger.getLogger(PalaverConnectionListener.class.getName());
+	private String accountJid;
+
 
 	@Override
 	public void connected(XMPPConnection connection) {
 		logger.info("Connected account " + connection.getServiceName());
+
 	}
 
 	@Override
 	public void authenticated(XMPPConnection connection) {
+		accountJid = StringUtils.parseBareAddress(connection.getUser());
 		try {
 			CarbonManager.getInstanceFor(connection).enableCarbons();
 		} catch (XMPPException e) {
@@ -37,10 +43,8 @@ public class PalaverConnectionListener implements ConnectionListener {
 			e.printStackTrace();
 		}
 		logger.fine(String.format("Authenticated to %s", connection.getUser()));
-		ListProperty<Palaver> data = ApplicationContext.getInstance().getRegisteredObject(PalaverProvider.class).getData();
-
-		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 		syncBookmarks(connection);
+		MucManager.getInstance().reconnect(accountJid);
 	}
 
 	private void syncBookmarks(XMPPConnection connection) {
@@ -57,9 +61,9 @@ public class PalaverConnectionListener implements ConnectionListener {
 				model.addContact(contact);
 
 				if (conference.isAutoJoin()) {
-					Palaver palaver = PalaverProvider.getById(contact.getAccount(), contact.getJid());
+					Palaver palaver = PalaverModel.getInstance().getById(contact.getAccount(), contact.getJid());
 					if (palaver == null || palaver.getClosed()) {
-						palaver = PalaverProvider.openPalaver(contact);
+						palaver = PalaverModel.getInstance().openPalaver(contact);
 					}
 					ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class).submit(new JoinMucTask(palaver));
 				}
@@ -80,6 +84,7 @@ public class PalaverConnectionListener implements ConnectionListener {
 	@Override
 	public void connectionClosedOnError(Exception e) {
 		logger.warning(String.format("Connection closed with error %s", e.getMessage()));
+		MucManager.getInstance().disconnect(accountJid);
 	}
 
 	@Override

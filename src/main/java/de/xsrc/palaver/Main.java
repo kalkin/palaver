@@ -1,17 +1,14 @@
 package de.xsrc.palaver;
 
 
-import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -41,11 +38,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws FlowException {
 		AccountProvider accounts = new AccountProvider();
-		PalaverProvider palavers = new PalaverProvider();
+
 
 		applicationContext.register(accounts);
 		applicationContext.register(new ObservableExecutor());
-		applicationContext.register(palavers);
+
 
 		Flow flow = new Flow(MainController.class);
 		flow.withAction(ContactController.class, "startPalaverButton", new FlowActionChain(new FlowMethodAction("startPalaverAction"), new FlowLink<>(MainController.class)));
@@ -60,20 +57,7 @@ public class Main extends Application {
 		primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
 		Platform.runLater(() -> {
 			accounts.retrieve();
-			palavers.retrieve();
 			ConnectionManager.getInstance();
-
-			palavers.getData().addListener((ListChangeListener<Palaver>) c -> {
-				while (c.next()) if (c.wasAdded()) {
-					c.getAddedSubList().stream().filter(palaver -> palaver.getConference() && !palaver.getClosed()).forEach((t) -> {
-//						try {
-//							Utils.joinMuc(t);
-//						} catch (XMPPException.XMPPErrorException | SmackException e) {
-//							e.printStackTrace();
-//						}
-					});
-				}
-			});
 
 		});
 
