@@ -25,7 +25,7 @@ public class Palaver implements EntityWithId<String> {
 	private StringProperty account;
 	private BooleanProperty unread;
 	private BooleanProperty closed;
-	private BooleanProperty conference = new SimpleBooleanProperty(false);
+	private BooleanProperty conference;
 
 
 	public Palaver() {
@@ -34,7 +34,7 @@ public class Palaver implements EntityWithId<String> {
 		this.history = new History();
 		this.closed = new SimpleBooleanProperty(false);
 		this.unread = new SimpleBooleanProperty(false);
-
+		this.conference = new SimpleBooleanProperty(false);
 	}
 
 	public Palaver(String account, String recipient) {
@@ -43,6 +43,7 @@ public class Palaver implements EntityWithId<String> {
 		this.history = new History();
 		this.closed = new SimpleBooleanProperty(false);
 		this.unread = new SimpleBooleanProperty(false);
+		this.conference = new SimpleBooleanProperty(false);
 	}
 
 
@@ -113,10 +114,15 @@ public class Palaver implements EntityWithId<String> {
 	}
 
 	public boolean isConference() {
-		return conference.get();
+		return getConference();
 	}
 
 	public void setConference(Boolean conference) {
 		this.conference.set(conference);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode() * 23;
 	}
 }
