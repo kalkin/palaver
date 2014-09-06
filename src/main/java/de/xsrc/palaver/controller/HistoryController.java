@@ -2,7 +2,6 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
@@ -12,9 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
+import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
@@ -44,7 +45,7 @@ public class HistoryController {
 	}
 
 	public void setPalaver(Palaver palaver) {
-		this.palaver =palaver;
+		this.palaver = palaver;
 		history = palaver.history.entryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
@@ -60,22 +61,26 @@ public class HistoryController {
 	}
 
 	private void add(List<? extends Entry> list) {
-		for (Entry entry : list) {
-			Label l = new Label();
-			l.textProperty().bind(entry.bodyProperty());
+		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
+		executor.submit(() -> {
+							for (Entry entry : list) {
+								Label l = new Label();
+								l.textProperty().bind(entry.bodyProperty());
 
-			final ViewContext<EntryController> context;
-			try {
-				context = ViewFactory.getInstance().createByController(
-								EntryController.class);
-				context.getController().setEntry(entry);
-				Platform.runLater(() -> historyBox.getChildren().add(context.getRootNode()));
-			} catch (FxmlLoadException e) {
-				e.printStackTrace();
-				logger.severe("Could not add entry from " + entry.getFrom() + " "
-								+ entry);
-			}
-		}
+								final ViewContext<EntryController> context;
+								try {
+									context = ViewFactory.getInstance().createByController(
+													EntryController.class);
+									context.getController().setEntry(entry);
+									Platform.runLater(() -> historyBox.getChildren().add(context.getRootNode()));
+								} catch (FxmlLoadException e) {
+									e.printStackTrace();
+									logger.severe("Could not add entry from " + entry.getFrom() + " "
+													+ entry);
+								}
+							}
+						}
+		);
 	}
 
 	@FXML
