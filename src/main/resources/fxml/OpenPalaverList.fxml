@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.fontawesome.AwesomeIcon?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<fx:root xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.BorderPane">
+    <top>
+        <BorderPane styleClass="bar">
+            <left>
+                <Button fx:id="showBuddyListButton" styleClass="awesome-icon" >
+                    <text>
+                        <AwesomeIcon fx:constant="PLUS"/>
+                    </text>
+                    <tooltip>
+                        <Tooltip text="%budy_list"/>
+                    </tooltip>
+                </Button>
+
+            </left>
+            <right>
+                <Button fx:id="hideButton" cancelButton="true" styleClass="awesome-icon" onAction="#hideAction">
+                    <text>
+                        <AwesomeIcon fx:constant="CHEVRON_LEFT"/>
+                    </text>
+
+                    <tooltip>
+                        <Tooltip text="%hide_palaver_list"/>
+                    </tooltip>
+                </Button>
+
+            </right>
+        </BorderPane>
+    </top>
+    <center>
+        <ListView fx:id="openPalaversList" styleClass="palaverList">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem text="%remove"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
+    </center>
+
+</fx:root>
