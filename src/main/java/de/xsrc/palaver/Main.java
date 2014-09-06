@@ -12,7 +12,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.control.cell.ServiceListCellFactory;
 import org.datafx.controller.context.ApplicationContext;
@@ -29,6 +31,11 @@ public class Main extends Application {
 	private static final Logger logger = Logger.getLogger(Main.class
 					.getName());
 	private ApplicationContext applicationContext = ApplicationContext.getInstance();
+
+	static {
+		Font.loadFont(FontAwesome.class.getResource("/font/fontawesome-webfont.ttf").toExternalForm(), 24);
+
+	}
 
 	public static void main(String[] args) {
 

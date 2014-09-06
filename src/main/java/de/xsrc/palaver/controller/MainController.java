@@ -3,10 +3,13 @@ package de.xsrc.palaver.controller;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.ViewFactory;
@@ -44,87 +48,40 @@ public class MainController {
 	private Button showBuddyListButton;
 
 	@FXML
-	private ListView<Palaver> palaverListView;
+	private Pane historyPane;
 
+	@FXML
+	private Button showOpenPalaverButton;
+
+	@FXML
+	private OpenPalaverList palaverListControl;
 	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
-
-	@FXML
-	private BorderPane borderPane;
-
-	@FXML
-	private Button hidePalaverButton;
-
-	private BorderPane palaverListTmp;
-
-	@FXML
-	private Button showPalaverButton;
-
 	private PalaverModel model = PalaverModel.getInstance();
 
 	@FXML
 	private void initialize() {
-
-				palaverListView.setItems(model.getOpenPalavers());
-		palaverListView
-						.setCellFactory(listView -> new PalaverCell());
-
-		MultipleSelectionModel<Palaver> selModel = palaverListView
-						.getSelectionModel();
-
-		selModel.setSelectionMode(SelectionMode.SINGLE);
-
-		selModel.selectedItemProperty().addListener(
-						(ObservableValue<? extends Palaver> observable, Palaver oldValue,
-						 Palaver newValue) -> {
-							if (newValue != null) {
-								newValue.setUnread(false);
-								if (!historyMap.containsKey(newValue)) {
-									try {
-										ViewContext<HistoryController> context = ViewFactory
-														.getInstance().createByController(HistoryController.class);
-										context.getController().setPalaver(newValue);
-										historyMap.put(newValue, context);
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-
-								borderPane.setCenter(historyMap.get(newValue).getRootNode());
-								historyMap.get(newValue).getController().requestFocus();
-							}
-						});
-		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
-		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
-		AwesomeDude.setIcon(showPalaverButton, AwesomeIcon.CHEVRON_RIGHT, "24");
-		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.PLUS, "24");
-
-
+		palaverListControl.selectedPalaver().addListener((observable, oldValue, newValue) -> {
+			if (!historyMap.containsKey(newValue)) {
+				try {
+					ViewContext<HistoryController> context = ViewFactory
+									.getInstance().createByController(HistoryController.class);
+					context.getController().setPalaver(newValue);
+					historyMap.put(newValue, context);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			historyPane.getChildren().addAll(historyMap.get(newValue).getRootNode());
+			historyMap.get(newValue).getController().requestFocus();
+		});
+		showOpenPalaverButton.visibleProperty().bind(palaverListControl.visibleProperty().not());
+		showOpenPalaverButton.managedProperty().bind(palaverListControl.managedProperty().not());
+		showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
 	}
 
 	@FXML
-	private void hidePalaverList() {
-		if (palaverListTmp == null) {
-			palaverListTmp = (BorderPane) borderPane.getLeft();
-			borderPane.setLeft(null);
-			showPalaverButton.setVisible(true);
-			showPalaverButton.setManaged(true);
-			showPalaverButton.setCancelButton(true);
-			hidePalaverButton.setCancelButton(false);
-
-		} else {
-			borderPane.setLeft(palaverListTmp);
-			palaverListTmp = null;
-			showPalaverButton.setVisible(false);
-			showPalaverButton.setManaged(false);
-			showPalaverButton.setCancelButton(false);
-			hidePalaverButton.setCancelButton(true);
-		}
-	}
-
-	@FXML
-	private void removeAction() {
-		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
-		p.setClosed(true);
+	private void showAction(){
+		palaverListControl.hide(false);
 	}
 }

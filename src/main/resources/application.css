@@ -1,9 +1,26 @@
 
-.history{
-	-fx-background-color: -fx-control-inner-background;
-	-fx-font-size: 16;
+.history {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-font-size: 16;
 }
 
 .button {
     -fx-font-size: 17;
-    }
+}
+
+.palaverList .list-cell {
+    -fx-pref-height: 82;
+}
+.awesome-icon {
+    -fx-font-size: 17;
+    -fx-font-family: FontAwesome;
+
+}
+
+.palaverBar {
+    padding: 4;
+}
+
+.bar {
+    -fx-padding: 4;
+}
