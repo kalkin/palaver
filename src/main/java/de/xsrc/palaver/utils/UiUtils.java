@@ -38,7 +38,7 @@ public class UiUtils {
 
 	public static synchronized Scene prepareFlow(Flow f,
 	                                             ViewFlowContext flowContext) throws FlowException {
-		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver");
 
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		FlowHandler flowHandler;
