@@ -72,6 +72,7 @@ public class MainController {
 					e.printStackTrace();
 				}
 			}
+			historyPane.getChildren().clear();
 			historyPane.getChildren().addAll(historyMap.get(newValue).getRootNode());
 			historyMap.get(newValue).getController().requestFocus();
 		});
