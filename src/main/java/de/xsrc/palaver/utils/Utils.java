@@ -37,7 +37,7 @@ public class Utils {
 
 	public static Stage getDialog(Flow f, ViewFlowContext flowContext)
 					throws FlowException {
-		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+		ResourceBundle b = UiUtils.getRessourceBundle();
 		DefaultFlowContainer container = new DefaultFlowContainer();
 		FlowHandler flowHandler;
 		if (flowContext != null) {

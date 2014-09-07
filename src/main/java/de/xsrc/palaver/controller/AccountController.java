@@ -5,6 +5,7 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.ColdStorage;
+import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -69,7 +70,7 @@ public class AccountController {
 	private void editAction() {
 		Account acc = accountList.getSelectionModel().getSelectedItem();
 		try {
-			ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+			ResourceBundle b = UiUtils.getRessourceBundle();
 			ViewConfiguration config = new ViewConfiguration();
 			config.setResources(b);
 			ViewContext<AddAccountController> context = ViewFactory.getInstance()
