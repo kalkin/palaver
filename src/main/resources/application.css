@@ -1,6 +1,7 @@
 .root {
     -fx-background-color: #f9f9f9;
     -fx-font-family: Roboto;
+    -fx-font-size: 14pt;
 
 }
 
@@ -11,10 +12,6 @@
 .bar .button {
 
     -fx-background-color: #009688;
-}
-
-.paper {
-    -fx-background-color: white;
 }
 
 .list-view {
@@ -36,14 +33,14 @@
 
 .muc {
     -fx-graphic: "/icon/ic_action_group.png";
-    -fx-font-size: 24;
+    -fx-font-size: 16pt;
     -fx-text-fill: #8a8a8a;
     -fx-max-width: 256;
 }
 
 .chat {
     -fx-graphic: "/icon/ic_action_person.png";
-    -fx-font-size: 24;
+    -fx-font-size: 16pt;
     -fx-text-fill: #8a8a8a;
     -fx-max-width: 256;
 }
@@ -85,7 +82,7 @@
 }
 
 .title {
-    -fx-font-size: 40;
+    -fx-font-size: 34pt;
     -fx-fill: white;
 }
 
@@ -121,20 +118,46 @@
     -fx-background-color: white;
     -fx-background-radius: 0;
 }
+
 .scroll-pane,
-.scroll-pane > .viewport  { -fx-background-color: transparent; }
-.scroll-pane .scroll-bar .thumb{
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .thumb {
     -fx-background-color: #f9f9f9;
 }
+
 .scroll-pane .scroll-bar .track,
 .scroll-pane .scroll-bar .decrement-button,
 .scroll-pane .scroll-bar .increment-button {
     -fx-background-color: white;
 }
 
-
+.bottom-divide {
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
 
 .historyBox {
     -fx-background-color: transparent;
-    -fx-padding: 8;
+}
+
+.zdepth1 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.24), 1, 0, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 1.5, 0, 0, 1);
+}
+
+.zdepth2 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.23), 3, 0, 0, 3);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.16), 3, 0, 0, 3);
+}
+
+.zdepth3 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.23), 3, 0, 0, 6);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.19), 10, 0, 0, 10);
+}
+
+.white {
+    -fx-background-color: white;
 }

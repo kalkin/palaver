@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <fx:root  prefWidth="256.0"  type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
     <children>
-        <AnchorPane AnchorPane.rightAnchor="0" minHeight="80" styleClass="primary">
+        <AnchorPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" minHeight="80" maxHeight="80" styleClass="bar">
             <children>
                 <Button fx:id="showBuddyListButton" styleClass="awesome-icon" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="64">
                     <text>
@@ -28,7 +28,7 @@
             </children>
         </AnchorPane>
 
-        <ListView AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="80"  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" fx:id="openPalaversList" styleClass="palaverList" >
+        <ListView AnchorPane.topAnchor="80"  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" fx:id="openPalaversList" styleClass="palaverList,zdepth2" >
             <contextMenu>
                 <ContextMenu>
                     <items>

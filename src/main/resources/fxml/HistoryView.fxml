@@ -4,19 +4,19 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<fx:root type="javafx.scene.layout.BorderPane" styleClass="history" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root type="javafx.scene.layout.BorderPane" styleClass="white,zdepth3"  xmlns:fx="http://javafx.com/fxml/1"
          xmlns="http://javafx.com/javafx/8">
-    <top>
-        <HBox maxHeight="80" minHeight="80"></HBox>
-        </top>
+    <!--<top>-->
+        <!--<HBox styleClass="bottom-divide" maxHeight="80" minHeight="80"></HBox>-->
+        <!--</top>-->
     <center>
-        <ScrollPane fx:id="scrollPane"  fitToWidth="true"  styleClass="historyScroll">
+        <ScrollPane fx:id="scrollPane"  fitToWidth="true"  styleClass="bottom-divide,white">
             <content>
-                <VBox fx:id="historyBox" fillWidth="true"  styleClass="history"/>
+                <VBox fx:id="historyBox" fillWidth="true"/>
             </content>
         </ScrollPane>
     </center>
     <bottom>
-        <TextArea fx:id="chatInput" prefHeight="64"/>
+        <TextArea   fx:id="chatInput" prefHeight="64"/>
     </bottom>
 </fx:root>

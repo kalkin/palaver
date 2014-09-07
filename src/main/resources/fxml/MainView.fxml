@@ -9,8 +9,8 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1024.0" prefWidth="1280.0" styleClass="background"
             xmlns="http://javafx.com/javafx/8">
     <children>
-        <StackPane styleClass="bar" maxHeight="144.0" minHeight="64.0" prefHeight="144.0" AnchorPane.leftAnchor="0.0"
-                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <StackPane styleClass="bar,zdepth1" maxHeight="144.0" minHeight="64.0" prefHeight="144.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
 
             <BorderPane maxWidth="1024" prefWidth="1024">
                 <left>
@@ -39,19 +39,19 @@
                 </right>
             </BorderPane>
         </StackPane>
-        <StackPane AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="64" AnchorPane.rightAnchor="0"
+        <StackPane AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="64" AnchorPane.rightAnchor="0"
                    AnchorPane.leftAnchor="0">
             <BorderPane maxWidth="1024" minWidth="256">
                 <left>
                     <OpenPalaverList fx:id="palaverListControl"/>
                 </left>
                 <center>
-                    <BorderPane fx:id="historyPane" maxWidth="960" prefWidth="704.0"
-                                styleClass="paper" style="-fx-padding:0;"/>
+                    <BorderPane styleClass="mainPaper" fx:id="historyPane" maxWidth="960" prefWidth="704.0"
+                                style="-fx-padding:0;"/>
                 </center>
 
                 <right>
-                    <StackPane maxWidth="64"  minWidth="64"/>
+                    <StackPane maxWidth="64" minWidth="64"/>
                 </right>
 
             </BorderPane>

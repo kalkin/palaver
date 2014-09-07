@@ -18,8 +18,8 @@ import java.util.ResourceBundle;
 public class UiUtils {
 
 	public static StackPane getAvatar(String name) {
-		int modena_colors[] = {0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
-						0xc84164, 0xFF00bcd4, 0x888888};
+		int modena_colors[] = {0xe51c23, 0xe91e63, 0x9c27b0, 0x673ab7, 0x5677fc, 0x03e9f4, 0x00bcd4, 0x009688, 0x259b24,
+						0x8bc34a, 0xcddc39, 0xffeb3b, 0xffc107, 0xff9800, 0xff5722, 0x795548, 0x9e9e9e, 0x607d8b};
 		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
 		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
 		Rectangle r = new Rectangle(64, 64);
