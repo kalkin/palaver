@@ -11,13 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 
-public class OpenPalaverList extends BorderPane {
+public class OpenPalaverList extends AnchorPane {
 
 	private static final Logger logger = Logger.getLogger(OpenPalaverList.class.getName());
 
@@ -66,9 +66,10 @@ public class OpenPalaverList extends BorderPane {
 		hide(true);
 	}
 
-	public void hide(boolean b){
+	public void hide(boolean b) {
 		setVisible(!b);
 		setManaged(!b);
+
 	}
 
 }

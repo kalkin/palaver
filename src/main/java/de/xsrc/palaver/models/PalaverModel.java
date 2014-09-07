@@ -53,7 +53,7 @@ public class PalaverModel {
 						if (oldValue && !newValue) {
 							// Palaver changed state to open
 							Platform.runLater(() ->
-							openPalaverList.add(palaver));
+											openPalaverList.add(palaver));
 							save();
 						} else if (!oldValue && newValue) {
 							// Palaver changed state to closed
@@ -75,7 +75,7 @@ public class PalaverModel {
 		return InstanceHolder.INSTANCE;
 	}
 
-	public Palaver openPalaver(Contact contact){
+	public Palaver openPalaver(Contact contact) {
 		return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
 	}
 
@@ -113,7 +113,7 @@ public class PalaverModel {
 	}
 
 	public Palaver getById(String account, String recipient) {
-		return palaverMap.get(account+":"+recipient);
+		return palaverMap.get(account + ":" + recipient);
 	}
 
 }

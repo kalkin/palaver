@@ -5,7 +5,6 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -46,15 +46,15 @@ public class MucManager {
 						executor.submit(() -> {
 							try {
 								BookmarkManager bm = BookmarkManager.getBookmarkManager(ConnectionManager.getConnection(palaver.getAccount()));
-							bm.getBookmarkedConferences().parallelStream().filter(bookmarkedConference -> bookmarkedConference.getJid().equals(palaver.getRecipient())&& bookmarkedConference.isAutoJoin()).forEach(bookmarkedConference -> {
-								try {
-									bm.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), false, StringUtils.parseName(palaver.getAccount()), null );
-								} catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
-									logger.warning(String.format("Could not remove autjoin on %s", palaver.toString()));
-								}
-							});
-						} catch (XMPPException | SmackException e) {
-							logger.warning(String.format("Could not get Bookmark manager on %s", palaver.toString()));
+								bm.getBookmarkedConferences().parallelStream().filter(bookmarkedConference -> bookmarkedConference.getJid().equals(palaver.getRecipient()) && bookmarkedConference.isAutoJoin()).forEach(bookmarkedConference -> {
+									try {
+										bm.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), false, StringUtils.parseName(palaver.getAccount()), null);
+									} catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
+										logger.warning(String.format("Could not remove autjoin on %s", palaver.toString()));
+									}
+								});
+							} catch (XMPPException | SmackException e) {
+								logger.warning(String.format("Could not get Bookmark manager on %s", palaver.toString()));
 							}
 						});
 					});

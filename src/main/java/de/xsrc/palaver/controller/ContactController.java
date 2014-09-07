@@ -5,7 +5,6 @@ import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.PalaverModel;
-import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Utils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

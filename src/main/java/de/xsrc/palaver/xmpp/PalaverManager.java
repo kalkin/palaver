@@ -1,7 +1,6 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.utils.Utils;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;

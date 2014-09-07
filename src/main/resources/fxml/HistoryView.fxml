@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane styleClass="history" xmlns:fx="http://javafx.com/fxml/1"
-	xmlns="http://javafx.com/javafx/8">
-	<center>
-		<ScrollPane fx:id="scrollPane" fitToWidth="true">
-			<content>
-				<VBox fx:id="historyBox" fillWidth="true" styleClass="history" />
-			</content>
-		</ScrollPane>
-	</center>
-	<bottom>
-		<TextField fx:id="chatInput" onAction="#sendMsgAction" />
-	</bottom>
-</BorderPane>
+<fx:root type="javafx.scene.layout.BorderPane" styleClass="history" xmlns:fx="http://javafx.com/fxml/1"
+         xmlns="http://javafx.com/javafx/8">
+    <top>
+        <HBox maxHeight="80" minHeight="80"></HBox>
+        </top>
+    <center>
+        <ScrollPane fx:id="scrollPane"  fitToWidth="true"  styleClass="historyScroll">
+            <content>
+                <VBox fx:id="historyBox" fillWidth="true"  styleClass="history"/>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <TextArea fx:id="chatInput" prefHeight="64"/>
+    </bottom>
+</fx:root>

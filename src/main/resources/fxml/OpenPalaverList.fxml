@@ -2,46 +2,41 @@
 
 <?import de.jensd.fx.fontawesome.AwesomeIcon?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<fx:root xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.BorderPane">
-    <top>
-        <BorderPane styleClass="bar">
-            <left>
-                <Button fx:id="showBuddyListButton" styleClass="awesome-icon" >
+<?import javafx.scene.layout.*?>
+<fx:root  prefWidth="256.0"  type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+    <children>
+        <AnchorPane AnchorPane.rightAnchor="0" minHeight="80" styleClass="primary">
+            <children>
+                <Button fx:id="showBuddyListButton" styleClass="awesome-icon" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="64">
                     <text>
-                        <AwesomeIcon fx:constant="PLUS"/>
+                        <AwesomeIcon fx:constant="PLUS" />
                     </text>
                     <tooltip>
-                        <Tooltip text="%budy_list"/>
+                        <Tooltip text="%budy_list" />
                     </tooltip>
                 </Button>
 
-            </left>
-            <right>
-                <Button fx:id="hideButton" cancelButton="true" styleClass="awesome-icon" onAction="#hideAction">
+                <Button fx:id="hideButton" cancelButton="true" onAction="#hideAction" styleClass="awesome-icon" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0">
                     <text>
-                        <AwesomeIcon fx:constant="CHEVRON_LEFT"/>
+                        <AwesomeIcon fx:constant="CHEVRON_LEFT" />
                     </text>
-
                     <tooltip>
-                        <Tooltip text="%hide_palaver_list"/>
+                        <Tooltip text="%hide_palaver_list" />
                     </tooltip>
                 </Button>
 
-            </right>
-        </BorderPane>
-    </top>
-    <center>
-        <ListView fx:id="openPalaversList" styleClass="palaverList">
+            </children>
+        </AnchorPane>
+
+        <ListView AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="80"  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" fx:id="openPalaversList" styleClass="palaverList" >
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem text="%remove"/>
+                        <MenuItem text="%remove" />
                     </items>
                 </ContextMenu>
             </contextMenu>
         </ListView>
-    </center>
+    </children>
 
 </fx:root>

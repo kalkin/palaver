@@ -2,17 +2,20 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Entry;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.datafx.concurrent.ObservableExecutor;
-import org.datafx.controller.FXMLController;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
@@ -20,15 +23,17 @@ import org.datafx.controller.context.ViewContext;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
 
+
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-@FXMLController("/fxml/HistoryView.fxml")
-public class HistoryController {
+public class HistoryController extends BorderPane {
 	private static final Logger logger = Logger
 					.getLogger(HistoryController.class.getName());
+	private static final String HISTORY_VIEW_FXML = "/fxml/HistoryView.fxml";
 	@FXML
-	private TextField chatInput;
+	private TextArea chatInput;
 	@FXML
 	private VBox historyBox;
 	@FXML
@@ -38,14 +43,22 @@ public class HistoryController {
 	private ObservableList<Entry> history;
 	private Palaver palaver;
 
-	@FXML
-	private void initialize() {
-		requestFocus();
+	public HistoryController(Palaver palaver) {
+		this.palaver = palaver;
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HISTORY_VIEW_FXML));
+		fxmlLoader.setResources(UiUtils.getRessourceBundle());
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
 
+		try {
+			fxmlLoader.load();
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
 	}
 
-	public void setPalaver(Palaver palaver) {
-		this.palaver = palaver;
+	@FXML
+	public void initialize() {
 		history = palaver.history.entryListProperty();
 		add(history);
 		history.addListener((Change<? extends Entry> change) -> {
@@ -58,6 +71,8 @@ public class HistoryController {
 			Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
 			palaver.setUnread(false);
 		});
+		requestFocus();
+
 	}
 
 	private void add(List<? extends Entry> list) {

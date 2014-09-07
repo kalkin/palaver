@@ -20,7 +20,7 @@ public class MucListener implements PacketListener {
 
 	public MucListener(Palaver palaver) {
 		this.palaver = palaver;
-		logger.fine("Create MucListener for " + palaver );
+		logger.fine("Create MucListener for " + palaver);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class MucListener implements PacketListener {
 				palaver.history.addEntry(entry);
 				if (!message.getFrom().equals(StringUtils.parseName(palaver.getAccount())))
 					palaver.setUnread(true);
-					Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
+				Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
 
 			}
 		}
