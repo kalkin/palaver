@@ -2,6 +2,7 @@
     -fx-background-color: #f9f9f9;
     -fx-font-family: Roboto;
     -fx-font-size: 14pt;
+    -fx-fill: rgba(0, 0, 0, 0.87);
 
 }
 
@@ -34,14 +35,14 @@
 .muc {
     -fx-graphic: "/icon/ic_action_group.png";
     -fx-font-size: 16pt;
-    -fx-text-fill: #8a8a8a;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
     -fx-max-width: 256;
 }
 
 .chat {
     -fx-graphic: "/icon/ic_action_person.png";
     -fx-font-size: 16pt;
-    -fx-text-fill: #8a8a8a;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
     -fx-max-width: 256;
 }
 
@@ -53,7 +54,6 @@
 }
 
 .palaver .label {
-    -fx-fill: white;
     -fx-font-size: 30;
 
     -fx-text-overrun: ellipsis;
@@ -62,7 +62,7 @@
 
 .awesome-icon {
     -fx-font-family: FontAwesome;
-    -fx-text-fill: #e0f2f1;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
     -fx-font-size: 40;
     -fx-padding: 4;
     -fx-min-height: 64;
@@ -135,7 +135,7 @@
 }
 
 .bottom-divide {
-    -fx-border-color: #e0e0e0;
+    -fx-border-color: rgba(0, 0, 0, 0.12);
     -fx-border-width: 0 0 1 0;
 }
 
