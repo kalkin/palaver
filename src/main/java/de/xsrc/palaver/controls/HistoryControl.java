@@ -1,8 +1,7 @@
-package de.xsrc.palaver.controller;
+package de.xsrc.palaver.controls;
 
 import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.controls.HistoryEntryCell;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
@@ -24,10 +23,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HistoryController extends BorderPane {
+public class HistoryControl extends BorderPane {
 	private static final Logger logger = Logger
-					.getLogger(HistoryController.class.getName());
-	private static final String HISTORY_VIEW_FXML = "/fxml/HistoryView.fxml";
+					.getLogger(HistoryControl.class.getName());
+	private static final String HISTORY_VIEW_FXML = "/fxml/History.fxml";
 	@FXML
 	private TextArea chatInput;
 	@FXML
@@ -39,7 +38,7 @@ public class HistoryController extends BorderPane {
 	private ObservableList<HistoryEntry> history;
 	private Palaver palaver;
 
-	public HistoryController(Palaver palaver) {
+	public HistoryControl(Palaver palaver) {
 		this.palaver = palaver;
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HISTORY_VIEW_FXML));
 		fxmlLoader.setResources(UiUtils.getRessourceBundle());

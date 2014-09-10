@@ -1,6 +1,7 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.controls.HistoryControl;
 import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
 import javafx.fxml.FXML;
@@ -32,7 +33,7 @@ public class MainController {
 
 	@FXML
 	private OpenPalaverList palaverListControl;
-	private HashMap<Palaver, HistoryController> historyMap = new HashMap<>();
+	private HashMap<Palaver, HistoryControl> historyMap = new HashMap<>();
 	private PalaverModel model = PalaverModel.getInstance();
 
 	@FXML
@@ -41,7 +42,7 @@ public class MainController {
 			if (!historyMap.containsKey(newValue)) {
 				try {
 
-					HistoryController history = new HistoryController(newValue);
+					HistoryControl history = new HistoryControl(newValue);
 					historyMap.put(newValue, history);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
