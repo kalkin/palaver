@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class XmlDataConverter<T> extends InputStreamConverter<T> {
 
 	private static final Logger logger = Logger
-					.getLogger(Storage.class.getName());
+					.getLogger(Utils.class.getName());
 	private NodeList dataList;
 	private int currentIndex = 0;
 	private Class<?> clazz;

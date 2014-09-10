@@ -31,7 +31,7 @@ public class Utils {
 	// private static final CrudService<EntityWithId.T>, CrudService.T> storage;
 
 	private static final Logger logger = Logger
-					.getLogger(Storage.class.getName());
+					.getLogger(Utils.class.getName());
 
 	private static ConcurrentHashMap<String, MultiUserChat> joinedMucs = new ConcurrentHashMap<>();
 
