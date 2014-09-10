@@ -3,7 +3,6 @@ package de.xsrc.palaver.controls;
 import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.UiUtils;
-import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
@@ -11,13 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,13 +24,12 @@ public class HistoryControl extends BorderPane {
 					.getLogger(HistoryControl.class.getName());
 	private static final String HISTORY_VIEW_FXML = "/fxml/History.fxml";
 	@FXML
-	private TextArea chatInput;
+	private ChatInput chatInput;
 	@FXML
 	private VBox historyBox;
 	@FXML
 	private ScrollPane scrollPane;
 
-	private Palaver Mpalaver;
 	private ObservableList<HistoryEntry> history;
 	private Palaver palaver;
 
@@ -56,6 +51,7 @@ public class HistoryControl extends BorderPane {
 	public void initialize() {
 		history = palaver.history.entryListProperty();
 		add(history);
+		chatInput.setPalaver(palaver);
 		history.addListener((Change<? extends HistoryEntry> change) -> {
 			while (change.next()) {
 				logger.finer("New Messages were added to " + palaver);
@@ -80,14 +76,6 @@ public class HistoryControl extends BorderPane {
 							}
 						}
 		);
-	}
-
-	@FXML
-	private void sendMsgAction() throws NotConnectedException, XMPPException {
-		String body = chatInput.getText();
-
-		PalaverManager.sendMsg(this.palaver, body);
-		chatInput.clear();
 	}
 
 	public void requestFocus() {

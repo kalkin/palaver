@@ -14,19 +14,28 @@ public class PalaverManager {
 	private static final Logger logger = Logger
 					.getLogger(PalaverManager.class.getName());
 
-	public static void sendMsg(Palaver palaver, String body) throws SmackException.NotConnectedException, XMPPException {
+	public static void sendMsg(Palaver palaver, String body) {
 		logger.finest(String.format("Sending msg from %s to %s: %s", palaver.getAccount(), palaver.getRecipient(), body));
 
 
 		if (palaver.getConference()) {
 			MultiUserChat muc = MucManager.getInstance().getMuc(palaver);
-			muc.sendMessage(body);
+			try {
+				muc.sendMessage(body);
+			} catch (XMPPException | SmackException.NotConnectedException e) {
+				e.printStackTrace();
+				logger.severe(String.format("Could not send msg to %s", palaver.getRecipient()));
+			}
 		} else {
 			Message message = new Message(palaver.getRecipient());
 			message.setType(Message.Type.chat);
 			message.setBody(body);
 			XMPPConnection connection = ConnectionManager.getConnection(palaver.getAccount());
-			connection.sendPacket(message);
+			try {
+				connection.sendPacket(message);
+			} catch (SmackException.NotConnectedException e) {
+				logger.severe(String.format("Could not send msg to conference %s", palaver.getRecipient()));
+			}
 		}
 
 	}
