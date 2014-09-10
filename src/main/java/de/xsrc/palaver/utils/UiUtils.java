@@ -1,5 +1,6 @@
 package de.xsrc.palaver.utils;
 
+import de.jensd.fx.fontawesome.AwesomeIcon;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -22,18 +23,19 @@ public class UiUtils {
 						0xcddc39, 0xffeb3b, 0xffc107, 0xff9800, 0xff5722, 0x795548, 0x9e9e9e, 0x607d8b};
 		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
 		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
-		Circle circle = new Circle(24, Color.web(hexcolor));
+		Circle circle = new Circle(20, Color.web(hexcolor));
 
 		circle.setFill(Paint.valueOf(hexcolor));
+
 		StackPane sp = new StackPane();
-		sp.setStyle("user-icon");
-		Text t = new Text("\uf007");
-		t.setStyle("-fx-fill: white;");
+		Text t = new Text(AwesomeIcon.USER.toString());
 		Font f = Font.font("FontAwesome", 34);
 
 		t.setFont(f);
+		t.setFill(Paint.valueOf("white"));
 		sp.getChildren().add(circle);
 		sp.getChildren().add(t);
+		sp.getStyleClass().add("avatar");
 		return sp;
 	}
 

@@ -10,7 +10,7 @@ import org.datafx.util.EntityWithId;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "entry")
-public class Entry implements EntityWithId<String> {
+public class HistoryEntry implements EntityWithId<String> {
 
 	/**
 	 *
@@ -20,15 +20,16 @@ public class Entry implements EntityWithId<String> {
 	private StringProperty body;
 	private StringProperty from;
 
-	public Entry() {
+	public HistoryEntry() {
 		this(null, null);
 
 	}
 
-	public Entry(String from, String body) {
+	public HistoryEntry(String from, String body) {
 		this.receivedAt = new SimpleLongProperty(System.currentTimeMillis());
 		this.from = new SimpleStringProperty(from);
 		this.body = new SimpleStringProperty(body);
+
 
 	}
 

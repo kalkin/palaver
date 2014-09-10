@@ -139,9 +139,6 @@
     -fx-border-width: 0 0 1 0;
 }
 
-.historyBox {
-    -fx-background-color: transparent;
-}
 
 .zdepth1 {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.24), 1, 0, 0, 1);
@@ -158,6 +155,36 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.19), 10, 0, 0, 10);
 }
 
+
+#historyBox {
+    -fx-padding: 24 0 0 0;
+}
+
+.history-entry-cell {
+    -fx-fill: white;
+    -fx-padding:  8 8 8 16;
+
+
+}
+.history-entry-cell .vbox {
+    -fx-padding: 0 4 0 4;
+}
 .white {
     -fx-background-color: white;
+}
+
+.avatar {
+    -fx-min-height: 48;
+    -fx-max-height: 48;
+    -fx-min-width: 48;
+    -fx-max-width: 48;
+    -fx-text-fill: white;
+}
+
+.body {
+ -fx-text-alignment: justify;
+}
+
+.secondary {
+    -fx-fill: rgba(0, 0, 0, 0.12);
 }

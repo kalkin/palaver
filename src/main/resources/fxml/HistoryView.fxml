@@ -12,7 +12,7 @@
     <center>
         <ScrollPane fx:id="scrollPane"  fitToWidth="true"  styleClass="bottom-divide,white">
             <content>
-                <VBox fx:id="historyBox" fillWidth="true"/>
+                <VBox  fx:id="historyBox" fillWidth="true"/>
             </content>
         </ScrollPane>
     </center>

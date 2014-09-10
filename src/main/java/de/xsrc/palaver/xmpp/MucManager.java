@@ -28,10 +28,6 @@ public class MucManager {
 	private final ObservableList<Palaver> openPalavers;
 	private ConcurrentHashMap<Palaver, MultiUserChat> joinedMucMap;
 
-	private static final class InstanceHolder {
-		static final MucManager INSTANCE = new MucManager();
-	}
-
 	private MucManager() {
 		joinedMucMap = new ConcurrentHashMap<>();
 
@@ -63,6 +59,10 @@ public class MucManager {
 		});
 	}
 
+	public static MucManager getInstance() {
+		return InstanceHolder.INSTANCE;
+	}
+
 	private void joinMucs(List<? extends Palaver> list) {
 		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 		list.forEach(palaver -> {
@@ -91,12 +91,12 @@ public class MucManager {
 		joinMucs(mucsToRejoin);
 	}
 
-	public static MucManager getInstance() {
-		return InstanceHolder.INSTANCE;
-	}
-
 	public MultiUserChat getMuc(Palaver palaver) {
 		return joinedMucMap.get(palaver);
+	}
+
+	private static final class InstanceHolder {
+		static final MucManager INSTANCE = new MucManager();
 	}
 
 }

@@ -1,0 +1,24 @@
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<fx:root type="javafx.scene.layout.HBox" styleClass="history-entry-cell" xmlns:fx="http://javafx.com/fxml/1"
+         xmlns="http://javafx.com/javafx/8">
+    <children>
+        <StackPane fx:id="avatar"/>
+        <VBox fillWidth="true">
+            <children>
+                <TextFlow textAlignment="JUSTIFY">
+                    <Text fx:id="body" />
+                </TextFlow>
+                <BorderPane styleClass="secondary" fx:id="bp">
+                    <left>
+                        <Text fx:id="nick" style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
+                    </left>
+                    <right>
+                        <Text fx:id="date" style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
+                    </right>
+                </BorderPane>
+            </children>
+        </VBox>
+    </children>
+</fx:root>

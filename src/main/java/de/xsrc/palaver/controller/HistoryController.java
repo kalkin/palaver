@@ -1,7 +1,8 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.controls.HistoryEntryCell;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.application.Platform;
@@ -12,17 +13,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.datafx.concurrent.ObservableExecutor;
-import org.datafx.controller.FxmlLoadException;
-import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ApplicationContext;
-import org.datafx.controller.context.ViewContext;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +36,7 @@ public class HistoryController extends BorderPane {
 	private ScrollPane scrollPane;
 
 	private Palaver Mpalaver;
-	private ObservableList<Entry> history;
+	private ObservableList<HistoryEntry> history;
 	private Palaver palaver;
 
 	public HistoryController(Palaver palaver) {
@@ -61,7 +57,7 @@ public class HistoryController extends BorderPane {
 	public void initialize() {
 		history = palaver.history.entryListProperty();
 		add(history);
-		history.addListener((Change<? extends Entry> change) -> {
+		history.addListener((Change<? extends HistoryEntry> change) -> {
 			while (change.next()) {
 				logger.finer("New Messages were added to " + palaver);
 				add(change.getAddedSubList());
@@ -75,24 +71,13 @@ public class HistoryController extends BorderPane {
 
 	}
 
-	private void add(List<? extends Entry> list) {
+	private void add(List<? extends HistoryEntry> list) {
 		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
 		executor.submit(() -> {
-							for (Entry entry : list) {
+							for (HistoryEntry historyEntry : list) {
 								Label l = new Label();
-								l.textProperty().bind(entry.bodyProperty());
+								Platform.runLater(() -> historyBox.getChildren().add(new HistoryEntryCell(historyEntry, palaver.isConference())));
 
-								final ViewContext<EntryController> context;
-								try {
-									context = ViewFactory.getInstance().createByController(
-													EntryController.class);
-									context.getController().setEntry(entry);
-									Platform.runLater(() -> historyBox.getChildren().add(context.getRootNode()));
-								} catch (FxmlLoadException e) {
-									e.printStackTrace();
-									logger.severe("Could not add entry from " + entry.getFrom() + " "
-													+ entry);
-								}
 							}
 						}
 		);

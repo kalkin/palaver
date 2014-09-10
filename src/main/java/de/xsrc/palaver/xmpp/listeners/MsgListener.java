@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.utils.Notifications;
@@ -33,20 +33,20 @@ public class MsgListener implements PacketListener {
 			logger.finest(message.toString());
 
 			if (body != null && body.length() >= 0) {
-				Entry entry = new Entry();
-				entry.setBody(message.getBody());
+				HistoryEntry historyEntry = new HistoryEntry();
+				historyEntry.setBody(message.getBody());
 
 				String fromJid = StringUtils.parseBareAddress(message.getFrom());
 				String toJid = StringUtils.parseBareAddress(message.getTo());
 
 				if (fromJid == null || fromJid.equals(account.getJid())) {
 					// Messages send by us
-					entry.setFrom(account.getJid());
-					saveEntry(account.getJid(), toJid, entry);
+					historyEntry.setFrom(account.getJid());
+					saveEntry(account.getJid(), toJid, historyEntry);
 				} else if (toJid.equals(account.getJid())) {
 					// Messages sent to us
-					entry.setFrom(fromJid);
-					saveEntry(account.getJid(), fromJid, entry);
+					historyEntry.setFrom(fromJid);
+					saveEntry(account.getJid(), fromJid, historyEntry);
 					Notifications.notify(StringUtils.parseName(fromJid), body);
 				} else {
 					logger.severe("Server is sending garbage? " + message.toString());
@@ -60,14 +60,14 @@ public class MsgListener implements PacketListener {
 		}
 	}
 
-	private void saveEntry(String account, String recipient, Entry entry) {
+	private void saveEntry(String account, String recipient, HistoryEntry historyEntry) {
 		Palaver palaver = PalaverModel.getInstance().getById(account, recipient);
 		if (palaver == null) {
 			logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
 			palaver = PalaverModel.getInstance().openPalaver(account, StringUtils.parseBareAddress(recipient), false);
 		}
-		palaver.history.addEntry(entry);
-		if (!account.equals(entry.getFrom())) {
+		palaver.history.addEntry(historyEntry);
+		if (!account.equals(historyEntry.getFrom())) {
 			palaver.setUnread(true);
 		}
 		palaver.setClosed(false);

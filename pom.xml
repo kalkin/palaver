@@ -59,6 +59,11 @@
     </build>
 
     <dependencies>
+	<dependency>
+	    <groupId>org.ocpsoft.prettytime</groupId>
+	    <artifactId>prettytime</artifactId>
+	    <version>3.2.5.Final</version>
+	</dependency>
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx</artifactId>
@@ -82,7 +87,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.0.6</version>
+            <version>8.0.6_20</version>
         </dependency>
         <dependency>
             <groupId>org.javafxdata</groupId>
