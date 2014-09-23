@@ -13,11 +13,10 @@
                    AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-            <BorderPane maxWidth="1024" prefWidth="1024">
+            <BorderPane maxWidth="1024" prefWidth="1024" fx:id="barPane">
                 <left>
-                    <BorderPane maxHeight="64" fx:id="titlePane">
+                    <BorderPane maxHeight="64"  fx:id="titlePane">
                         <left>
-
                             <Button fx:id="showOpenPalaverButton" onAction="#showAction" styleClass="awesome-icon"
                                     visible="false" managed="false">
                                 <text>
@@ -29,9 +28,7 @@
                             </Button>
                         </left>
                         <center>
-                            <Text styleClass="title" text="Palavers">
-
-                            </Text>
+                            <Text styleClass="title" text="Palavers"/>
                         </center>
                     </BorderPane>
                 </left>
@@ -45,9 +42,9 @@
             <children>
                 <StackPane maxWidth="1024">
                     <children>
-                        <OpenPalaverList StackPane.alignment="TOP_LEFT" fx:id="palaverListControl" />
                         <BorderPane StackPane.alignment="TOP_RIGHT" styleClass="mainPaper" fx:id="historyPane"
                                     maxWidth="768" style="-fx-padding:0;"/>
+                        <OpenPalaverList StackPane.alignment="TOP_LEFT" fx:id="palaverListControl" />
                     </children>
                 </StackPane>
             </children>

@@ -4,9 +4,12 @@ import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.controls.HistoryControl;
 import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.LinkAction;
@@ -18,10 +21,14 @@ import java.util.logging.Logger;
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {
 	private static final Logger logger = Logger.getLogger(MainController.class.getName());
+	private static final int STEP_WIDTH = 64;
 
 	@FXML
 	@LinkAction(AccountController.class)
 	private Button showAccountsButton;
+
+	@FXML
+	private BorderPane barPane;
 
 	@FXML
 	@LinkAction(ContactController.class)
@@ -43,6 +50,7 @@ public class MainController {
 
 	@FXML
 	private void initialize() {
+
 		palaverListControl.selectedPalaver().addListener((observable, oldValue, newValue) -> {
 			if (!historyMap.containsKey(newValue)) {
 				try {
@@ -58,6 +66,7 @@ public class MainController {
 			historyPane.setCenter(historyMap.get(newValue));
 
 		});
+
 		showOpenPalaverButton.visibleProperty().bind(palaverListControl.visibleProperty().not());
 		showOpenPalaverButton.managedProperty().bind(palaverListControl.managedProperty().not());
 		showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
@@ -75,11 +84,37 @@ public class MainController {
 				historyPane.setMaxWidth(768);
 			}
 		});
+		Platform.runLater(() ->
+						palaverListControl.getScene().getWindow().widthProperty().addListener((observable, oldValue, newValue) -> resize(newValue)));
+	}
+
+	private void resize(Number newValue) {
+		int t = newValue.intValue() / 64;
+		int width = t * 64;
+		if (width > 1024) {
+			width = 1024;
+			t = 16;
+		}
+		logger.fine(String.format("WIDTH: %d", width));
+		barPane.setMaxWidth(width);
+		StackPane parent = (StackPane) palaverListControl.getParent();
+		parent.setMaxWidth(width);
+
+
+		if (t >= 11) {
+			palaverListControl.hide(false);
+			historyPane.setMaxWidth((t - 4) * STEP_WIDTH);
+		} else {
+			palaverListControl.hide(true);
+			historyPane.setMaxWidth(t * 64);
+		}
+
 
 	}
 
 	@FXML
 	private void showAction() {
 		palaverListControl.hide(false);
+
 	}
 }
