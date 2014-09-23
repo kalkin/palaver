@@ -7,8 +7,10 @@ import de.xsrc.palaver.models.PalaverModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.LinkAction;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -27,6 +29,9 @@ public class MainController {
 
 	@FXML
 	private BorderPane historyPane;
+
+	@FXML
+	private BorderPane titlePane;
 
 	@FXML
 	private Button showOpenPalaverButton;
@@ -51,11 +56,26 @@ public class MainController {
 			}
 
 			historyPane.setCenter(historyMap.get(newValue));
-//			historyMap.get(newValue).requestFocus();
+
 		});
 		showOpenPalaverButton.visibleProperty().bind(palaverListControl.visibleProperty().not());
 		showOpenPalaverButton.managedProperty().bind(palaverListControl.managedProperty().not());
 		showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
+		palaverListControl.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue) {
+				Palaver p = palaverListControl.selectedPalaver().get();
+				Text text = new Text(StringUtils.parseName(p.getRecipient()));
+				text.getStyleClass().add("title");
+				titlePane.setCenter(text);
+				historyPane.setMaxWidth(1024);
+			} else {
+				Text text = new Text("Palavers");
+				text.getStyleClass().add("title");
+				titlePane.setCenter(text);
+				historyPane.setMaxWidth(768);
+			}
+		});
+
 	}
 
 	@FXML

@@ -3,10 +3,10 @@
 <?import de.jensd.fx.fontawesome.AwesomeIcon?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root maxWidth="256.0" minWidth="256.0" type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root maxWidth="256.0" minWidth="256.0" styleClass="zdepth2" type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1"
          xmlns="http://javafx.com/javafx/8">
     <top>
-        <AnchorPane  minHeight="80" maxHeight="80">
+        <AnchorPane minHeight="80" maxHeight="80" style="-fx-background-color: #f9f9f9;" styleClass="bottom-divide">
             <children>
                 <Button fx:id="showBuddyListButton" styleClass="awesome-icon" AnchorPane.bottomAnchor="0"
                         AnchorPane.rightAnchor="64">
@@ -31,7 +31,7 @@
     </top>
     <center>
         <ListView AnchorPane.topAnchor="80" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-                  fx:id="openPalaversList" styleClass="palaverList,zdepth2">
+                  fx:id="openPalaversList" styleClass="palaverList">
             <contextMenu>
                 <ContextMenu>
                     <items>
