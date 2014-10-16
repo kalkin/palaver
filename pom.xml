@@ -12,7 +12,7 @@
         <javafx.version>2.2</javafx.version>
     </properties>
     <packaging>jar</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
@@ -36,7 +36,7 @@
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>2.0</version>
+                <version>8.1.2</version>
                 <configuration>
 
                     <mainClass>de.xsrc.palaver.Main</mainClass>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.0.6_20</version>
+            <version>8.20.7</version>
         </dependency>
         <dependency>
             <groupId>org.javafxdata</groupId>
