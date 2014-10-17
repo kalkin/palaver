@@ -36,7 +36,7 @@ public class PalaverConnectionListener implements ConnectionListener {
 		try {
 			CarbonManager.getInstanceFor(connection).enableCarbons();
 		} catch (XMPPException | SmackException e) {
-				logger.warning("Could not enable carbons on " + connection.getUser());
+			logger.warning("Could not enable carbons on " + connection.getUser());
 		}
 
 		syncBookmarks(connection);

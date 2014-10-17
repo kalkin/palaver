@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.listeners;
 
 
-import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;
@@ -20,7 +20,7 @@ public class MucListener implements PacketListener {
 
 	public MucListener(Palaver palaver) {
 		this.palaver = palaver;
-		logger.fine("Create MucListener for " + palaver );
+		logger.fine("Create MucListener for " + palaver);
 	}
 
 	@Override
@@ -32,11 +32,11 @@ public class MucListener implements PacketListener {
 			logger.finest(message.toString());
 
 			if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
-				Entry entry = new Entry(StringUtils.parseResource(message.getFrom()), message.getBody());
-				palaver.history.addEntry(entry);
+				HistoryEntry historyEntry = new HistoryEntry(StringUtils.parseResource(message.getFrom()), message.getBody());
+				palaver.history.addEntry(historyEntry);
 				if (!message.getFrom().equals(StringUtils.parseName(palaver.getAccount())))
 					palaver.setUnread(true);
-					Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
+				Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
 
 			}
 		}

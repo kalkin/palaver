@@ -15,7 +15,6 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.carbons.CarbonManager;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -108,7 +107,6 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		} catch (XMPPException e) {
 			e.printStackTrace();
 		}
-
 
 
 		connection.getRoster().addRosterListener(new PalaverRosterListener(account));

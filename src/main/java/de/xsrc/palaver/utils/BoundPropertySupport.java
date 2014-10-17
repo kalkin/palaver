@@ -1,4 +1,4 @@
-package de.xsrc.palaver.beans;
+package de.xsrc.palaver.utils;
 
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;

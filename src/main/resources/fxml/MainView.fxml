@@ -4,49 +4,50 @@
 <?import de.xsrc.palaver.controls.OpenPalaverList?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.StackPane?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
-            prefHeight="480" fx:id="borderPane">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1024.0" prefWidth="1280.0" styleClass="background"
+            xmlns="http://javafx.com/javafx/8">
+    <children>
+        <StackPane styleClass="bar,zdepth1" maxHeight="144.0" minHeight="64.0" prefHeight="144.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-    <left>
-        <OpenPalaverList fx:id="palaverListControl"/>
-    </left>
-    <center>
-        <BorderPane>
-            <top>
-
-                <BorderPane styleClass="bar">
-                    <left>
-                        <Button fx:id="showOpenPalaverButton" styleClass="awesome-icon" onAction="#showAction">
-                            <text>
-                                <AwesomeIcon fx:constant="CHEVRON_RIGHT"/>
-                            </text>
-                            <tooltip>
-                                <Tooltip text="%show_palaver"/>
-                            </tooltip>
-                        </Button>
-                    </left>
-                    <right>
-                        <Button fx:id="showAccountsButton" styleClass="awesome-icon">
-                            <text>
-                                <AwesomeIcon fx:constant="GEAR"/>
-                            </text>
-                            <tooltip>
-                                <Tooltip text="%account_managment"/>
-                            </tooltip>
-                        </Button>
-                    </right>
-                </BorderPane>
-            </top>
-            <center>
-                <StackPane fx:id="historyPane">
-                <Text>Help</Text>
+            <BorderPane maxWidth="1024" prefWidth="1024" fx:id="barPane">
+                <left>
+                    <BorderPane maxHeight="64"  fx:id="titlePane">
+                        <left>
+                            <Button fx:id="showOpenPalaverButton" onAction="#showAction" styleClass="awesome-icon"
+                                    visible="false" managed="false">
+                                <text>
+                                    <AwesomeIcon fx:constant="CHEVRON_DOWN"/>
+                                </text>
+                                <tooltip>
+                                    <Tooltip text="%hide_palaver_list"/>
+                                </tooltip>
+                            </Button>
+                        </left>
+                        <center>
+                            <Text styleClass="title" text="Palavers"/>
+                        </center>
+                    </BorderPane>
+                </left>
+                <right>
+                    <Button fx:id="showAccountsButton" styleClass="action-overflow" maxWidth="64" maxHeight="64"/>
+                </right>
+            </BorderPane>
+        </StackPane>
+        <StackPane AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="64" AnchorPane.rightAnchor="0"
+                   AnchorPane.leftAnchor="0">
+            <children>
+                <StackPane maxWidth="1024">
+                    <children>
+                        <BorderPane StackPane.alignment="TOP_RIGHT" styleClass="mainPaper" fx:id="historyPane"
+                                    maxWidth="768" style="-fx-padding:0;"/>
+                        <OpenPalaverList StackPane.alignment="TOP_LEFT" fx:id="palaverListControl" />
+                    </children>
                 </StackPane>
-            </center>
-        </BorderPane>
-
-    </center>
-</BorderPane>
-
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>

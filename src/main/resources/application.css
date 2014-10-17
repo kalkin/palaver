@@ -1,26 +1,190 @@
+.root {
+    -fx-background-color: #f9f9f9;
+    -fx-font-family: Roboto;
+    -fx-font-size: 14pt;
+    -fx-fill: rgba(0, 0, 0, 0.87);
 
-.history {
-    -fx-background-color: -fx-control-inner-background;
-    -fx-font-size: 16;
 }
 
-.button {
-    -fx-font-size: 17;
+.background {
+    -fx-background-color: #f9f9f9;
 }
 
-.palaverList .list-cell {
-    -fx-pref-height: 82;
+.bar .button {
+
+    -fx-background-color: #009688;
 }
+
+.palaverList .list-view {
+    -fx-padding: 0;
+    -fx-border-insets: 0, 0 0 0 0;
+    -fx-background-insets: 0;
+    -fx-background-color: #f9f9f9;
+
+}
+
+.list-cell {
+    -fx-pref-height: 64;
+    -fx-background-color: #f9f9f9;
+}
+
+.palaverList .list-cell:focused {
+    -fx-background-color: #b2ebf2;
+}
+
+.muc {
+    -fx-graphic: "/icon/ic_action_group.png";
+    -fx-font-size: 16pt;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
+    -fx-max-width: 256;
+}
+
+.chat {
+    -fx-graphic: "/icon/ic_action_person.png";
+    -fx-font-size: 16pt;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
+    -fx-max-width: 256;
+}
+
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+
+.palaver .label {
+    -fx-font-size: 30;
+
+    -fx-text-overrun: ellipsis;
+    -fx-min-height: 80;
+}
+
 .awesome-icon {
-    -fx-font-size: 17;
     -fx-font-family: FontAwesome;
+    -fx-text-fill: rgba(0, 0, 0, 0.54);
+    -fx-font-size: 40;
+    -fx-padding: 4;
+    -fx-min-height: 64;
+    -fx-max-height: 64;
+    -fx-min-width: 64;
+    -fx-max-width: 64;
+    -fx-background-color: transparent;
 
 }
 
-.palaverBar {
-    padding: 4;
+.action-overflow {
+    -fx-graphic: "/icon/ic_action_overflow.png";
+    -fx-max-height: 64;
+    -fx-max-width: 64;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.title {
+    -fx-font-size: 34pt;
+    -fx-fill: white;
+    -fx-text-fill: white;
 }
 
 .bar {
-    -fx-padding: 4;
+    -fx-background-color: #009688;
+
+}
+
+.text-area {
+    -fx-padding: 0;
+    -fx-cursor: default;
+    -fx-background-color: white;
+}
+
+.text-area > .scroll-pane {
+    -fx-background-color: white;
+}
+
+.text-area > .scroll-pane > .scroll-bar:horizontal {
+    -fx-background-radius: 0 0 0 0;
+}
+
+.text-area > .scroll-pane > .scroll-bar:vertical {
+    -fx-background-radius: 0 0 0 0;
+}
+
+.text-area > .scroll-pane > .corner {
+    -fx-background-radius: 0 0 0 0;
+}
+
+.text-area .content {
+
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: #f9f9f9;
+}
+
+.scroll-pane .scroll-bar .track,
+.scroll-pane .scroll-bar .decrement-button,
+.scroll-pane .scroll-bar .increment-button {
+    -fx-background-color: white;
+}
+
+.bottom-divide {
+    -fx-border-color: rgba(0, 0, 0, 0.12);
+    -fx-border-width: 0 0 1 0;
+}
+
+.zdepth1 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.24), 1, 0, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 1.5, 0, 0, 1);
+}
+
+.zdepth2 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.23), 3, 0, 0, 3);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.16), 3, 0, 0, 3);
+}
+
+.zdepth3 {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.23), 3, 0, 0, 6);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.19), 10, 0, 0, 10);
+}
+
+
+#historyBox {
+    -fx-padding: 24 0 0 0;
+}
+
+.history-entry-cell {
+    -fx-fill: white;
+    -fx-padding:  8 8 8 16;
+
+
+}
+.history-entry-cell .vbox {
+    -fx-padding: 0 4 0 4;
+}
+.white {
+    -fx-background-color: white;
+}
+
+.avatar {
+    -fx-min-height: 48;
+    -fx-max-height: 48;
+    -fx-min-width: 48;
+    -fx-max-width: 48;
+    -fx-text-fill: white;
+}
+
+.body {
+ -fx-text-alignment: justify;
+}
+
+.secondary {
+    -fx-fill: rgba(0, 0, 0, 0.12);
 }

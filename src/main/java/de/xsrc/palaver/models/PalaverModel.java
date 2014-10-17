@@ -1,7 +1,7 @@
 package de.xsrc.palaver.models;
 
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.beans.Entry;
+import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.ColdStorage;
@@ -19,17 +19,11 @@ import java.util.logging.Logger;
  */
 public class PalaverModel {
 
-	protected ConcurrentHashMap<String, Palaver> palaverMap;
-	protected static ObservableList<Palaver> openPalaverList;
-
-
 	private static final Logger logger = Logger.getLogger(PalaverModel.class
 					.getName());
+	protected static ObservableList<Palaver> openPalaverList;
+	protected ConcurrentHashMap<String, Palaver> palaverMap;
 	private ObservableList<Palaver> data;
-
-	private static final class InstanceHolder {
-		static final PalaverModel INSTANCE = new PalaverModel();
-	}
 
 	private PalaverModel() {
 		palaverMap = new ConcurrentHashMap<>();
@@ -43,7 +37,7 @@ public class PalaverModel {
 					// sync data with our Concurrent HashMap
 					c.getAddedSubList().forEach(palaver -> palaverMap.put(palaver.getId(), palaver));
 					// auto save when history entries are added
-					c.getAddedSubList().forEach(palaver -> palaver.history.entryListProperty().addListener((ListChangeListener<Entry>) change -> save()));
+					c.getAddedSubList().forEach(palaver -> palaver.history.entryListProperty().addListener((ListChangeListener<HistoryEntry>) change -> save()));
 					c.getAddedSubList().forEach(palaver -> {
 						if (palaver.isOpen()) openPalaverList.add(palaver);
 					});
@@ -53,7 +47,7 @@ public class PalaverModel {
 						if (oldValue && !newValue) {
 							// Palaver changed state to open
 							Platform.runLater(() ->
-							openPalaverList.add(palaver));
+											openPalaverList.add(palaver));
 							save();
 						} else if (!oldValue && newValue) {
 							// Palaver changed state to closed
@@ -70,12 +64,11 @@ public class PalaverModel {
 
 	}
 
-
 	public static PalaverModel getInstance() {
 		return InstanceHolder.INSTANCE;
 	}
 
-	public Palaver openPalaver(Contact contact){
+	public Palaver openPalaver(Contact contact) {
 		return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
 	}
 
@@ -113,7 +106,11 @@ public class PalaverModel {
 	}
 
 	public Palaver getById(String account, String recipient) {
-		return palaverMap.get(account+":"+recipient);
+		return palaverMap.get(account + ":" + recipient);
+	}
+
+	private static final class InstanceHolder {
+		static final PalaverModel INSTANCE = new PalaverModel();
 	}
 
 }

@@ -66,9 +66,10 @@ public class OpenPalaverList extends BorderPane {
 		hide(true);
 	}
 
-	public void hide(boolean b){
+	public void hide(boolean b) {
 		setVisible(!b);
 		setManaged(!b);
+
 	}
 
 }

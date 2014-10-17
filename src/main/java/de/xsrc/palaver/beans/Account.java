@@ -1,5 +1,6 @@
 package de.xsrc.palaver.beans;
 
+import de.xsrc.palaver.utils.BoundPropertySupport;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.datafx.util.EntityWithId;

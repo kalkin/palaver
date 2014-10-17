@@ -28,10 +28,6 @@ public class MucManager {
 	private final ObservableList<Palaver> openPalavers;
 	private ConcurrentHashMap<Palaver, MultiUserChat> joinedMucMap;
 
-	private static final class InstanceHolder {
-		static final MucManager INSTANCE = new MucManager();
-	}
-
 	private MucManager() {
 		joinedMucMap = new ConcurrentHashMap<>();
 
@@ -46,21 +42,25 @@ public class MucManager {
 						executor.submit(() -> {
 							try {
 								BookmarkManager bm = BookmarkManager.getBookmarkManager(ConnectionManager.getConnection(palaver.getAccount()));
-							bm.getBookmarkedConferences().parallelStream().filter(bookmarkedConference -> bookmarkedConference.getJid().equals(palaver.getRecipient())&& bookmarkedConference.isAutoJoin()).forEach(bookmarkedConference -> {
-								try {
-									bm.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), false, StringUtils.parseName(palaver.getAccount()), null );
-								} catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
-									logger.warning(String.format("Could not remove autjoin on %s", palaver.toString()));
-								}
-							});
-						} catch (XMPPException | SmackException e) {
-							logger.warning(String.format("Could not get Bookmark manager on %s", palaver.toString()));
+								bm.getBookmarkedConferences().parallelStream().filter(bookmarkedConference -> bookmarkedConference.getJid().equals(palaver.getRecipient()) && bookmarkedConference.isAutoJoin()).forEach(bookmarkedConference -> {
+									try {
+										bm.addBookmarkedConference(StringUtils.parseName(palaver.getRecipient()), palaver.getRecipient(), false, StringUtils.parseName(palaver.getAccount()), null);
+									} catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
+										logger.warning(String.format("Could not remove autjoin on %s", palaver.toString()));
+									}
+								});
+							} catch (XMPPException | SmackException e) {
+								logger.warning(String.format("Could not get Bookmark manager on %s", palaver.toString()));
 							}
 						});
 					});
 				}
 			}
 		});
+	}
+
+	public static MucManager getInstance() {
+		return InstanceHolder.INSTANCE;
 	}
 
 	private void joinMucs(List<? extends Palaver> list) {
@@ -91,12 +91,12 @@ public class MucManager {
 		joinMucs(mucsToRejoin);
 	}
 
-	public static MucManager getInstance() {
-		return InstanceHolder.INSTANCE;
-	}
-
 	public MultiUserChat getMuc(Palaver palaver) {
 		return joinedMucMap.get(palaver);
+	}
+
+	private static final class InstanceHolder {
+		static final MucManager INSTANCE = new MucManager();
 	}
 
 }

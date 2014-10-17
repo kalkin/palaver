@@ -1,88 +1,120 @@
 package de.xsrc.palaver.controller;
 
-import de.jensd.fx.fontawesome.AwesomeDude;
-import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.controls.HistoryControl;
 import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
-import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import org.datafx.concurrent.ObservableExecutor;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.ViewFactory;
-import org.datafx.controller.context.ApplicationContext;
-import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.LinkAction;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
-import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
-import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smack.util.StringUtils;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {
 	private static final Logger logger = Logger.getLogger(MainController.class.getName());
+	private static final int STEP_WIDTH = 64;
 
 	@FXML
 	@LinkAction(AccountController.class)
 	private Button showAccountsButton;
 
 	@FXML
+	private BorderPane barPane;
+
+	@FXML
 	@LinkAction(ContactController.class)
 	private Button showBuddyListButton;
 
 	@FXML
-	private Pane historyPane;
+	private BorderPane historyPane;
+
+	@FXML
+	private BorderPane titlePane;
 
 	@FXML
 	private Button showOpenPalaverButton;
 
 	@FXML
 	private OpenPalaverList palaverListControl;
-	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
+	private HashMap<Palaver, HistoryControl> historyMap = new HashMap<>();
 	private PalaverModel model = PalaverModel.getInstance();
 
 	@FXML
 	private void initialize() {
+
 		palaverListControl.selectedPalaver().addListener((observable, oldValue, newValue) -> {
 			if (!historyMap.containsKey(newValue)) {
 				try {
-					ViewContext<HistoryController> context = ViewFactory
-									.getInstance().createByController(HistoryController.class);
-					context.getController().setPalaver(newValue);
-					historyMap.put(newValue, context);
+
+					HistoryControl history = new HistoryControl(newValue);
+					historyMap.put(newValue, history);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			historyPane.getChildren().clear();
-			historyPane.getChildren().addAll(historyMap.get(newValue).getRootNode());
-			historyMap.get(newValue).getController().requestFocus();
+
+			historyPane.setCenter(historyMap.get(newValue));
+
 		});
+
 		showOpenPalaverButton.visibleProperty().bind(palaverListControl.visibleProperty().not());
 		showOpenPalaverButton.managedProperty().bind(palaverListControl.managedProperty().not());
 		showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
+		palaverListControl.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue) {
+				Palaver p = palaverListControl.selectedPalaver().get();
+				Text text = new Text(StringUtils.parseName(p.getRecipient()));
+				text.getStyleClass().add("title");
+				titlePane.setCenter(text);
+				historyPane.setMaxWidth(1024);
+			} else {
+				Text text = new Text("Palavers");
+				text.getStyleClass().add("title");
+				titlePane.setCenter(text);
+				historyPane.setMaxWidth(768);
+			}
+		});
+		Platform.runLater(() ->
+						palaverListControl.getScene().getWindow().widthProperty().addListener((observable, oldValue, newValue) -> resize(newValue)));
+	}
+
+	private void resize(Number newValue) {
+		int t = newValue.intValue() / 64;
+		int width = t * 64;
+		if (width > 1024) {
+			width = 1024;
+			t = 16;
+		}
+		logger.fine(String.format("WIDTH: %d", width));
+		barPane.setMaxWidth(width);
+		StackPane parent = (StackPane) palaverListControl.getParent();
+		parent.setMaxWidth(width);
+
+
+		if (t >= 11) {
+			palaverListControl.hide(false);
+			historyPane.setMaxWidth((t - 4) * STEP_WIDTH);
+		} else {
+			palaverListControl.hide(true);
+			historyPane.setMaxWidth(t * 64);
+		}
+
+
 	}
 
 	@FXML
-	private void showAction(){
+	private void showAction() {
 		palaverListControl.hide(false);
+
 	}
 }
