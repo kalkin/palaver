@@ -6,14 +6,13 @@ import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.LinkAction;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -73,7 +72,7 @@ public class MainController {
 		palaverListControl.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue) {
 				Palaver p = palaverListControl.selectedPalaver().get();
-				Text text = new Text(StringUtils.parseName(p.getRecipient()));
+				Text text = new Text(XmppStringUtils.parseLocalpart(p.getRecipient()));
 				text.getStyleClass().add("title");
 				titlePane.setCenter(text);
 				historyPane.setMaxWidth(1024);

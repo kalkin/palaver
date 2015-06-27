@@ -5,14 +5,14 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.OverrunStyle;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jxmpp.util.XmppStringUtils;
 
 public class PalaverCell extends ListCell<Palaver> {
 	@Override
 	public void updateItem(Palaver p, boolean empty) {
 		super.updateItem(p, empty);
 		if (!empty && p != null) {
-			String name = StringUtils.parseName(p.getRecipient());
+			String name = XmppStringUtils.parseLocalpart(p.getRecipient());
 			if (name != null && name.length() > 0) {
 				Label label = new Label();
 				if (p.isConference()) {
@@ -23,7 +23,7 @@ public class PalaverCell extends ListCell<Palaver> {
 				}
 
 				label.setTextOverrun(OverrunStyle.ELLIPSIS);
-				label.setText(StringUtils.parseName(p.getRecipient()));
+				label.setText(XmppStringUtils.parseLocalpart(p.getRecipient()));
 
 				setGraphic(label);
 

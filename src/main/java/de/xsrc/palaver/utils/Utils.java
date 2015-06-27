@@ -11,14 +11,14 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.jivesoftware.smack.DirectoryRosterStore;
+import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public class Utils {
 
 	public static boolean isMuc(XMPPConnection connection, String jid) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
 		ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
-		DiscoverInfo info = discoManager.discoverInfo(StringUtils.parseServer(jid));
+		DiscoverInfo info = discoManager.discoverInfo(XmppStringUtils.parseDomain(jid));
 		return info.containsFeature("http://jabber.org/protocol/muc");
 	}
 
@@ -123,7 +123,7 @@ public class Utils {
 		if (name != null && name.length() > 0) {
 			contact.setName(name);
 		} else {
-			contact.setName(StringUtils.parseName(contact.getJid()));
+			contact.setName(XmppStringUtils.parseLocalpart(contact.getJid()));
 		}
 		if (conference) {
 			contact.setConference(true);

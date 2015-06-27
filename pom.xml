@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-core</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.javafxdata</groupId>
@@ -102,23 +102,28 @@
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-tcp</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-debug</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-resolver-javax</artifactId>
-            <version>4.0.3</version>
+                <version>4.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.igniterealtime.smack</groupId>
+            <artifactId>smack-im</artifactId>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-experimental</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

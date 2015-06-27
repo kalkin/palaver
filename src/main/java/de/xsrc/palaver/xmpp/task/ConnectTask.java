@@ -9,12 +9,17 @@ import de.xsrc.palaver.xmpp.listeners.MsgListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverConnectionListener;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import org.datafx.concurrent.DataFxTask;
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.RosterPacket;
+import org.jivesoftware.smack.roster.packet.RosterPacket;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jxmpp.util.XmppStringUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -34,19 +39,20 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		this.updateTitle("Connecting to " + account.getJid());
 	}
 
-	private static ConnectionConfiguration configureConnection(String server) {
-		ConnectionConfiguration config = new ConnectionConfiguration(server);
-		SSLContext context;
+	private static XMPPTCPConnectionConfiguration configureConnection(String server) {
+        final XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
+        SSLContext context;
 		try {
 			context = getContext();
-			config.setCustomSSLContext(context);
-			config.setRosterLoadedAtLogin(true);
+            builder.setCustomSSLContext(context);
+			builder.setCustomSSLContext(context);
+//			builder.setRosterLoadedAtLogin(true);
 //		config.setDebuggerEnabled(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return config;
+		return builder.build();
 	}
 
 	protected static SSLContext getContext() throws Exception {
@@ -87,19 +93,19 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		logger.finer("Connecting to account " + account);
 		String jid = account.getJid();
 
-		ConnectionConfiguration config = configureConnection(StringUtils
-						.parseServer(jid));
+		XMPPTCPConnectionConfiguration config = configureConnection(XmppStringUtils
+						.parseDomain(jid));
 
 		DirectoryRosterStore directoryRosterStore = Utils.getRosterStore(account);
-		config.setRosterStore(directoryRosterStore);
+//		config.setRosterStore(directoryRosterStore);
 		// TODO: move this logic some where else
 
-		XMPPConnection connection = new XMPPTCPConnection(config);
+		XMPPTCPConnection connection = new XMPPTCPConnection(config);
 		ConnectionManager.getConMap().put(account.getJid(), connection);
 		connection.addConnectionListener(new PalaverConnectionListener());
 		try {
 			connection.connect();
-			connection.login(StringUtils.parseName(jid), account.getPassword(), "Palaver");
+			connection.login(XmppStringUtils.parseLocalpart(jid), account.getPassword(), "Palaver");
 		} catch (SmackException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -109,9 +115,10 @@ public class ConnectTask extends DataFxTask<XMPPConnection> {
 		}
 
 
-		connection.getRoster().addRosterListener(new PalaverRosterListener(account));
-		connection.addPacketListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
-		connection.addPacketSendingListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
+        Roster.getInstanceFor(connection).addRosterListener(new PalaverRosterListener(account));
+        // TODO Fix connection
+//		connection.addPacketListener(new MsgListener(account), MessageTypeFilter.acceptSpecific(Message.Type.chat));
+//		connection.addPacketSendingListener(new MsgListener(account), new MessageTypeFilter(Message.Type.chat));
 
 		for (RosterPacket.Item item : directoryRosterStore.getEntries()) {
 			Contact contact = Utils.createContact(account.getJid(), item.getUser(), item.getName(), false

@@ -8,7 +8,8 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
@@ -24,7 +25,7 @@ public class MucListener implements PacketListener {
 	}
 
 	@Override
-	public void processPacket(Packet packet) throws SmackException.NotConnectedException {
+	public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
 		if (packet instanceof Message) {
 			Message message = (Message) packet;
 			logger.finer("Received muc message");
@@ -32,11 +33,11 @@ public class MucListener implements PacketListener {
 			logger.finest(message.toString());
 
 			if (message.getType() == Message.Type.groupchat && body != null && message.getBody().length() >= 0) {
-				HistoryEntry historyEntry = new HistoryEntry(StringUtils.parseResource(message.getFrom()), message.getBody());
+				HistoryEntry historyEntry = new HistoryEntry(XmppStringUtils.parseResource(message.getFrom()), message.getBody());
 				palaver.history.addEntry(historyEntry);
-				if (!message.getFrom().equals(StringUtils.parseName(palaver.getAccount())))
+				if (!message.getFrom().equals(XmppStringUtils.parseLocalpart(palaver.getAccount())))
 					palaver.setUnread(true);
-				Notifications.notify(StringUtils.parseResource(message.getFrom()), message.getBody());
+				Notifications.notify(XmppStringUtils.parseLocalpart(message.getFrom()), message.getBody());
 
 			}
 		}

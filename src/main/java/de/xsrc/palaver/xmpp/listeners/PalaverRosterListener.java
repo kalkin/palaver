@@ -5,8 +5,9 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConnectionManager;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 
 import java.util.Collection;
@@ -61,7 +62,7 @@ public class PalaverRosterListener implements RosterListener {
 
 
 	private Contact getContact(String address) {
-		RosterEntry entry = ConnectionManager.getConnection(this.account).getRoster().getEntry(address);
+		RosterEntry entry = Roster.getInstanceFor(ConnectionManager.getConnection(this.account)).getEntry(address);
 		if (entry == null) {
 			return null;
 		}

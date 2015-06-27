@@ -10,10 +10,10 @@ import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
@@ -29,10 +29,10 @@ public class PalaverConnectionListener implements ConnectionListener {
 
 	}
 
-	@Override
-	public void authenticated(XMPPConnection connection) {
+    @Override
+	public void authenticated(XMPPConnection connection, boolean b) {
 		logger.fine(String.format("Authenticated to %s", connection.getUser()));
-		accountJid = StringUtils.parseBareAddress(connection.getUser());
+		accountJid = XmppStringUtils.parseBareJid(connection.getUser());
 		try {
 			CarbonManager.getInstanceFor(connection).enableCarbons();
 		} catch (XMPPException | SmackException e) {
@@ -53,7 +53,7 @@ public class PalaverConnectionListener implements ConnectionListener {
 			ContactModel model = ContactModel.getInstance();
 			for (BookmarkedConference conference : bm.getBookmarkedConferences()) {
 				logger.finer(String.format("Adding %s", conference.getJid()));
-				Contact contact = Utils.createContact(StringUtils.parseBareAddress(connection.getUser()), conference.getJid(), conference.getName(), true);
+				Contact contact = Utils.createContact(XmppStringUtils.parseBareJid(connection.getUser()), conference.getJid(), conference.getName(), true);
 				model.addContact(contact);
 
 				if (conference.isAutoJoin()) {

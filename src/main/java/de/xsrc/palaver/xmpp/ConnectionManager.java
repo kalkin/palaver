@@ -9,6 +9,7 @@ import javafx.collections.ListChangeListener;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public class ConnectionManager {
 	private static final Logger logger = Logger.getLogger(ConnectionManager.class
 					.getName());
-	private static ConcurrentHashMap<String, XMPPConnection> conMap;
+	private static ConcurrentHashMap<String, XMPPTCPConnection> conMap;
 
 	private ConnectionManager() {
 		ListProperty<Account> accounts = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
@@ -46,7 +47,7 @@ public class ConnectionManager {
 
 	}
 
-	public static XMPPConnection getConnection(String account) {
+	public static XMPPTCPConnection getConnection(String account) {
 		return conMap.get(account);
 	}
 
@@ -54,11 +55,11 @@ public class ConnectionManager {
 		return InstanceHolder.INSTANCE;
 	}
 
-	public static XMPPConnection getConnection(Account account) {
+	public static XMPPTCPConnection getConnection(Account account) {
 		return conMap.get(account.getJid());
 	}
 
-	public static ConcurrentHashMap<String, XMPPConnection> getConMap() {
+	public static ConcurrentHashMap<String, XMPPTCPConnection> getConMap() {
 		return conMap;
 	}
 

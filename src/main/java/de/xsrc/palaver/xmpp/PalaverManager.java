@@ -22,7 +22,7 @@ public class PalaverManager {
 			MultiUserChat muc = MucManager.getInstance().getMuc(palaver);
 			try {
 				muc.sendMessage(body);
-			} catch (XMPPException | SmackException.NotConnectedException e) {
+			} catch (SmackException.NotConnectedException e) {
 				e.printStackTrace();
 				logger.severe(String.format("Could not send msg to %s", palaver.getRecipient()));
 			}

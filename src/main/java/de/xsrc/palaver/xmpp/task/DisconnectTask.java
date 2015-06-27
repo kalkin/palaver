@@ -2,15 +2,16 @@ package de.xsrc.palaver.xmpp.task;
 
 import org.datafx.concurrent.DataFxTask;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.logging.Logger;
 
 public class DisconnectTask extends DataFxTask {
 	private static final Logger logger = Logger.getLogger(DisconnectTask.class
 					.getName());
-	private XMPPConnection connection;
+	private XMPPTCPConnection connection;
 
-	public DisconnectTask(XMPPConnection connection) {
+	public DisconnectTask(XMPPTCPConnection connection) {
 		this.connection = connection;
 	}
 

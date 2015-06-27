@@ -1,15 +1,10 @@
 package de.xsrc.palaver;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
+import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.utils.AppDataSource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
-
 import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.util.EntityWithId;
@@ -17,8 +12,11 @@ import org.datafx.writer.WriteBackHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.utils.AppDataSource;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class AppDataSourceTest {
 

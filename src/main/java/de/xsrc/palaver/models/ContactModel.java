@@ -11,10 +11,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.bookmarks.BookmarkManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -56,20 +60,20 @@ public class ContactModel {
 	}
 
 	public void updateContact(Contact contact) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	public void removeContact(Contact contact) {
 		logger.info("Removing " + contact.getJid());
 		accountContactObservableMap.remove(contact.getJid());
 		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		XMPPConnection connection = ConnectionManager.getConnection(contact.getAccount());
+        XMPPTCPConnection connection = ConnectionManager.getConnection(contact.getAccount());
 		executor.submit(() -> {
 			try {
 				if (contact.isConference()) {
 					BookmarkManager.getBookmarkManager(connection).removeBookmarkedConference(contact.getJid());
 				} else {
-					Roster roster = connection.getRoster();
+					Roster roster = Roster.getInstanceFor(connection);
 					RosterEntry entry = roster.getEntry(contact.getJid());
 					roster.removeEntry(entry);
 
@@ -86,15 +90,15 @@ public class ContactModel {
 
 	public Contact addContact(Account account, String jid)
 					throws SmackException, XMPPException {
-		XMPPConnection connection = ConnectionManager.getConnection(account);
-		String name = StringUtils.parseName(jid);
+        XMPPTCPConnection connection = ConnectionManager.getConnection(account);
+		String name = XmppStringUtils.parseLocalpart(jid);
 		Contact contact = createContact(account.getJid(), jid, name, false);
 		if (Utils.isMuc(connection, jid)) {
 			contact.setConference(true);
 		} else {
 			logger.info(String.format("Adding %s to roster %s", jid, account));
-			connection.getRoster().createEntry(contact.getJid(), contact.getName(), null);
-		}
+            Roster.getInstanceFor(connection).createEntry(contact.getJid(), contact.getName(), null);
+        }
 
 		accountContactObservableMap.put(contact.getJid(), contact);
 		return contact;

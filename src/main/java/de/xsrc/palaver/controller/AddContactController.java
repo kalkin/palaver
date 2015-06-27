@@ -15,7 +15,7 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
@@ -47,7 +47,7 @@ public class AddContactController {
 		}
 
 		jid.textProperty().addListener(observable -> {
-			boolean isJid = StringUtils.isFullJID(jid.textProperty().get() + "/Foo");
+			boolean isJid = XmppStringUtils.isFullJID(jid.textProperty().get() + "/Foo");
 			saveButton.setDisable(!isJid);
 		});
 	}
