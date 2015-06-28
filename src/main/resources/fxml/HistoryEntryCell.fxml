@@ -1,27 +1,32 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<fx:root type="javafx.scene.layout.HBox" styleClass="history-entry-cell" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.HBox"
+         styleClass="history-entry-cell"
          xmlns="http://javafx.com/javafx/8">
     <children>
         <StackPane fx:id="avatar"/>
         <VBox fillWidth="true">
             <children>
                 <TextFlow textAlignment="JUSTIFY">
-                    <Text fx:id="body" />
+                    <Text fx:id="body"/>
                 </TextFlow>
                 <BorderPane styleClass="secondary" fx:id="bp">
                     <left>
-                        <Text fx:id="nick" style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
+                        <Text fx:id="nick"
+                              style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
                     </left>
                     <right>
-                        <Text fx:id="date" style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
+                        <Text fx:id="date"
+                              style="-fx-fill: rgba(0, 0, 0, 0.54);"/>
                     </right>
                 </BorderPane>
-                <Separator style="    -fx-border-color: rgba(0, 0, 0, 0.12) transparent transparent transparent;"/>
+                <Separator
+                        style="    -fx-border-color: rgba(0, 0, 0, 0.12) transparent transparent transparent;"/>
             </children>
         </VBox>
     </children>

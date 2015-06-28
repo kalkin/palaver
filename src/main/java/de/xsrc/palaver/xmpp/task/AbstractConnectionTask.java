@@ -29,6 +29,7 @@ public abstract class AbstractConnectionTask<V> extends DataFxTask<V> {
 
 
     }
+
     protected static SSLContext getContext() throws SSLException {
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL");

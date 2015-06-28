@@ -20,69 +20,69 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class HistoryControl extends BorderPane {
-	private static final Logger logger = Logger
-					.getLogger(HistoryControl.class.getName());
-	private static final String HISTORY_VIEW_FXML = "/fxml/History.fxml";
-	@FXML
-	private ChatInput chatInput;
-	@FXML
-	private VBox historyBox;
-	@FXML
-	private ScrollPane scrollPane;
+    private static final Logger logger = Logger
+            .getLogger(HistoryControl.class.getName());
+    private static final String HISTORY_VIEW_FXML = "/fxml/History.fxml";
+    @FXML
+    private ChatInput chatInput;
+    @FXML
+    private VBox historyBox;
+    @FXML
+    private ScrollPane scrollPane;
 
-	private ObservableList<HistoryEntry> history;
-	private Palaver palaver;
+    private ObservableList<HistoryEntry> history;
+    private Palaver palaver;
 
-	public HistoryControl(Palaver palaver) {
-		this.palaver = palaver;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HISTORY_VIEW_FXML));
-		fxmlLoader.setResources(UiUtils.getRessourceBundle());
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
+    public HistoryControl(Palaver palaver) {
+        this.palaver = palaver;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HISTORY_VIEW_FXML));
+        fxmlLoader.setResources(UiUtils.getRessourceBundle());
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
 
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
-		}
-	}
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
-	@FXML
-	public void initialize() {
-		history = palaver.history.entryListProperty();
-		add(history);
-		chatInput.setPalaver(palaver);
-		history.addListener((Change<? extends HistoryEntry> change) -> {
-			while (change.next()) {
-				logger.finer("New Messages were added to " + palaver);
-				add(change.getAddedSubList());
-			}
-		});
-		historyBox.heightProperty().addListener((observable, oldValue, newValue) -> {
-			Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
-			palaver.setUnread(false);
-		});
-		requestFocus();
+    @FXML
+    public void initialize() {
+        history = palaver.history.entryListProperty();
+        add(history);
+        chatInput.setPalaver(palaver);
+        history.addListener((Change<? extends HistoryEntry> change) -> {
+            while (change.next()) {
+                logger.finer("New Messages were added to " + palaver);
+                add(change.getAddedSubList());
+            }
+        });
+        historyBox.heightProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
+            palaver.setUnread(false);
+        });
+        requestFocus();
 
-	}
+    }
 
-	private void add(List<? extends HistoryEntry> list) {
-		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		executor.submit(() -> {
-							for (HistoryEntry historyEntry : list) {
-								Label l = new Label();
-								Platform.runLater(() -> historyBox.getChildren().add(new HistoryEntryCell(historyEntry, palaver.isConference())));
+    private void add(List<? extends HistoryEntry> list) {
+        ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
+        executor.submit(() -> {
+                    for (HistoryEntry historyEntry : list) {
+                        Label l = new Label();
+                        Platform.runLater(() -> historyBox.getChildren().add(new HistoryEntryCell(historyEntry, palaver.isConference())));
 
-							}
-						}
-		);
-	}
+                    }
+                }
+        );
+    }
 
-	public void requestFocus() {
-		Platform.runLater(() -> {
-			chatInput.requestFocus();
-			chatInput.positionCaret(chatInput.getLength());
-		});
+    public void requestFocus() {
+        Platform.runLater(() -> {
+            chatInput.requestFocus();
+            chatInput.positionCaret(chatInput.getLength());
+        });
 
-	}
+    }
 }

@@ -22,7 +22,7 @@ public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
     private ConcurrentHashMap<String, XMPPTCPConnection> connectionMap;
 
     public ConnectTask(Account account) {
-        this(account, new  ConcurrentHashMap<String, XMPPTCPConnection>());
+        this(account, new ConcurrentHashMap<String, XMPPTCPConnection>());
     }
 
     public ConnectTask(Account account, ConcurrentHashMap<String, XMPPTCPConnection> connectionMap) {

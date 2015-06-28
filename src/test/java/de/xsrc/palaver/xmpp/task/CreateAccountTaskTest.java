@@ -15,6 +15,8 @@ import static junit.framework.Assert.assertTrue;
 public class CreateAccountTaskTest extends AbstractConnectionTest {
 
     final Account account = getAccount("alice.create.test@xsrc.de", "password");
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     @After
@@ -34,9 +36,6 @@ public class CreateAccountTaskTest extends AbstractConnectionTest {
         assertTrue(connection.isAuthenticated());
         connection.disconnect();
     }
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     /**
      * Expects AccountCreationException to be thrown

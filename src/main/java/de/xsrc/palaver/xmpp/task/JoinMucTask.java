@@ -1,44 +1,30 @@
 package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.xmpp.listeners.MucListener;
 import org.datafx.concurrent.DataFxTask;
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
-import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
 
 public class JoinMucTask extends DataFxTask {
 
-	private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
+    private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
 
-	private Palaver palaver;
-	private XMPPConnection connection;
+    private Palaver palaver;
+    private XMPPConnection connection;
 
-	public JoinMucTask(Palaver palaver, XMPPConnection connection) {
-		this.palaver = palaver;
-		this.connection = connection;
-		this.updateTitle("Joining Conference " + palaver.getRecipient());
+    public JoinMucTask(Palaver palaver, XMPPConnection connection) {
+        this.palaver = palaver;
+        this.connection = connection;
+        this.updateTitle("Joining Conference " + palaver.getRecipient());
 
-	}
-
-	public JoinMucTask(Palaver palaver) {
-		this.palaver = palaver;
-		this.updateTitle("Joining Conference " + palaver.getRecipient());
-		this.connection = ConnectionManager.getConnection(palaver.getAccount());
-	}
+    }
 
 
-	@Override
-	protected MultiUserChat call() {
+    @Override
+    protected MultiUserChat call() {
 // TODO Fix Muc Connection
 //		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
 //		try {
@@ -65,5 +51,5 @@ public class JoinMucTask extends DataFxTask {
 //			return null;
 //		}
         return null;
-	}
+    }
 }

@@ -5,6 +5,6 @@ package de.xsrc.palaver.xmpp.exception;
  */
 public class AuthenticationFailedException extends ConnectionFailedException {
     public AuthenticationFailedException(String message, Exception cause) {
-        super(message,cause);
+        super(message, cause);
     }
 }

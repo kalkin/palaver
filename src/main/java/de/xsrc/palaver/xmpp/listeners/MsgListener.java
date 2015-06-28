@@ -9,8 +9,6 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
-import org.jivesoftware.smackx.carbons.CarbonManager;
-import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;

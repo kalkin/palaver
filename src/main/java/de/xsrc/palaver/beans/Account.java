@@ -15,49 +15,49 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "account")
 public class Account implements EntityWithId<String> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private StringProperty jid = new SimpleStringProperty();
+    private StringProperty jid = new SimpleStringProperty();
 
-	private StringProperty password = new SimpleStringProperty();
+    private StringProperty password = new SimpleStringProperty();
 
-	private BoundPropertySupport credentialsChanged = new BoundPropertySupport(this);
+    private BoundPropertySupport credentialsChanged = new BoundPropertySupport(this);
 
-	public Account() {
-		this.credentialsChanged.raisePropertyChangeEventFor(jid);
-		this.credentialsChanged.raisePropertyChangeEventFor(password);
-	}
+    public Account() {
+        this.credentialsChanged.raisePropertyChangeEventFor(jid);
+        this.credentialsChanged.raisePropertyChangeEventFor(password);
+    }
 
-	@Override
-	public int hashCode() {
-		return getId().hashCode() * 23;
-	}
+    @Override
+    public int hashCode() {
+        return getId().hashCode() * 23;
+    }
 
-	public String getId() {
-		return getJid();
-	}
+    public String getId() {
+        return getJid();
+    }
 
-	public String getPassword() {
-		return password.get();
-	}
+    public String getPassword() {
+        return password.get();
+    }
 
-	public void setPassword(String password) {
-		this.password.set(password);
-	}
+    public void setPassword(String password) {
+        this.password.set(password);
+    }
 
-	public String getJid() {
-		return jid.get();
-	}
+    public String getJid() {
+        return jid.get();
+    }
 
-	public void setJid(String jid) {
-		this.jid.set(jid);
-	}
+    public void setJid(String jid) {
+        this.jid.set(jid);
+    }
 
-	public String toString() {
-		return jid.get();
-	}
+    public String toString() {
+        return jid.get();
+    }
 
-	public BoundPropertySupport credentialsChangedProperty() {
-		return this.credentialsChanged;
-	}
+    public BoundPropertySupport credentialsChangedProperty() {
+        return this.credentialsChanged;
+    }
 }

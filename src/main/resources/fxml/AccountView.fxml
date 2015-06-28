@@ -2,36 +2,35 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import org.controlsfx.control.ButtonBar?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1">
-	<top>
-		<ButtonBar>
-			<buttons>
-				<Button fx:id="back" cancelButton="true">
-					<tooltip>
-						<Tooltip text="%back_button" />
-					</tooltip>
-				</Button>
-				<Button fx:id="addAccountButton" onAction="#addAccount"
-					defaultButton="true">
-					<tooltip>
-						<Tooltip text="%add_account" />
-					</tooltip>
-				</Button>
-			</buttons>
-		</ButtonBar>
-	</top>
-	<center>
-		<ListView fx:id="accountList">
-			<contextMenu>
-				<ContextMenu>
-					<items>
-						<MenuItem text="%edit" onAction="#editAction" />
-						<MenuItem text="%remove" onAction="#removeAction" />
-					</items>
-				</ContextMenu>
-			</contextMenu>
-		</ListView>
-	</center>
+    <top>
+        <ButtonBar>
+            <buttons>
+                <Button fx:id="back" cancelButton="true">
+                    <tooltip>
+                        <Tooltip text="%back_button"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="addAccountButton" onAction="#addAccount"
+                        defaultButton="true">
+                    <tooltip>
+                        <Tooltip text="%add_account"/>
+                    </tooltip>
+                </Button>
+            </buttons>
+        </ButtonBar>
+    </top>
+    <center>
+        <ListView fx:id="accountList">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem text="%edit" onAction="#editAction"/>
+                        <MenuItem text="%remove" onAction="#removeAction"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
+    </center>
 </BorderPane>
 

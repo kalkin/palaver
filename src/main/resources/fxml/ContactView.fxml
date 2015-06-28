@@ -3,7 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8">
     <top>
         <ButtonBar>
             <buttons>
@@ -13,7 +14,8 @@
                     </tooltip>
                 </Button>
                 <Button fx:id="addContactButton" text="%add"/>
-                <Button fx:id="deleteContactButton"  onAction="#deleteContactAction" text="%delete"/>
+                <Button fx:id="deleteContactButton"
+                        onAction="#deleteContactAction" text="%delete"/>
             </buttons>
         </ButtonBar>
     </top>
@@ -24,7 +26,8 @@
         <HBox>
             <children>
                 <TextField fx:id="searchInput"/>
-                <Button text="start" defaultButton="true" fx:id="startPalaverButton"/>
+                <Button text="start" defaultButton="true"
+                        fx:id="startPalaverButton"/>
             </children>
         </HBox>
     </bottom>

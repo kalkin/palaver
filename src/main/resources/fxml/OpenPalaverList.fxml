@@ -3,12 +3,17 @@
 <?import de.jensd.fx.fontawesome.AwesomeIcon?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root maxWidth="256.0" minWidth="256.0" styleClass="zdepth2" type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root xmlns:fx="http://javafx.com/fxml/1" maxWidth="256.0" minWidth="256.0"
+         styleClass="zdepth2"
+         type="javafx.scene.layout.BorderPane"
          xmlns="http://javafx.com/javafx/8">
     <top>
-        <AnchorPane minHeight="80" maxHeight="80" style="-fx-background-color: #f9f9f9;" styleClass="bottom-divide">
+        <AnchorPane minHeight="80" maxHeight="80"
+                    style="-fx-background-color: #f9f9f9;"
+                    styleClass="bottom-divide">
             <children>
-                <Button fx:id="showBuddyListButton" styleClass="awesome-icon" AnchorPane.bottomAnchor="0"
+                <Button fx:id="showBuddyListButton" styleClass="awesome-icon"
+                        AnchorPane.bottomAnchor="0"
                         AnchorPane.rightAnchor="64">
                     <text>
                         <AwesomeIcon fx:constant="PLUS"/>
@@ -17,7 +22,8 @@
                         <Tooltip text="%budy_list"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="hideButton" cancelButton="true" onAction="#hideAction" styleClass="awesome-icon"
+                <Button fx:id="hideButton" cancelButton="true"
+                        onAction="#hideAction" styleClass="awesome-icon"
                         AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0">
                     <text>
                         <AwesomeIcon fx:constant="CHEVRON_LEFT"/>
@@ -30,7 +36,8 @@
         </AnchorPane>
     </top>
     <center>
-        <ListView AnchorPane.topAnchor="80" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+        <ListView AnchorPane.topAnchor="80" AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0"
                   fx:id="openPalaversList" styleClass="palaverList">
             <contextMenu>
                 <ContextMenu>

@@ -15,9 +15,9 @@ import static org.junit.Assert.assertFalse;
 public class DeleteAccountTaskTest extends AbstractConnectionTest {
 
     static final Account account = getAccount("alice.delete.test@xsrc.de", "password");
-    private XMPPTCPConnection connection;
     @Rule
     public ExpectedException exception = ExpectedException.none();
+    private XMPPTCPConnection connection;
 
     @BeforeClass
     public static void initializeJFX() {

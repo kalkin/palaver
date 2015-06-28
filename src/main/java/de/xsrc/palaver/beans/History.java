@@ -11,27 +11,27 @@ import java.util.List;
 
 @XmlRootElement
 public class History {
-	@XmlElement(name = "entry", type = HistoryEntry.class)
-	private ListProperty<HistoryEntry> entryList;
+    @XmlElement(name = "entry", type = HistoryEntry.class)
+    private ListProperty<HistoryEntry> entryList;
 
-	public History() {
-		entryList = new SimpleListProperty<HistoryEntry>(
-						FXCollections.observableArrayList());
-	}
+    public History() {
+        entryList = new SimpleListProperty<HistoryEntry>(
+                FXCollections.observableArrayList());
+    }
 
-	public List<HistoryEntry> getEntryList() {
-		return entryList.get();
-	}
+    public List<HistoryEntry> getEntryList() {
+        return entryList.get();
+    }
 
-	public void setEntryList(ObservableList<HistoryEntry> history) {
-		this.entryList.set(history);
-	}
+    public void setEntryList(ObservableList<HistoryEntry> history) {
+        this.entryList.set(history);
+    }
 
-	public ObservableList<HistoryEntry> entryListProperty() {
-		return entryList;
-	}
+    public ObservableList<HistoryEntry> entryListProperty() {
+        return entryList;
+    }
 
-	public void addEntry(HistoryEntry e) {
-		this.entryList.add(e);
-	}
+    public void addEntry(HistoryEntry e) {
+        this.entryList.add(e);
+    }
 }

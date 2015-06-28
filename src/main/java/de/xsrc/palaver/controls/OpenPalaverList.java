@@ -19,57 +19,57 @@ import java.util.logging.Logger;
 
 public class OpenPalaverList extends BorderPane {
 
-	private static final Logger logger = Logger.getLogger(OpenPalaverList.class.getName());
+    private static final Logger logger = Logger.getLogger(OpenPalaverList.class.getName());
 
-	private static final String OPEN_PALAVER_LIST_FXML = "/fxml/OpenPalaverList.fxml";
+    private static final String OPEN_PALAVER_LIST_FXML = "/fxml/OpenPalaverList.fxml";
 
-	private PalaverModel model = PalaverModel.getInstance();
+    private PalaverModel model = PalaverModel.getInstance();
 
 
-	@FXML
-	private ListView<Palaver> openPalaversList;
+    @FXML
+    private ListView<Palaver> openPalaversList;
 
-	@FXML
-	private Button hideButton;
+    @FXML
+    private Button hideButton;
 
-	public OpenPalaverList() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(OPEN_PALAVER_LIST_FXML));
-		fxmlLoader.setResources(UiUtils.getRessourceBundle());
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
+    public OpenPalaverList() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(OPEN_PALAVER_LIST_FXML));
+        fxmlLoader.setResources(UiUtils.getRessourceBundle());
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
 
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
-		}
-	}
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
-	@FXML
-	private void initialize() {
-		openPalaversList.setItems(model.getOpenPalavers());
-		MultipleSelectionModel<Palaver> selModel = openPalaversList
-						.getSelectionModel();
-		selModel.setSelectionMode(SelectionMode.SINGLE);
-		openPalaversList.setSelectionModel(selModel);
-		openPalaversList.setCellFactory(listView -> new PalaverCell());
-		hideButton.cancelButtonProperty().bind(this.visibleProperty()); // There can only be one cancelButton
-	}
+    @FXML
+    private void initialize() {
+        openPalaversList.setItems(model.getOpenPalavers());
+        MultipleSelectionModel<Palaver> selModel = openPalaversList
+                .getSelectionModel();
+        selModel.setSelectionMode(SelectionMode.SINGLE);
+        openPalaversList.setSelectionModel(selModel);
+        openPalaversList.setCellFactory(listView -> new PalaverCell());
+        hideButton.cancelButtonProperty().bind(this.visibleProperty()); // There can only be one cancelButton
+    }
 
-	public ReadOnlyObjectProperty<Palaver> selectedPalaver() {
-		logger.finer(String.format("Selected %s", openPalaversList.getSelectionModel().selectedItemProperty().get()));
-		return openPalaversList.getSelectionModel().selectedItemProperty();
-	}
+    public ReadOnlyObjectProperty<Palaver> selectedPalaver() {
+        logger.finer(String.format("Selected %s", openPalaversList.getSelectionModel().selectedItemProperty().get()));
+        return openPalaversList.getSelectionModel().selectedItemProperty();
+    }
 
-	@FXML
-	private void hideAction() {
-		hide(true);
-	}
+    @FXML
+    private void hideAction() {
+        hide(true);
+    }
 
-	public void hide(boolean b) {
-		setVisible(!b);
-		setManaged(!b);
+    public void hide(boolean b) {
+        setVisible(!b);
+        setManaged(!b);
 
-	}
+    }
 
 }

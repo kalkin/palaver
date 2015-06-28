@@ -2,24 +2,27 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<center>
-		<GridPane>
-			<children>
-				<Label text="%jid" />
-				<Label text="%password" GridPane.rowIndex="1" />
-				<TextField GridPane.columnIndex="1" fx:id="jidField"/>
-				<PasswordField GridPane.columnIndex="1"
-					GridPane.rowIndex="1" fx:id="passwordField" />
-			</children>
-		</GridPane>
-	</center>
-	<bottom>
-		<ButtonBar>
-			<buttons>
-				<Button fx:id="back" onAction="#close" text="%back_button" cancelButton="true"/>
-				<Button text="%add_account" onAction="#saveAccount"  defaultButton="true" fx:id="saveButton" disable="true"/>
-			</buttons>
-		</ButtonBar>
-	</bottom>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8">
+    <center>
+        <GridPane>
+            <children>
+                <Label text="%jid"/>
+                <Label text="%password" GridPane.rowIndex="1"/>
+                <TextField GridPane.columnIndex="1" fx:id="jidField"/>
+                <PasswordField GridPane.columnIndex="1"
+                               GridPane.rowIndex="1" fx:id="passwordField"/>
+            </children>
+        </GridPane>
+    </center>
+    <bottom>
+        <ButtonBar>
+            <buttons>
+                <Button fx:id="back" onAction="#close" text="%back_button"
+                        cancelButton="true"/>
+                <Button text="%add_account" onAction="#saveAccount"
+                        defaultButton="true" fx:id="saveButton" disable="true"/>
+            </buttons>
+        </ButtonBar>
+    </bottom>
 </BorderPane>

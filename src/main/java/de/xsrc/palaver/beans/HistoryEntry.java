@@ -12,62 +12,62 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "entry")
 public class HistoryEntry implements EntityWithId<String> {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-	private LongProperty receivedAt;
-	private StringProperty body;
-	private StringProperty from;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private LongProperty receivedAt;
+    private StringProperty body;
+    private StringProperty from;
 
-	public HistoryEntry() {
-		this(null, null);
+    public HistoryEntry() {
+        this(null, null);
 
-	}
+    }
 
-	public HistoryEntry(String from, String body) {
-		this.receivedAt = new SimpleLongProperty(System.currentTimeMillis());
-		this.from = new SimpleStringProperty(from);
-		this.body = new SimpleStringProperty(body);
+    public HistoryEntry(String from, String body) {
+        this.receivedAt = new SimpleLongProperty(System.currentTimeMillis());
+        this.from = new SimpleStringProperty(from);
+        this.body = new SimpleStringProperty(body);
 
 
-	}
+    }
 
-	@Override
-	public String getId() {
-		return getReceivedAt() + "";
-	}
+    @Override
+    public String getId() {
+        return getReceivedAt() + "";
+    }
 
-	public Long getReceivedAt() {
-		return receivedAt.get();
-	}
+    public Long getReceivedAt() {
+        return receivedAt.get();
+    }
 
-	public void setReceivedAt(long l) {
-		receivedAt.set(l);
-	}
+    public void setReceivedAt(long l) {
+        receivedAt.set(l);
+    }
 
-	public String toString() {
-		return body.get();
-	}
+    public String toString() {
+        return body.get();
+    }
 
-	public String getBody() {
-		return body.get();
-	}
+    public String getBody() {
+        return body.get();
+    }
 
-	public void setBody(String body) {
-		this.body.set(body);
-	}
+    public void setBody(String body) {
+        this.body.set(body);
+    }
 
-	public String getFrom() {
-		return from.get();
-	}
+    public String getFrom() {
+        return from.get();
+    }
 
-	public void setFrom(String from) {
-		this.from.set(from);
-	}
+    public void setFrom(String from) {
+        this.from.set(from);
+    }
 
-	public ObservableValue<? extends String> bodyProperty() {
-		return body;
-	}
+    public ObservableValue<? extends String> bodyProperty() {
+        return body;
+    }
 
 }

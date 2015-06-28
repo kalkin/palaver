@@ -18,47 +18,47 @@ import java.util.ResourceBundle;
 
 public class UiUtils {
 
-	public static StackPane getAvatar(String name) {
-		int modena_colors[] = {0xe51c23, 0xe91e63, 0x9c27b0, 0x673ab7, 0x5677fc, 0x03e9f4, 0x00bcd4, 0x009688, 0x259b24,
-						0xcddc39, 0xffeb3b, 0xffc107, 0xff9800, 0xff5722, 0x795548, 0x9e9e9e, 0x607d8b};
-		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
-		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
-		Circle circle = new Circle(20, Color.web(hexcolor));
+    public static StackPane getAvatar(String name) {
+        int modena_colors[] = {0xe51c23, 0xe91e63, 0x9c27b0, 0x673ab7, 0x5677fc, 0x03e9f4, 0x00bcd4, 0x009688, 0x259b24,
+                0xcddc39, 0xffeb3b, 0xffc107, 0xff9800, 0xff5722, 0x795548, 0x9e9e9e, 0x607d8b};
+        int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
+        String hexcolor = String.format("#%06X", (0xFFFFFF & color));
+        Circle circle = new Circle(20, Color.web(hexcolor));
 
-		circle.setFill(Paint.valueOf(hexcolor));
+        circle.setFill(Paint.valueOf(hexcolor));
 
-		StackPane sp = new StackPane();
-		Text t = new Text(AwesomeIcon.USER.toString());
-		Font f = Font.font("FontAwesome", 34);
+        StackPane sp = new StackPane();
+        Text t = new Text(AwesomeIcon.USER.toString());
+        Font f = Font.font("FontAwesome", 34);
 
-		t.setFont(f);
-		t.setFill(Paint.valueOf("white"));
-		sp.getChildren().add(circle);
-		sp.getChildren().add(t);
-		sp.getStyleClass().add("avatar");
-		return sp;
-	}
+        t.setFont(f);
+        t.setFill(Paint.valueOf("white"));
+        sp.getChildren().add(circle);
+        sp.getChildren().add(t);
+        sp.getStyleClass().add("avatar");
+        return sp;
+    }
 
-	public static synchronized Scene prepareFlow(Flow f,
-	                                             ViewFlowContext flowContext) throws FlowException {
-		ResourceBundle b = getRessourceBundle();
+    public static synchronized Scene prepareFlow(Flow f,
+                                                 ViewFlowContext flowContext) throws FlowException {
+        ResourceBundle b = getRessourceBundle();
 
-		DefaultFlowContainer container = new DefaultFlowContainer();
-		FlowHandler flowHandler;
-		if (flowContext != null) {
-			flowHandler = f.createHandler(flowContext);
-		} else {
-			flowHandler = f.createHandler();
-		}
-		flowHandler.getViewConfiguration().setResources(b);
-		flowHandler.start(container);
-		Scene scene = new Scene(container.getView());
-		scene.getStylesheets().add("application.css");
-		return scene;
-	}
+        DefaultFlowContainer container = new DefaultFlowContainer();
+        FlowHandler flowHandler;
+        if (flowContext != null) {
+            flowHandler = f.createHandler(flowContext);
+        } else {
+            flowHandler = f.createHandler();
+        }
+        flowHandler.getViewConfiguration().setResources(b);
+        flowHandler.start(container);
+        Scene scene = new Scene(container.getView());
+        scene.getStylesheets().add("application.css");
+        return scene;
+    }
 
-	public static ResourceBundle getRessourceBundle() {
-		return ResourceBundle.getBundle("i18n.Palaver");
-	}
+    public static ResourceBundle getRessourceBundle() {
+        return ResourceBundle.getBundle("i18n.Palaver");
+    }
 
 }

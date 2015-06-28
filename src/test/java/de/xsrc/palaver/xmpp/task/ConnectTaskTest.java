@@ -41,7 +41,7 @@ public class ConnectTaskTest extends AbstractConnectionTest {
     }
 
     @After
-    public void disconnect(){
+    public void disconnect() {
         connection.disconnect();
     }
 

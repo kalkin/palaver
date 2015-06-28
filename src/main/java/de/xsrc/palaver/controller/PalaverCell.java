@@ -8,43 +8,43 @@ import javafx.scene.control.OverrunStyle;
 import org.jxmpp.util.XmppStringUtils;
 
 public class PalaverCell extends ListCell<Palaver> {
-	@Override
-	public void updateItem(Palaver p, boolean empty) {
-		super.updateItem(p, empty);
-		if (!empty && p != null) {
-			String name = XmppStringUtils.parseLocalpart(p.getRecipient());
-			if (name != null && name.length() > 0) {
-				Label label = new Label();
-				if (p.isConference()) {
-					label.getStyleClass().add("muc");
-				} else {
-					label.getStyleClass().add("chat");
+    @Override
+    public void updateItem(Palaver p, boolean empty) {
+        super.updateItem(p, empty);
+        if (!empty && p != null) {
+            String name = XmppStringUtils.parseLocalpart(p.getRecipient());
+            if (name != null && name.length() > 0) {
+                Label label = new Label();
+                if (p.isConference()) {
+                    label.getStyleClass().add("muc");
+                } else {
+                    label.getStyleClass().add("chat");
 
-				}
+                }
 
-				label.setTextOverrun(OverrunStyle.ELLIPSIS);
-				label.setText(XmppStringUtils.parseLocalpart(p.getRecipient()));
+                label.setTextOverrun(OverrunStyle.ELLIPSIS);
+                label.setText(XmppStringUtils.parseLocalpart(p.getRecipient()));
 
-				setGraphic(label);
+                setGraphic(label);
 
 
-				changeUnreadState(p.getUnread());
-				p.unreadProperty().addListener((observable, oldValue, newValue) -> {
-					changeUnreadState(newValue);
-				});
-			}
-		} else {
-			setGraphic(null);
-			setText(null);
-		}
-	}
+                changeUnreadState(p.getUnread());
+                p.unreadProperty().addListener((observable, oldValue, newValue) -> {
+                    changeUnreadState(newValue);
+                });
+            }
+        } else {
+            setGraphic(null);
+            setText(null);
+        }
+    }
 
-	private void changeUnreadState(boolean unread) {
-		if (unread) {
-			Platform.runLater(() -> this.setStyle("-fx-font-weight: bold"));
-		} else {
-			Platform.runLater(() -> this.setStyle("-fx-font-weight: normal"));
-		}
-	}
+    private void changeUnreadState(boolean unread) {
+        if (unread) {
+            Platform.runLater(() -> this.setStyle("-fx-font-weight: bold"));
+        } else {
+            Platform.runLater(() -> this.setStyle("-fx-font-weight: normal"));
+        }
+    }
 
 }
