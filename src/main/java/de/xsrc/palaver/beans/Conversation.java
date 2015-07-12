@@ -9,8 +9,8 @@ import org.datafx.util.EntityWithId;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "palaver")
-public class Palaver implements EntityWithId<String> {
+@XmlRootElement(name = "conversation")
+public class Conversation implements EntityWithId<String> {
 
     private static final long serialVersionUID = 1L;
     @XmlElement(name = "history", type = History.class)
@@ -28,7 +28,7 @@ public class Palaver implements EntityWithId<String> {
     private BooleanProperty conference;
 
 
-    public Palaver() {
+    public Conversation() {
         this.recipient = new SimpleStringProperty();
         this.account = new SimpleStringProperty();
         this.history = new History();
@@ -37,7 +37,7 @@ public class Palaver implements EntityWithId<String> {
         this.conference = new SimpleBooleanProperty(false);
     }
 
-    public Palaver(String account, String recipient) {
+    public Conversation(String account, String recipient) {
         this.recipient = new SimpleStringProperty(recipient);
         this.account = new SimpleStringProperty(account);
         this.history = new History();

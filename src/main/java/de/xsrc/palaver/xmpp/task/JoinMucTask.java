@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import org.datafx.concurrent.DataFxTask;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -12,13 +12,13 @@ public class JoinMucTask extends DataFxTask {
 
     private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
 
-    private Palaver palaver;
+    private Conversation conversation;
     private XMPPConnection connection;
 
-    public JoinMucTask(Palaver palaver, XMPPConnection connection) {
-        this.palaver = palaver;
+    public JoinMucTask(Conversation conversation, XMPPConnection connection) {
+        this.conversation = conversation;
         this.connection = connection;
-        this.updateTitle("Joining Conference " + palaver.getRecipient());
+        this.updateTitle("Joining Conference " + conversation.getRecipient());
 
     }
 

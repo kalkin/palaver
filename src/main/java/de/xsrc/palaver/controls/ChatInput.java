@@ -1,11 +1,16 @@
 package de.xsrc.palaver.controls;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Conversation;
+import de.xsrc.palaver.xmpp.PalaverManager;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import org.datafx.controller.context.ApplicationContext;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.logging.Logger;
 
@@ -14,7 +19,7 @@ public class ChatInput extends TextArea {
 
     final private KeyCombination SHIFT_ENTER = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.SHIFT_DOWN);
     final private KeyCombination ENTER = new KeyCodeCombination(KeyCode.ENTER);
-    private Palaver palaver;
+    private Conversation conversation;
 
     public ChatInput() {
         super();
@@ -34,8 +39,8 @@ public class ChatInput extends TextArea {
         });
     }
 
-    public void setPalaver(Palaver palaver) {
-        this.palaver = palaver;
+    public void setConversation(Conversation conversation) {
+        this.conversation = conversation;
     }
 
 }

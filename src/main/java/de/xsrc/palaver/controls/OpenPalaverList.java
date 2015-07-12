@@ -1,6 +1,6 @@
 package de.xsrc.palaver.controls;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.controller.PalaverCell;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.utils.UiUtils;
@@ -27,7 +27,7 @@ public class OpenPalaverList extends BorderPane {
 
 
     @FXML
-    private ListView<Palaver> openPalaversList;
+    private ListView<Conversation> openPalaversList;
 
     @FXML
     private Button hideButton;
@@ -48,7 +48,7 @@ public class OpenPalaverList extends BorderPane {
     @FXML
     private void initialize() {
         openPalaversList.setItems(model.getOpenPalavers());
-        MultipleSelectionModel<Palaver> selModel = openPalaversList
+        MultipleSelectionModel<Conversation> selModel = openPalaversList
                 .getSelectionModel();
         selModel.setSelectionMode(SelectionMode.SINGLE);
         openPalaversList.setSelectionModel(selModel);
@@ -56,7 +56,7 @@ public class OpenPalaverList extends BorderPane {
         hideButton.cancelButtonProperty().bind(this.visibleProperty()); // There can only be one cancelButton
     }
 
-    public ReadOnlyObjectProperty<Palaver> selectedPalaver() {
+    public ReadOnlyObjectProperty<Conversation> selectedPalaver() {
         logger.finer(String.format("Selected %s", openPalaversList.getSelectionModel().selectedItemProperty().get()));
         return openPalaversList.getSelectionModel().selectedItemProperty();
     }

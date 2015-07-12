@@ -1,15 +1,15 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.OverrunStyle;
 import org.jxmpp.util.XmppStringUtils;
 
-public class PalaverCell extends ListCell<Palaver> {
+public class PalaverCell extends ListCell<Conversation> {
     @Override
-    public void updateItem(Palaver p, boolean empty) {
+    public void updateItem(Conversation p, boolean empty) {
         super.updateItem(p, empty);
         if (!empty && p != null) {
             String name = XmppStringUtils.parseLocalpart(p.getRecipient());

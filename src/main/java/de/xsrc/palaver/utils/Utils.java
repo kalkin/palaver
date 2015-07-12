@@ -1,7 +1,7 @@
 package de.xsrc.palaver.utils;
 
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -101,8 +101,8 @@ public class Utils {
         return info.containsFeature("http://jabber.org/protocol/muc");
     }
 
-    public static MultiUserChat getMuc(Palaver palaver) {
-        return getJoinedMucs().get(palaver.getId());
+    public static MultiUserChat getMuc(Conversation conversation) {
+        return getJoinedMucs().get(conversation.getId());
     }
 
 

@@ -1,6 +1,6 @@
 package de.xsrc.palaver;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.utils.AppDataSource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,21 +20,21 @@ import static org.junit.Assert.assertEquals;
 
 public class AppDataSourceTest {
 
-    private ListDataProvider<Palaver> provider;
-    private ObservableList<Palaver> expected;
+    private ListDataProvider<Conversation> provider;
+    private ObservableList<Conversation> expected;
 
     @Before
     public void setUp() throws FileNotFoundException, IOException {
         new JFXPanel(); // Initialize JFX :)
-        provider = new ListDataProvider<Palaver>();
+        provider = new ListDataProvider<Conversation>();
         expected = FXCollections.observableArrayList();
-        provider.setDataReader(new AppDataSource<Palaver>("./", Palaver.class));
+        provider.setDataReader(new AppDataSource<Conversation>("./", Conversation.class));
         provider.setResultObservableList(expected);
-        provider.setAddEntryHandler(new WriteBackHandler<Palaver>() {
+        provider.setAddEntryHandler(new WriteBackHandler<Conversation>() {
 
             @Override
-            public WritableDataReader<Palaver> createDataSource(
-                    Palaver observable) {
+            public WritableDataReader<Conversation> createDataSource(
+                    Conversation observable) {
                 return null;
             }
         });
@@ -43,19 +43,19 @@ public class AppDataSourceTest {
 
     @Test
     public void testAdd() {
-        expected.add(new Palaver("hans@example.com", "alice@example.com"));
-        expected.add(new Palaver("hans@example.com", "bob@example.com"));
-        expected.add(new Palaver("hans@example.com", "eve@example.com"));
-        ObservableList<Palaver> result = provider.getData().get();
+        expected.add(new Conversation("hans@example.com", "alice@example.com"));
+        expected.add(new Conversation("hans@example.com", "bob@example.com"));
+        expected.add(new Conversation("hans@example.com", "eve@example.com"));
+        ObservableList<Conversation> result = provider.getData().get();
         checkIfListsMatch(expected, result);
     }
 
     @Test
     public void testRemove() {
-        ObservableList<Palaver> result = provider.getData().get();
-        Palaver p = new Palaver("hans@example.com", "eve@example.com");
-        result.add(new Palaver("hans@example.com", "alice@example.com"));
-        result.add(new Palaver("hans@example.com", "bob@example.com"));
+        ObservableList<Conversation> result = provider.getData().get();
+        Conversation p = new Conversation("hans@example.com", "eve@example.com");
+        result.add(new Conversation("hans@example.com", "alice@example.com"));
+        result.add(new Conversation("hans@example.com", "bob@example.com"));
         result.add(p);
         expected.remove(p);
         checkIfListsMatch(expected, result);
@@ -64,13 +64,13 @@ public class AppDataSourceTest {
 
     @Test
     public void testWriteBackHandler() {
-        ObservableList<Palaver> result = provider.getData().get();
-        Palaver p = new Palaver("hans@example.com", "eve@example.com");
-        result.add(new Palaver("hans@example.com", "alice@example.com"));
-        result.add(new Palaver("hans@example.com", "bob@example.com"));
+        ObservableList<Conversation> result = provider.getData().get();
+        Conversation p = new Conversation("hans@example.com", "eve@example.com");
+        result.add(new Conversation("hans@example.com", "alice@example.com"));
+        result.add(new Conversation("hans@example.com", "bob@example.com"));
         result.add(p);
 
-        result.add(new Palaver("hans@example.com", "bob@example.com"));
+        result.add(new Conversation("hans@example.com", "bob@example.com"));
         p.setClosed(true);
     }
 

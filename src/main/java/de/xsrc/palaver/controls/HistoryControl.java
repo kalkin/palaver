@@ -1,7 +1,7 @@
 package de.xsrc.palaver.controls;
 
 import de.xsrc.palaver.beans.HistoryEntry;
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.utils.UiUtils;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
@@ -31,10 +31,10 @@ public class HistoryControl extends BorderPane {
     private ScrollPane scrollPane;
 
     private ObservableList<HistoryEntry> history;
-    private Palaver palaver;
+    private Conversation conversation;
 
-    public HistoryControl(Palaver palaver) {
-        this.palaver = palaver;
+    public HistoryControl(Conversation conversation) {
+        this.conversation = conversation;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HISTORY_VIEW_FXML));
         fxmlLoader.setResources(UiUtils.getRessourceBundle());
         fxmlLoader.setRoot(this);
@@ -49,18 +49,18 @@ public class HistoryControl extends BorderPane {
 
     @FXML
     public void initialize() {
-        history = palaver.history.entryListProperty();
+        history = conversation.history.entryListProperty();
         add(history);
-        chatInput.setPalaver(palaver);
+        chatInput.setConversation(conversation);
         history.addListener((Change<? extends HistoryEntry> change) -> {
             while (change.next()) {
-                logger.finer("New Messages were added to " + palaver);
+                logger.finer("New Messages were added to " + conversation);
                 add(change.getAddedSubList());
             }
         });
         historyBox.heightProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax()));
-            palaver.setUnread(false);
+            conversation.setUnread(false);
         });
         requestFocus();
 
@@ -71,7 +71,7 @@ public class HistoryControl extends BorderPane {
         executor.submit(() -> {
                     for (HistoryEntry historyEntry : list) {
                         Label l = new Label();
-                        Platform.runLater(() -> historyBox.getChildren().add(new HistoryEntryCell(historyEntry, palaver.isConference())));
+                        Platform.runLater(() -> historyBox.getChildren().add(new HistoryEntryCell(historyEntry, conversation.isConference())));
 
                     }
                 }

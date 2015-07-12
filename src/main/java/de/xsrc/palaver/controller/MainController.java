@@ -1,6 +1,6 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.controls.HistoryControl;
 import de.xsrc.palaver.controls.OpenPalaverList;
 import de.xsrc.palaver.models.PalaverModel;
@@ -44,7 +44,7 @@ public class MainController {
 
     @FXML
     private OpenPalaverList palaverListControl;
-    private HashMap<Palaver, HistoryControl> historyMap = new HashMap<>();
+    private HashMap<Conversation, HistoryControl> historyMap = new HashMap<>();
     private PalaverModel model = PalaverModel.getInstance();
 
     @FXML
@@ -71,7 +71,7 @@ public class MainController {
         showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
         palaverListControl.visibleProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                Palaver p = palaverListControl.selectedPalaver().get();
+                Conversation p = palaverListControl.selectedPalaver().get();
                 Text text = new Text(XmppStringUtils.parseLocalpart(p.getRecipient()));
                 text.getStyleClass().add("title");
                 titlePane.setCenter(text);

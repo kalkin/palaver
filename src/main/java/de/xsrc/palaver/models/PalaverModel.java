@@ -3,7 +3,7 @@ package de.xsrc.palaver.models;
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.HistoryEntry;
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.ColdStorage;
 import javafx.application.Platform;
@@ -23,17 +23,17 @@ public class PalaverModel {
 
     private static final Logger logger = Logger.getLogger(PalaverModel.class
             .getName());
-    protected static ObservableList<Palaver> openPalaverList;
-    protected ConcurrentHashMap<String, Palaver> palaverMap;
-    private ObservableList<Palaver> data;
+    protected static ObservableList<Conversation> openConversationList;
+    protected ConcurrentHashMap<String, Conversation> palaverMap;
+    private ObservableList<Conversation> data;
 
     private PalaverModel() {
         palaverMap = new ConcurrentHashMap<>();
-        openPalaverList = FXCollections.observableList(new CopyOnWriteArrayList<>());
+        openConversationList = FXCollections.observableList(new CopyOnWriteArrayList<>());
 
         data = FXCollections.observableList(new CopyOnWriteArrayList<>());
 
-        data.addListener((ListChangeListener<Palaver>) c -> {
+        data.addListener((ListChangeListener<Conversation>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     // sync data with our Concurrent HashMap
@@ -41,7 +41,7 @@ public class PalaverModel {
                     // auto save when history entries are added
                     c.getAddedSubList().forEach(palaver -> palaver.history.entryListProperty().addListener((ListChangeListener<HistoryEntry>) change -> save()));
                     c.getAddedSubList().forEach(palaver -> {
-                        if (palaver.isOpen()) openPalaverList.add(palaver);
+                        if (palaver.isOpen()) openConversationList.add(palaver);
                     });
 
                     // auto add to openPalaversList if a palaver closedProperty changes to true
@@ -49,11 +49,11 @@ public class PalaverModel {
                         if (oldValue && !newValue) {
                             // Palaver changed state to open
                             Platform.runLater(() ->
-                                    openPalaverList.add(palaver));
+                                    openConversationList.add(palaver));
                             save();
                         } else if (!oldValue && newValue) {
                             // Palaver changed state to closed
-                            Platform.runLater(() -> openPalaverList.remove(palaver));
+                            Platform.runLater(() -> openConversationList.remove(palaver));
                             save();
                         }
                     }));
@@ -70,48 +70,48 @@ public class PalaverModel {
         return InstanceHolder.INSTANCE;
     }
 
-    public Palaver openPalaver(Contact contact) {
+    public Conversation openPalaver(Contact contact) {
         return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
     }
 
-    public Palaver openPalaver(Account account, String jid){
+    public Conversation openPalaver(Account account, String jid){
         return openPalaver(account.getJid(), jid, false);
     }
 
-    public synchronized Palaver openPalaver(String accountJid, String recipientJid, boolean conference) {
+    public synchronized Conversation openPalaver(String accountJid, String recipientJid, boolean conference) {
         String id = accountJid + ":" + recipientJid;
-        Palaver palaver = palaverMap.get(id);
-        if (palaver == null) {
+        Conversation conversation = palaverMap.get(id);
+        if (conversation == null) {
             logger.finer(String.format("No previous palaver for %s found ", id));
-            palaver = createPalaver(accountJid, recipientJid, conference);
-            data.add(palaver);
+            conversation = createPalaver(accountJid, recipientJid, conference);
+            data.add(conversation);
             save();
-        } else if (palaver.getClosed()) {
-            palaver.setClosed(false);
+        } else if (conversation.getClosed()) {
+            conversation.setClosed(false);
         }
-        return palaver;
+        return conversation;
     }
 
-    private Palaver createPalaver(String accountJid, String recipientJid, boolean conference) {
-        logger.finer(String.format("Createing new palaver %s:%s ", accountJid, recipientJid));
-        Palaver palaver = new Palaver();
-        palaver.setAccount(accountJid);
-        palaver.setRecipient(recipientJid);
-        palaver.setConference(conference);
-        palaver.setClosed(false);
-        return palaver;
+    private Conversation createPalaver(String accountJid, String recipientJid, boolean conference) {
+        logger.finer(String.format("Creating new palaver %s:%s ", accountJid, recipientJid));
+        Conversation conversation = new Conversation();
+        conversation.setAccount(accountJid);
+        conversation.setRecipient(recipientJid);
+        conversation.setConference(conference);
+        conversation.setClosed(false);
+        return conversation;
     }
 
-    public ObservableList<Palaver> getOpenPalavers() {
+    public ObservableList<Conversation> getOpenPalavers() {
 
-        return FXCollections.unmodifiableObservableList(openPalaverList);
+        return FXCollections.unmodifiableObservableList(openConversationList);
     }
 
     private synchronized void save() {
-        ColdStorage.save(Palaver.class, data);
+        ColdStorage.save(Conversation.class, data);
     }
 
-    public Palaver getById(String account, String recipient) {
+    public Conversation getById(String account, String recipient) {
         return palaverMap.get(account + ":" + recipient);
     }
 

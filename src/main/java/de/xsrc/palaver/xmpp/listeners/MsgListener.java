@@ -2,7 +2,7 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.HistoryEntry;
-import de.xsrc.palaver.beans.Palaver;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.PacketListener;
@@ -60,16 +60,16 @@ public class MsgListener implements PacketListener {
     }
 
     private void saveEntry(String account, String recipient, HistoryEntry historyEntry) {
-        Palaver palaver = PalaverModel.getInstance().getById(account, recipient);
-        if (palaver == null) {
+        Conversation conversation = PalaverModel.getInstance().getById(account, recipient);
+        if (conversation == null) {
             logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
-            palaver = PalaverModel.getInstance().openPalaver(account, XmppStringUtils.parseBareJid(recipient), false);
+            conversation = PalaverModel.getInstance().openPalaver(account, XmppStringUtils.parseBareJid(recipient), false);
         }
-        palaver.history.addEntry(historyEntry);
+        conversation.history.addEntry(historyEntry);
         if (!account.equals(historyEntry.getFrom())) {
-            palaver.setUnread(true);
+            conversation.setUnread(true);
         }
-        palaver.setClosed(false);
+        conversation.setClosed(false);
 
     }
 
