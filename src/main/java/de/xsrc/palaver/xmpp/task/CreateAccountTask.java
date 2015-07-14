@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.xmpp.ConnectionSetupFactory;
+import de.xsrc.palaver.Connection;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -19,25 +19,25 @@ public class CreateAccountTask extends AbstractConnectionTask<XMPPTCPConnection>
     private static final Logger logger = Logger.getLogger(ConnectTask.class
             .getName());
 
-    private Account account;
-    private ObservableMap<Account, XMPPTCPConnection> connections;
+    private Credentials credentials;
+    private ObservableMap<Credentials, XMPPTCPConnection> connections;
 
-    public CreateAccountTask(Account account, ObservableMap<Account, XMPPTCPConnection> connections) {
-        this.account = account;
+    public CreateAccountTask(Credentials credentials, ObservableMap<Credentials, XMPPTCPConnection> connections) {
+        this.credentials = credentials;
         this.connections = connections;
     }
 
     @Override
     protected XMPPTCPConnection call() throws AccountCreationException {
         try {
-            XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(XmppStringUtils.parseDomain(account.getJid()));
+            XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(XmppStringUtils.parseDomain(credentials.getJid()));
             final XMPPTCPConnectionConfiguration configuration = builder.build();
             final XMPPTCPConnection connection = new XMPPTCPConnection(configuration);
             connection.connect();
             final AccountManager accountManager = AccountManager.getInstance(connection);
-            accountManager.createAccount(XmppStringUtils.parseLocalpart(account.getJid()), account.getPassword());
-            XMPPTCPConnection c = ConnectionSetupFactory.setupConnection(connection, account);
-            connections.put(account, c);
+            accountManager.createAccount(XmppStringUtils.parseLocalpart(credentials.getJid()), credentials.getPassword());
+            XMPPTCPConnection c = (new Connection(credentials,connection)).xmpptcpConnection;
+            connections.put(credentials, c);
             return c;
         } catch (Exception e) {
             throw new AccountCreationException("Account creation failed", e);

@@ -1,7 +1,6 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.beans.Contact;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.AccountProvider;
@@ -35,14 +34,14 @@ public class AddContactController {
     private Button saveButton;
 
     @FXML
-    private ChoiceBox<Account> accountChoice;
+    private ChoiceBox<Credentials> accountChoice;
 
     @FXML
     private void initialize() {
-        ListProperty<Account> accounts = ApplicationContext.getInstance()
+        ListProperty<Credentials> credentialses = ApplicationContext.getInstance()
                 .getRegisteredObject(AccountProvider.class).getData();
-        accountChoice.getItems().addAll(accounts);
-        if (accounts.size() > 0) {
+        accountChoice.getItems().addAll(credentialses);
+        if (credentialses.size() > 0) {
             accountChoice.getSelectionModel().select(0);
         }
 
@@ -56,11 +55,11 @@ public class AddContactController {
     private void addContactAction() throws SmackException,
             XMPPException {
 
-        Account account = accountChoice.getSelectionModel().getSelectedItem();
+        Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
         final ContactModel contactModel = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
-		contactModel.subscribe(account, jid.getText());
+		contactModel.subscribe(credentials, jid.getText());
         PalaverModel palaverModel = PalaverModel.getInstance();
-		palaverModel.openPalaver(account, jid.getText());
+		palaverModel.openPalaver(credentials, jid.getText());
         close();
     }
 

@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.RosterEntriesImporter;
@@ -15,7 +15,7 @@ import java.io.File;
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 29.06.15.
  */
-public class ConnectionEstablishedListener implements MapChangeListener<Account, XMPPTCPConnection> {
+public class ConnectionEstablishedListener implements MapChangeListener<Credentials, XMPPTCPConnection> {
 
     private static final String WORKING_DIRECTORY = Utils.getConfigDirectory() + "/roster/";
     private final ContactModel contactModel;
@@ -25,14 +25,14 @@ public class ConnectionEstablishedListener implements MapChangeListener<Account,
     }
 
     @Override
-    public void onChanged(MapChangeListener.Change<? extends Account, ? extends XMPPTCPConnection> c) {
+    public void onChanged(MapChangeListener.Change<? extends Credentials, ? extends XMPPTCPConnection> c) {
         if (c.wasAdded()) {
             final XMPPConnection connection = c.getValueAdded();
-            final Account account = c.getKey();
+            final Credentials credentials = c.getKey();
             final Roster roster = Roster.getInstanceFor(connection);
-            final String jid = account.getJid();
+            final String jid = credentials.getJid();
             setupRosterStore(WORKING_DIRECTORY + jid, roster);
-            setupRosterEntriesSynchronisation(account, roster, contactModel);
+            setupRosterEntriesSynchronisation(credentials, roster, contactModel);
 
         }
     }
@@ -59,14 +59,14 @@ public class ConnectionEstablishedListener implements MapChangeListener<Account,
 
     /**
      *
-     * @param account
+     * @param credentials
      * @param roster
      * @param contactModel
      */
-    public static void setupRosterEntriesSynchronisation(Account account, Roster roster, ContactModel contactModel) {
-        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(account, contactModel);
-        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(account, contactModel, roster);
-        contactModel.registerRoster(account, roster);
+    public static void setupRosterEntriesSynchronisation(Credentials credentials, Roster roster, ContactModel contactModel) {
+        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(credentials, contactModel);
+        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(credentials, contactModel, roster);
+        contactModel.registerRoster(credentials, roster);
         roster.getEntriesAndAddListener(palaverRosterListener, rosterEntriesImporter);
     }
 

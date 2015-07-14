@@ -1,11 +1,10 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.*;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class DeleteAccountTaskTest extends AbstractConnectionTest {
 
-    static final Account account = getAccount("alice.delete.test@xsrc.de", "password");
+    static final Credentials CREDENTIALS = getAccount("alice.delete.test@xsrc.de", "password");
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private XMPPTCPConnection connection;
@@ -27,11 +26,11 @@ public class DeleteAccountTaskTest extends AbstractConnectionTest {
 
     @Before
     public void createAccount() throws ConnectionFailedException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
+        final CreateAccountTask createAccountTask = new CreateAccountTask(CREDENTIALS, getObservableMap());
         try {
             connection = createAccountTask.call();
         } catch (AccountCreationException e) {
-            connection = (new ConnectTask(account, getObservableMap())).call();
+            connection = (new ConnectTask(CREDENTIALS, getObservableMap())).call();
         }
     }
 
@@ -46,7 +45,7 @@ public class DeleteAccountTaskTest extends AbstractConnectionTest {
         final DeleteAccountTask task = new DeleteAccountTask(connection);
         task.call();
         exception.expect(AuthenticationFailedException.class);
-        (new ConnectTask(account, getObservableMap())).call();
+        (new ConnectTask(CREDENTIALS, getObservableMap())).call();
     }
 
     @Test

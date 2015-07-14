@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
@@ -25,8 +25,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class ContactModelTest extends AbstractTaskTest {
 
-    private ListProperty<Account> accounts;
-    private Account julia;
+    private ListProperty<Credentials> credentialses;
+    private Credentials julia;
     private Roster juliasRoster;
     private ContactModel contactModel;
     private XMPPTCPConnection connection;
@@ -34,8 +34,8 @@ public class ContactModelTest extends AbstractTaskTest {
     @Before
     public void setUp() throws Exception {
         new JFXPanel();
-        accounts = getMockAccounts(3);
-        final ObservableList<Account> accountsList = this.accounts.get();
+        credentialses = getMockAccounts(3);
+        final ObservableList<Credentials> accountsList = this.credentialses.get();
         julia = accountsList.get(0);
         initializeJuliasRoster(accountsList);
         connection = (new ConnectTask(julia, getObservableMap())).call();
@@ -55,7 +55,7 @@ public class ContactModelTest extends AbstractTaskTest {
      * @throws XMPPException.XMPPErrorException
      * @throws SmackException.NotConnectedException
      */
-    private void initializeJuliasRoster(ObservableList<Account> accountsList) throws ConnectionFailedException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
+    private void initializeJuliasRoster(ObservableList<Credentials> accountsList) throws ConnectionFailedException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
         final XMPPTCPConnection connection = (new ConnectTask(julia, getObservableMap())).call();
         final Roster roster = Roster.getInstanceFor(connection);
 
@@ -111,6 +111,6 @@ public class ContactModelTest extends AbstractTaskTest {
             connection.disconnect();
         }
 
-        removeMockAccounts(accounts);
+        removeMockAccounts(credentialses);
     }
 }

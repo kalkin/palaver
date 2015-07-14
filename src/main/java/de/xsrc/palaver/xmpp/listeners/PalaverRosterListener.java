@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
@@ -17,27 +17,25 @@ public class PalaverRosterListener implements RosterListener {
     private static final Logger logger = Logger.getLogger(PalaverRosterListener.class
             .getName());
 
-    private Account account;
-    private ContactModel contacts;
-    private Roster roster;
+    private final Credentials credentials;
+    private final ContactModel contacts;
+    private final Roster roster;
 
 
-    public PalaverRosterListener(Account account, ContactModel contactModel, Roster roster) {
-        this.account = account;
+    public PalaverRosterListener(Credentials credentials, ContactModel contactModel, Roster roster) {
+        this.credentials = credentials;
         this.contacts = contactModel;
         this.roster = roster;
-        logger.fine(String.format("Created %s", account.getJid()));
+        logger.fine(String.format("Created RosterListener for %s", credentials.getJid()));
     }
 
     @Override
     public void entriesAdded(Collection<String> addresses) {
-        logger.fine(String.format("Roster %s added %s", account.getJid(), addresses.toString()));
-
         for (String address : addresses) {
+            logger.finer(String.format("Roster %s add %s", credentials.getJid(), address));
             Contact contact = getContact(address);
             contacts.addContact(contact);
         }
-
     }
 
     @Override
@@ -47,8 +45,8 @@ public class PalaverRosterListener implements RosterListener {
 
     @Override
     public void entriesDeleted(Collection<String> addresses) {
-        logger.fine(String.format("Roster %s deleted %s", account.getJid(), addresses));
         for (String address : addresses) {
+            logger.finer(String.format("Roster %s delete %s", credentials.getJid(), address));
             Contact contact = getContact(address);
             if (contact == null) {
                 return;
@@ -69,6 +67,6 @@ public class PalaverRosterListener implements RosterListener {
         if (entry == null) {
             return null;
         }
-        return Utils.createContact(account.getJid(), address, entry.getName(), false);
+        return Utils.createContact(credentials.getJid(), address, entry.getName(), false);
     }
 }

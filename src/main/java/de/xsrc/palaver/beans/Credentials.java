@@ -12,8 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author kalkin
  */
-@XmlRootElement(name = "account")
-public class Account implements EntityWithId<String> {
+@XmlRootElement(name = "credentials")
+public class Credentials implements EntityWithId<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,7 @@ public class Account implements EntityWithId<String> {
 
     private BoundPropertySupport credentialsChanged = new BoundPropertySupport(this);
 
-    public Account() {
+    public Credentials() {
         this.credentialsChanged.raisePropertyChangeEventFor(jid);
         this.credentialsChanged.raisePropertyChangeEventFor(password);
     }

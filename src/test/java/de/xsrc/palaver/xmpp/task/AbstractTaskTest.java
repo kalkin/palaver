@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.NameGenerator;
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import javafx.beans.property.ListProperty;
@@ -17,37 +17,37 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AbstractTaskTest {
 
-    public static ListProperty<Account> getMockAccounts(int amount) {
-        final ListProperty<Account> accounts = new SimpleListProperty<>(FXCollections.observableArrayList());
+    public static ListProperty<Credentials> getMockAccounts(int amount) {
+        final ListProperty<Credentials> credentialses = new SimpleListProperty<>(FXCollections.observableArrayList());
         for (int i = 0; i < amount; i++) {
-            final Account account = getMockAccount();
-            accounts.add(account);
-            CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
+            final Credentials credentials = getMockAccount();
+            credentialses.add(credentials);
+            CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
             try {
                 createAccountTask.call().disconnect();
             } catch (AccountCreationException e) {
                 e.printStackTrace();
             }
         }
-        return accounts;
+        return credentialses;
     }
 
-    protected static Account getMockAccount() {
+    protected static Credentials getMockAccount() {
         final NameGenerator gen = new NameGenerator();
-        final Account account = new Account();
-        account.setJid(gen.getName() + "@xsrc.de");
-        account.setPassword("password");
-        return account;
+        final Credentials credentials = new Credentials();
+        credentials.setJid(gen.getName() + "@xsrc.de");
+        credentials.setPassword("password");
+        return credentials;
     }
 
-    protected static ObservableMap<Account, XMPPTCPConnection> getObservableMap(){
-        return FXCollections.observableMap(new ConcurrentHashMap<Account, XMPPTCPConnection>());
+    protected static ObservableMap<Credentials, XMPPTCPConnection> getObservableMap(){
+        return FXCollections.observableMap(new ConcurrentHashMap<Credentials, XMPPTCPConnection>());
     }
 
-    public static void removeMockAccounts(ListProperty<Account> accounts) {
-        for (Account account : accounts) {
+    public static void removeMockAccounts(ListProperty<Credentials> credentialses) {
+        for (Credentials credentials : credentialses) {
             try {
-                final DeleteAccountTask deleteAccountTask = new DeleteAccountTask(account);
+                final DeleteAccountTask deleteAccountTask = new DeleteAccountTask(credentials);
                 deleteAccountTask.call();
             } catch (AccountDeletionException e) {
                 e.printStackTrace();

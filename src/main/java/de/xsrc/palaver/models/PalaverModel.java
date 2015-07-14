@@ -1,6 +1,6 @@
 package de.xsrc.palaver.models;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Conversation;
@@ -74,8 +74,8 @@ public class PalaverModel {
         return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
     }
 
-    public Conversation openPalaver(Account account, String jid){
-        return openPalaver(account.getJid(), jid, false);
+    public Conversation openPalaver(Credentials credentials, String jid){
+        return openPalaver(credentials.getJid(), jid, false);
     }
 
     public synchronized Conversation openPalaver(String accountJid, String recipientJid, boolean conference) {

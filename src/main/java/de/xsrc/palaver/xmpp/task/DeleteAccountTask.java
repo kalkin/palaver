@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -18,10 +18,10 @@ public class DeleteAccountTask extends AbstractConnectionTask<XMPPTCPConnection>
         this.connection = connection;
     }
 
-    public DeleteAccountTask(Account account) throws AccountDeletionException {
-        final String jid = account.getJid();
+    public DeleteAccountTask(Credentials credentials) throws AccountDeletionException {
+        final String jid = credentials.getJid();
         final String username = XmppStringUtils.parseLocalpart(jid);
-        final String password = account.getPassword();
+        final String password = credentials.getPassword();
         final String serviceName = XmppStringUtils.parseDomain(jid);
         try {
             XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(serviceName);

@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.xmpp.ConnectionSetupFactory;
+import de.xsrc.palaver.Connection;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.SmackException;
@@ -17,28 +17,28 @@ public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
 
     private static final Logger logger = Logger.getLogger(ConnectTask.class
             .getName());
-    private final Account account;
-    private ObservableMap<Account, XMPPTCPConnection> connectionMap;
+    private final Credentials credentials;
+    private ObservableMap<Credentials, XMPPTCPConnection> connectionMap;
 
-     public ConnectTask(Account account, ObservableMap<Account, XMPPTCPConnection> connectionMap) {
+     public ConnectTask(Credentials credentials, ObservableMap<Credentials, XMPPTCPConnection> connectionMap) {
         super();
-        this.account = account;
+        this.credentials = credentials;
         this.connectionMap = connectionMap;
-        this.updateTitle("Connecting to " + account.getJid());
+        this.updateTitle("Connecting to " + credentials.getJid());
     }
 
 
     @Override
     protected XMPPTCPConnection call() throws ConnectionFailedException {
-        logger.finer("Connecting to account " + account);
-        final String jid = account.getJid();
+        logger.finer("Connecting to account " + credentials);
+        final String jid = credentials.getJid();
         final String serviceName = XmppStringUtils.parseDomain(jid);
 
         XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(serviceName);
 
-        XMPPTCPConnection connection = new XMPPTCPConnection(builder.build());
+        XMPPTCPConnection xmpptcpConnection = new XMPPTCPConnection(builder.build());
         try {
-            connection.connect();
+            xmpptcpConnection.connect();
             logger.fine(String.format("Connection to serviceName %s " +
                     "successful", serviceName));
         } catch (SmackException | IOException | XMPPException e) {
@@ -47,10 +47,10 @@ public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
             throw new ConnectionFailedException(message, e);
         }
 
-        connection = ConnectionSetupFactory.setupConnection(connection, account);
+        Connection connection = new Connection(credentials, xmpptcpConnection);
 
-        connectionMap.put(account, connection);
-        return connection;
+        connectionMap.put(credentials, connection.xmpptcpConnection);
+        return xmpptcpConnection;
 
 //        Roster.getInstanceFor(connection).addRosterListener(new PalaverRosterListener(account));
         // TODO Fix connection

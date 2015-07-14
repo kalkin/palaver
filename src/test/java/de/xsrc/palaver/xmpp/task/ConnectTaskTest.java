@@ -1,45 +1,42 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.junit.*;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import static org.junit.Assert.assertTrue;
 
 public class ConnectTaskTest extends AbstractConnectionTest {
 
 
-    static final Account account = getAccount("alice.connect.test@xsrc.de", "password");
-    private ObservableMap<Account, XMPPTCPConnection> connectionMap;
+    static final Credentials CREDENTIALS = getAccount("alice.connect.test@xsrc.de", "password");
+    private ObservableMap<Credentials, XMPPTCPConnection> connectionMap;
     private XMPPTCPConnection connection;
 
     @BeforeClass
     public static void createAccount() throws AccountCreationException {
         new JFXPanel(); // Initialize JFX :)
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
+        final CreateAccountTask createAccountTask = new CreateAccountTask(CREDENTIALS, getObservableMap());
         createAccountTask.call().disconnect();
 
     }
 
     @AfterClass
     public static void deleteAccount() throws AccountDeletionException {
-        DeleteAccountTask task = new DeleteAccountTask(account);
+        DeleteAccountTask task = new DeleteAccountTask(CREDENTIALS);
         task.call();
     }
 
     @Before
     public void connect() throws ConnectionFailedException {
         connectionMap = getObservableMap();
-        connection = (new ConnectTask(account, connectionMap)).call();
+        connection = (new ConnectTask(CREDENTIALS, connectionMap)).call();
     }
 
     @After
@@ -57,7 +54,7 @@ public class ConnectTaskTest extends AbstractConnectionTest {
 
     @Test
     public void connectionIsManaged() throws ConnectionFailedException {
-        XMPPTCPConnection connection2 = connectionMap.get(account);
+        XMPPTCPConnection connection2 = connectionMap.get(CREDENTIALS);
         assertTrue("ObservableMap contains appropriate connection", connection == connection2);
     }
 

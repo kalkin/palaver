@@ -1,6 +1,6 @@
 package de.xsrc.palaver.controller;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.ColdStorage;
 import javafx.beans.property.ListProperty;
@@ -27,7 +27,7 @@ public class AddAccountController {
     private ViewFlowContext context;
 
     @FXML
-    private Account account;
+    private Credentials credentials;
 
     @FXML
     private Button back;
@@ -57,28 +57,28 @@ public class AddAccountController {
 
     @FXML
     public void saveAccount() {
-        if (account == null) {
-            account = new Account();
-            account.setJid(jidField.getText());
-            account.setPassword(passwordField.getText());
-            logger.fine("Saving Account " + account);
+        if (credentials == null) {
+            credentials = new Credentials();
+            credentials.setJid(jidField.getText());
+            credentials.setPassword(passwordField.getText());
+            logger.fine("Saving Account " + credentials);
             AccountProvider provider = ApplicationContext.getInstance()
                     .getRegisteredObject(AccountProvider.class);
-            provider.getData().add(account);
+            provider.getData().add(credentials);
         } else {
-            account.setJid(jidField.getText());
-            account.setPassword(passwordField.getText());
+            credentials.setJid(jidField.getText());
+            credentials.setPassword(passwordField.getText());
         }
-        ListProperty<Account> data = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
-        ColdStorage.save(Account.class, data);
+        ListProperty<Credentials> data = ApplicationContext.getInstance().getRegisteredObject(AccountProvider.class).getData();
+        ColdStorage.save(Credentials.class, data);
         close();
 
     }
 
     public void setContext(ViewContext<AddAccountController> context) {
-        account = (Account) context.getRegisteredObject("account");
-        jidField.setText(account.getJid());
-        passwordField.setText(account.getPassword());
+        credentials = (Credentials) context.getRegisteredObject("account");
+        jidField.setText(credentials.getJid());
+        passwordField.setText(credentials.getPassword());
 
     }
 }

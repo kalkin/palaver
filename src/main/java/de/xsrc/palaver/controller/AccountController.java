@@ -2,7 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.ColdStorage;
 import de.xsrc.palaver.utils.UiUtils;
@@ -42,12 +42,12 @@ public class AccountController {
     private Button addAccountButton;
 
     @FXML
-    private ListView<Account> accountList;
+    private ListView<Credentials> accountList;
 
     @FXML
     public void initialize() {
 
-        ObservableList<Account> all = ApplicationContext.getInstance()
+        ObservableList<Credentials> all = ApplicationContext.getInstance()
                 .getRegisteredObject(AccountProvider.class).getData();
         accountList.setItems(all);
         AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
@@ -68,7 +68,7 @@ public class AccountController {
 
     @FXML
     private void editAction() {
-        Account acc = accountList.getSelectionModel().getSelectedItem();
+        Credentials acc = accountList.getSelectionModel().getSelectedItem();
         try {
             ResourceBundle b = UiUtils.getRessourceBundle();
             ViewConfiguration config = new ViewConfiguration();
@@ -90,8 +90,8 @@ public class AccountController {
 
     @FXML
     private void removeAction() {
-        Account acc = accountList.getSelectionModel().getSelectedItem();
+        Credentials acc = accountList.getSelectionModel().getSelectedItem();
         accountList.getItems().remove(acc);
-        ColdStorage.save(Account.class, accountList.getItems());
+        ColdStorage.save(Credentials.class, accountList.getItems());
     }
 }

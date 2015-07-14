@@ -1,6 +1,6 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.models.PalaverModel;
@@ -17,10 +17,10 @@ public class MsgListener implements PacketListener {
     private static final Logger logger = Logger.getLogger(MsgListener.class
             .getName());
 
-    private Account account;
+    private Credentials credentials;
 
-    public MsgListener(Account account) {
-        this.account = account;
+    public MsgListener(Credentials credentials) {
+        this.credentials = credentials;
     }
 
     @Override
@@ -37,14 +37,14 @@ public class MsgListener implements PacketListener {
                 String fromJid = XmppStringUtils.parseBareJid(message.getFrom());
                 String toJid = XmppStringUtils.parseBareJid(message.getTo());
 
-                if (fromJid == null || fromJid.equals(account.getJid())) {
+                if (fromJid == null || fromJid.equals(credentials.getJid())) {
                     // Messages send by us
-                    historyEntry.setFrom(account.getJid());
-                    saveEntry(account.getJid(), toJid, historyEntry);
-                } else if (toJid.equals(account.getJid())) {
+                    historyEntry.setFrom(credentials.getJid());
+                    saveEntry(credentials.getJid(), toJid, historyEntry);
+                } else if (toJid.equals(credentials.getJid())) {
                     // Messages sent to us
                     historyEntry.setFrom(fromJid);
-                    saveEntry(account.getJid(), fromJid, historyEntry);
+                    saveEntry(credentials.getJid(), fromJid, historyEntry);
                     Notifications.notify(XmppStringUtils.parseLocalpart(fromJid), body);
                 } else {
                     logger.severe("Server is sending garbage? " + message.toString());

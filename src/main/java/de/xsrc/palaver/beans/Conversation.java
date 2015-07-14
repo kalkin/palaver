@@ -67,7 +67,7 @@ public class Conversation implements EntityWithId<String> {
         account.set(s);
     }
 
-    public void setAccount(Account a) {
+    public void setAccount(Credentials a) {
         account.set(a.getId());
 
     }

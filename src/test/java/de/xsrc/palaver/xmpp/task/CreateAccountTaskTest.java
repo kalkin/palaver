@@ -1,8 +1,7 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.After;
@@ -15,7 +14,7 @@ import static junit.framework.Assert.assertTrue;
 
 public class CreateAccountTaskTest extends AbstractConnectionTest {
 
-    final Account account = getAccount("alice.create.test@xsrc.de", "password");
+    final Credentials credentials = getAccount("alice.create.test@xsrc.de", "password");
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -24,14 +23,14 @@ public class CreateAccountTaskTest extends AbstractConnectionTest {
     public void cleanUpAccounts() {
         new JFXPanel(); // Initialize JFX :)
         try {
-            (new DeleteAccountTask(account)).call();
+            (new DeleteAccountTask(credentials)).call();
         } catch (Exception e) {
         }
     }
 
     @Test
     public void testAccountCreationSuccess() throws AccountCreationException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
+        final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         final XMPPTCPConnection connection = createAccountTask.call();
         assertTrue(connection.isConnected());
         assertTrue(connection.isAuthenticated());

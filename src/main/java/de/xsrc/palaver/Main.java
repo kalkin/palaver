@@ -1,7 +1,7 @@
 package de.xsrc.palaver;
 
 
-import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.models.ContactModel;
@@ -46,8 +46,8 @@ public class Main extends Application {
     }
 
     private ApplicationContext applicationContext = ApplicationContext.getInstance();
-    private ObservableMap<Account, XMPPTCPConnection> connections = FXCollections.observableMap(new
-            ConcurrentHashMap<Account, XMPPTCPConnection>());
+    private ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
+            ConcurrentHashMap<Credentials, XMPPTCPConnection>());
     private ContactModel contactModel = new ContactModel();
 
     public static void main(String[] args) {
@@ -79,8 +79,9 @@ public class Main extends Application {
         primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
         Platform.runLater(() -> {
             accountProvider.retrieve();
-            final ListProperty<Account> accounts = accountProvider.getData();
-            accounts.addListener(new AccountChangeListener(executor, connections));
+            final ListProperty<Credentials> credentialsListProperty = accountProvider.getData();
+            AccountManager accountManager = new AccountManager(executor);
+            credentialsListProperty.addListener(new AccountChangeListener(accountManager));
             final ConnectionEstablishedListener connectionEstablishedListener = new ConnectionEstablishedListener(contactModel);
             connections.addListener(connectionEstablishedListener);
         });
