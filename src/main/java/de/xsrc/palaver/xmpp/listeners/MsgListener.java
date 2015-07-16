@@ -1,86 +1,99 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.beans.HistoryEntry;
+import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Conversation;
-import de.xsrc.palaver.models.PalaverModel;
-import de.xsrc.palaver.utils.Notifications;
-import org.jivesoftware.smack.PacketListener;
+import de.xsrc.palaver.models.ConversationManager;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smackx.carbons.CarbonManager;
+import org.jivesoftware.smackx.carbons.packet.CarbonExtension;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
-public class MsgListener implements PacketListener {
+public class MsgListener implements StanzaListener {
     private static final Logger logger = Logger.getLogger(MsgListener.class
             .getName());
 
-    private Credentials credentials;
+    private final ConversationManager conversationManager;
+    private Connection connection;
 
-    public MsgListener(Credentials credentials) {
-        this.credentials = credentials;
+
+    public MsgListener(Connection connection, ConversationManager conversationManager) {
+        this.connection = connection;
+        this.conversationManager = conversationManager;
     }
 
     @Override
-    public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
-        if (packet instanceof Message) {
-            Message message = (Message) packet;
-            String body = message.getBody();
-            logger.finest(message.toString());
+    public void processPacket(Stanza stanza) throws SmackException.NotConnectedException {
+        Message message = (Message) stanza;
+        logger.fine("Received message from " + message.getFrom() + " to " + message.getTo());
+        final String myJid = connection.getCredentials().getJid();
+        final String body = message.getBody();
+        final String fromJid = XmppStringUtils.parseBareJid(message.getFrom());
 
-            if (body != null && body.length() >= 0) {
-                HistoryEntry historyEntry = new HistoryEntry();
-                historyEntry.setBody(message.getBody());
-
-                String fromJid = XmppStringUtils.parseBareJid(message.getFrom());
-                String toJid = XmppStringUtils.parseBareJid(message.getTo());
-
-                if (fromJid == null || fromJid.equals(credentials.getJid())) {
-                    // Messages send by us
-                    historyEntry.setFrom(credentials.getJid());
-                    saveEntry(credentials.getJid(), toJid, historyEntry);
-                } else if (toJid.equals(credentials.getJid())) {
-                    // Messages sent to us
-                    historyEntry.setFrom(fromJid);
-                    saveEntry(credentials.getJid(), fromJid, historyEntry);
-                    Notifications.notify(XmppStringUtils.parseLocalpart(fromJid), body);
-                } else {
-                    logger.severe("Server is sending garbage? " + message.toString());
-                }
-//                TODO Fix Carbon Handling. The MessageListener needs an XmppConnectionObject to check if the current Connection has carbon enabled
-//			} else if (CarbonManager.getInstanceFor(CONNECTION).getCarbonsEnabled()) {
-//				handleCarbon(message);
-            } else {
-                logger.warning(String.format("Strange Message %s", message.toString()));
-            }
-
+        if (body == null || body.length() <= 0) {
+            logger.warning(String.format("Strange Message %s", message.toString()));
+            return;
         }
-    }
 
-    private void saveEntry(String account, String recipient, HistoryEntry historyEntry) {
-        Conversation conversation = PalaverModel.getInstance().getById(account, recipient);
-        if (conversation == null) {
-            logger.fine(String.format("Creating new palaver %s -> %s", account, recipient));
-            conversation = PalaverModel.getInstance().openPalaver(account, XmppStringUtils.parseBareJid(recipient), false);
+        logger.finest(message.toString());
+
+        final boolean sendByMe = isSendByMe(myJid, message);
+        final boolean carbonReceived = isCarbonReceived(message);
+        if (sendByMe && !carbonReceived) {
+            logger.finer("Message written by us locally" + message.toString());
+            return;
         }
-        conversation.history.addEntry(historyEntry);
-        if (!account.equals(historyEntry.getFrom())) {
-            conversation.setUnread(true);
-        }
-        conversation.setClosed(false);
+
+        final Conversation conversation = getConversation(message, sendByMe);
+        // msg does not need to be send if it's carbon copy or send not by me
+        final boolean sendState = (carbonReceived || !sendByMe);
+        conversation.addMessage(fromJid, body, sendState);
 
     }
 
-//    private void handleCarbon(Message message) throws SmackException.NotConnectedException {
-//        CarbonExtension extension = CarbonManager.getCarbon(message);
-//        if (extension.getDirection() == CarbonExtension.Direction.sent) {
-//            logger.finer(String.format("Found Carbon Message %s", message.toString()));
-//            Stanza stanza = extension.getForwarded().getForwardedPacket();
-//            processPacket(stanza);
-//        }
-//    }
+    private Conversation getConversation(Message message, boolean sendByMe) {
+        final String accountJid;
+        final String receiverJid;
+        final String fromJid = XmppStringUtils.parseBareJid(message.getFrom());
+        final String toJid = XmppStringUtils.parseBareJid(message.getTo());
+        if (sendByMe) {
+            accountJid = fromJid;
+            receiverJid = toJid;
+        } else {
+            accountJid = toJid;
+            receiverJid = fromJid;
+        }
+
+        return conversationManager.getConversation(accountJid, receiverJid, false);
+    }
+
+
+    private boolean isSendByMe(String myJid, Message message) {
+        final String fromJid = XmppStringUtils.parseBareJid(message.getFrom());
+        final String toJid = XmppStringUtils.parseBareJid(message.getTo());
+        if (fromJid.equals(myJid)) {
+            logger.finer("Message send by me " + message.toString());
+            return true;
+        }
+        logger.finer("Message received " + message.toString());
+        return false;
+    }
+
+    private boolean isCarbonReceived(Message message) {
+        final boolean carbonEnabled = CarbonManager.getInstanceFor(connection.xmpptcpConnection).getCarbonsEnabled();
+        if (!carbonEnabled)
+            return false;
+
+        CarbonExtension carbonExtension = CarbonExtension.from(message);
+        if (carbonExtension != null && carbonExtension.getDirection() == CarbonExtension.Direction.received) {
+            return true;
+        }
+        return false;
+    }
 
 
 }
