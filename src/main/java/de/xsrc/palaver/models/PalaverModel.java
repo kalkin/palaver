@@ -1,9 +1,9 @@
 package de.xsrc.palaver.models;
 
-import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Conversation;
+import de.xsrc.palaver.beans.Credentials;
+import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.ColdStorage;
 import javafx.application.Platform;
@@ -21,14 +21,13 @@ import java.util.logging.Logger;
  */
 public class PalaverModel {
 
-    private static final Logger logger = Logger.getLogger(PalaverModel.class
-            .getName());
+    private static final Logger logger = Logger.getLogger(PalaverModel.class.getName());
     protected static ObservableList<Conversation> openConversationList;
-    protected ConcurrentHashMap<String, Conversation> palaverMap;
+    protected ConcurrentHashMap<String, Conversation> conversationMap;
     private ObservableList<Conversation> data;
 
     private PalaverModel() {
-        palaverMap = new ConcurrentHashMap<>();
+        conversationMap = new ConcurrentHashMap<>();
         openConversationList = FXCollections.observableList(new CopyOnWriteArrayList<>());
 
         data = FXCollections.observableList(new CopyOnWriteArrayList<>());
@@ -36,27 +35,39 @@ public class PalaverModel {
         data.addListener((ListChangeListener<Conversation>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
-                    // sync data with our Concurrent HashMap
-                    c.getAddedSubList().forEach(palaver -> palaverMap.put(palaver.getId(), palaver));
-                    // auto save when history entries are added
-                    c.getAddedSubList().forEach(palaver -> palaver.history.entryListProperty().addListener((ListChangeListener<HistoryEntry>) change -> save()));
-                    c.getAddedSubList().forEach(palaver -> {
-                        if (palaver.isOpen()) openConversationList.add(palaver);
-                    });
+                    while (c.next()) {
+                        c.getAddedSubList().forEach(conversation -> {
+                            logger.fine("New conversation added");
+                            // sync data with our Concurrent HashMap
+                            conversationMap.put(conversation.getId(), conversation);
+                            // auto save when history entries are added
+                            conversation.history.entryListProperty().addListener((ListChangeListener<HistoryEntry>)
+                                    change -> save());
 
-                    // auto add to openPalaversList if a palaver closedProperty changes to true
-                    c.getAddedSubList().forEach(palaver -> palaver.closedProperty().addListener((observable, oldValue, newValue) -> {
-                        if (oldValue && !newValue) {
-                            // Palaver changed state to open
-                            Platform.runLater(() ->
-                                    openConversationList.add(palaver));
-                            save();
-                        } else if (!oldValue && newValue) {
-                            // Palaver changed state to closed
-                            Platform.runLater(() -> openConversationList.remove(palaver));
-                            save();
-                        }
-                    }));
+                            // auto add to openConversationList if a palaver closedProperty changes to true
+                            conversation.closedProperty().addListener((observable, oldValue, newValue) -> {
+                                if (oldValue && !newValue) {
+                                    // Palaver changed state to open
+                                    logger.finer("Adding palaver " + conversation.getId() + " to list of open palavers");
+                                    Platform.runLater(() ->
+                                            openConversationList.add(conversation));
+                                    save();
+                                } else if (!oldValue && newValue) {
+                                    // Palaver changed state to closed
+                                    logger.finer("Removing palaver " + conversation.getId() + " from list of open palavers");
+                                    Platform.runLater(() -> openConversationList.remove(conversation));
+                                    save();
+                                }
+                            });
+
+                            if (conversation.isOpen()) Platform.runLater(() -> {
+                                logger.finer("Adding Conversation top openConversationList " + conversation.getId());
+                                openConversationList.add(conversation);
+                            });
+
+
+                        });
+                    }
                 }
             }
         });
@@ -74,36 +85,39 @@ public class PalaverModel {
         return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
     }
 
-    public Conversation openPalaver(Credentials credentials, String jid){
+    public Conversation openPalaver(Credentials credentials, String jid) {
         return openPalaver(credentials.getJid(), jid, false);
     }
 
     public synchronized Conversation openPalaver(String accountJid, String recipientJid, boolean conference) {
         String id = accountJid + ":" + recipientJid;
-        Conversation conversation = palaverMap.get(id);
+        Conversation conversation = conversationMap.get(id);
+        logger.fine("A conversation between  " + accountJid + " and " + recipientJid + "will be opened");
         if (conversation == null) {
-            logger.finer(String.format("No previous palaver for %s found ", id));
-            conversation = createPalaver(accountJid, recipientJid, conference);
-            data.add(conversation);
-            save();
+            logger.finer(String.format("No previous conversation for %s found ", id));
+            Conversation newConversation = createPalaver(accountJid, recipientJid, conference);
+            Platform.runLater(() -> {
+                data.add(newConversation);
+                save();
+            });
+            return newConversation;
+
         } else if (conversation.getClosed()) {
+            logger.finer("Reopening conversation " + conversation.getId());
             conversation.setClosed(false);
         }
         return conversation;
     }
 
     private Conversation createPalaver(String accountJid, String recipientJid, boolean conference) {
-        logger.finer(String.format("Creating new palaver %s:%s ", accountJid, recipientJid));
-        Conversation conversation = new Conversation();
-        conversation.setAccount(accountJid);
-        conversation.setRecipient(recipientJid);
+        logger.finer(String.format("Creating new conversation %s:%s ", accountJid, recipientJid));
+        Conversation conversation = new Conversation(accountJid, recipientJid);
         conversation.setConference(conference);
         conversation.setClosed(false);
         return conversation;
     }
 
     public ObservableList<Conversation> getOpenPalavers() {
-
         return FXCollections.unmodifiableObservableList(openConversationList);
     }
 
@@ -112,7 +126,7 @@ public class PalaverModel {
     }
 
     public Conversation getById(String account, String recipient) {
-        return palaverMap.get(account + ":" + recipient);
+        return conversationMap.get(account + ":" + recipient);
     }
 
     private static final class InstanceHolder {
