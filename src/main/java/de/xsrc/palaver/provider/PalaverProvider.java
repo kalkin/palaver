@@ -21,8 +21,7 @@ public class PalaverProvider extends ListDataProvider<Conversation> {
         this.setAddEntryHandler(new WriteBackHandler<Conversation>() {
             @Override
             public WritableDataReader<Conversation> createDataSource(Conversation observable) {
-                ObservableList<Conversation> list = ApplicationContext.getInstance()
-                        .getRegisteredObject(PalaverProvider.class).getData();
+                ObservableList<Conversation> list = getData();
                 return new AppDataWriter<>(list, Conversation.class);
             }
         });
@@ -30,8 +29,7 @@ public class PalaverProvider extends ListDataProvider<Conversation> {
         this.setWriteBackHandler(new WriteBackHandler<Conversation>() {
             @Override
             public WritableDataReader<Conversation> createDataSource(Conversation observable) {
-                ObservableList<Conversation> list = ApplicationContext.getInstance()
-                        .getRegisteredObject(PalaverProvider.class).getData();
+                ObservableList<Conversation> list = getData();
                 return new AppDataWriter<>(list, Conversation.class);
             }
         });
