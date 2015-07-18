@@ -7,6 +7,7 @@ import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.StringUtils;
@@ -31,6 +32,7 @@ public class Connection {
     private static final Logger logger = Logger.getLogger(Connection.class.getName());
     private final Credentials credentials;
     public XMPPTCPConnection xmpptcpConnection;
+    private ChatManager chatManager;
 
     /**
      * Authenticates the user and configures the connection to use {@link org.jivesoftware.smack.sm.packet.StreamManagement}
@@ -189,6 +191,7 @@ public class Connection {
         login(credentials, xmppConnection);
         enableCarbons(xmppConnection);
         this.xmpptcpConnection = xmppConnection;
+        chatManager = ChatManager.getInstanceFor(xmppConnection);
     }
 
     private void enableSM(XMPPTCPConnection xmppConnection) {
@@ -236,4 +239,7 @@ public class Connection {
         this.xmpptcpConnection.disconnect();
     }
 
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
 }
