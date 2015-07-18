@@ -1,49 +1,50 @@
 package de.xsrc.palaver.xmpp.task;
 
+import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
+import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
+import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static junit.framework.Assert.assertTrue;
 
-public class CreateAccountTaskTest extends AbstractConnectionTest {
+public class CreateAccountTaskTest extends AbstractTaskTest {
 
-    final Credentials credentials = getAccount("alice.create.test@xsrc.de", "password");
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private Credentials credentials;
+    private Connection connection;
+
+    @After
+    public void cleanUpAccounts() throws ConnectionFailedException, AccountDeletionException {
+        connection.delete();
+    }
 
     @Before
-    @After
-    public void cleanUpAccounts() {
+    public void createAccount() throws ConnectionFailedException, AccountCreationException {
         new JFXPanel(); // Initialize JFX :)
-        try {
-            (new DeleteAccountTask(credentials)).call();
-        } catch (Exception e) {
-        }
+        credentials = getMockAccount();
+        final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
+        connection = createAccountTask.call();
     }
 
     @Test
-    public void testAccountCreationSuccess() throws AccountCreationException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
-        final XMPPTCPConnection connection = createAccountTask.call();
-        assertTrue(connection.isConnected());
-        assertTrue(connection.isAuthenticated());
-        connection.disconnect();
+    public void testAccountCreationSuccess() throws AccountCreationException, ConnectionFailedException {
+        XMPPTCPConnection xmpptcpConnection = connection.xmpptcpConnection;
+        assertTrue(xmpptcpConnection.isConnected());
+        assertTrue(xmpptcpConnection.isAuthenticated());
     }
 
     /**
      * Expects AccountCreationException to be thrown
      */
     @Test(expected = AccountCreationException.class)
-    public void testAccountCreationFailure() throws AccountCreationException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(getAccount("alice.test@example.invalid",
-                "password"), getObservableMap());
+    public void testAccountCreationFailure() throws AccountCreationException, ConnectionFailedException {
+        final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         createAccountTask.call();
     }
+
 }

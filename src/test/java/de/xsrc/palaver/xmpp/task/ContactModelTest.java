@@ -1,7 +1,7 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
+import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class ContactModelTest extends AbstractTaskTest {
 
-    private ListProperty<Credentials> credentialses;
+    private ListProperty<Credentials> credentialsList;
     private Credentials julia;
     private Roster juliasRoster;
     private ContactModel contactModel;
@@ -34,11 +34,11 @@ public class ContactModelTest extends AbstractTaskTest {
     @Before
     public void setUp() throws Exception {
         new JFXPanel();
-        credentialses = getMockAccounts(3);
-        final ObservableList<Credentials> accountsList = this.credentialses.get();
+        credentialsList = getMockAccounts(3);
+        final ObservableList<Credentials> accountsList = this.credentialsList.get();
         julia = accountsList.get(0);
         initializeJuliasRoster(accountsList);
-        connection = (new ConnectTask(julia, getObservableMap())).call();
+        connection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         juliasRoster = Roster.getInstanceFor(connection);
 
         contactModel = new ContactModel();
@@ -56,7 +56,7 @@ public class ContactModelTest extends AbstractTaskTest {
      * @throws SmackException.NotConnectedException
      */
     private void initializeJuliasRoster(ObservableList<Credentials> accountsList) throws ConnectionFailedException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
-        final XMPPTCPConnection connection = (new ConnectTask(julia, getObservableMap())).call();
+        final XMPPTCPConnection connection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         final Roster roster = Roster.getInstanceFor(connection);
 
         for (int i = 1; i < accountsList.size(); i++) {
@@ -68,24 +68,18 @@ public class ContactModelTest extends AbstractTaskTest {
 
     /**
      * Test if the ContactModel adds all the initial RosterEntries, added on the server side
-     *
-     * @throws ConnectionFailedException
-     * @throws SmackException.NotLoggedInException
-     * @throws XMPPException.XMPPErrorException
-     * @throws SmackException.NotConnectedException
-     * @throws SmackException.NoResponseException
      */
     @Test
-    public void initialRosterEntriesSynchronisation() throws ConnectionFailedException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    public void initialRosterEntriesSynchronisation() {
         assertEquals(juliasRoster.getEntryCount(), contactModel.getData().size());
     }
 
     @Test
-    public void addContactNotInRoster() throws ConnectionFailedException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    public void addContactNotInRoster() throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
         String nurse = "nurse@example.com";
         contactModel.subscribe(julia, nurse);
         final ObservableList<Contact> data = contactModel.getData();
-        for(Contact c: data){
+        for (Contact c : data) {
             System.out.println(c.getId());
         }
         assertEquals(juliasRoster.getEntryCount(), data.size());
@@ -99,18 +93,18 @@ public class ContactModelTest extends AbstractTaskTest {
         String nurse = "nurse@example.com";
         contactModel.subscribe(julia, nurse);
         final ObservableList<Contact> data = contactModel.getData();
-        final XMPPTCPConnection newConnection = (new ConnectTask(julia, getObservableMap())).call();
+        final XMPPTCPConnection newConnection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         final Roster roster = Roster.getInstanceFor(newConnection);
         ConnectionEstablishedListener.setupRosterEntriesSynchronisation(julia, roster, contactModel);
         assertEquals(juliasRoster.getEntryCount(), data.size());
     }
 
     @After
-    public void tearDown() throws Exception {
-        if (connection != null && connection.isConnected() ){
+    public void tearDown() {
+        if (connection != null && connection.isConnected()) {
             connection.disconnect();
         }
 
-        removeMockAccounts(credentialses);
+        removeMockAccounts(credentialsList);
     }
 }
