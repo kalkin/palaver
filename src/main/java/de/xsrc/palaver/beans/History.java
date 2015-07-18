@@ -15,7 +15,7 @@ public class History {
     private ListProperty<HistoryEntry> entryList;
 
     public History() {
-        entryList = new SimpleListProperty<HistoryEntry>(
+        entryList = new SimpleListProperty<>(
                 FXCollections.observableArrayList());
     }
 
