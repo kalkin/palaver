@@ -5,7 +5,7 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
-import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
+import de.xsrc.palaver.xmpp.listeners.ContactSynchronisationListener;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -43,7 +43,7 @@ public class ContactModelTest extends AbstractTest {
         juliasRoster = Roster.getInstanceFor(connection);
 
         contactModel = new ContactModel();
-        ConnectionEstablishedListener.setupRosterEntriesSynchronisation(julia, juliasRoster, contactModel);
+        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia, juliasRoster, contactModel);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ContactModelTest extends AbstractTest {
         final ObservableList<Contact> data = contactModel.getData();
         final XMPPTCPConnection newConnection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         final Roster roster = Roster.getInstanceFor(newConnection);
-        ConnectionEstablishedListener.setupRosterEntriesSynchronisation(julia, roster, contactModel);
+        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia, roster, contactModel);
         assertEquals(juliasRoster.getEntryCount(), data.size());
     }
 

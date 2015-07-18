@@ -1,6 +1,7 @@
 package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.Connection;
+import de.xsrc.palaver.ConnectionListener;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
@@ -16,12 +17,12 @@ import java.io.IOException;
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 29.06.15.
  */
-public class ConnectionEstablishedListener implements MapChangeListener<Credentials, Connection> {
+public class ContactSynchronisationListener implements ConnectionListener {
 
     private static final String WORKING_DIRECTORY = Utils.getConfigDirectory() + "/roster/";
     private final ContactModel contactModel;
 
-    public ConnectionEstablishedListener(ContactModel contactModel) {
+    public ContactSynchronisationListener(ContactModel contactModel) {
         this.contactModel = contactModel;
     }
 

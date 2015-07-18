@@ -9,6 +9,7 @@ import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
+import de.xsrc.palaver.xmpp.listeners.ContactSynchronisationListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -78,8 +79,11 @@ public class Main extends Application {
         primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
         Platform.runLater(() -> {
             accountProvider.retrieve();
+            final ContactSynchronisationListener contactSynchronisationListener = new ContactSynchronisationListener(contactModel);
+            ConnectionManager connectionManager = new ConnectionManager(executor);
+            connectionManager.addConnectionEstablishedListener(contactSynchronisationListener);
+
             final ListProperty<Credentials> credentialsListProperty = accountProvider.getData();
-            ConnectionManager connectionManager = new ConnectionManager(executor, contactModel);
             credentialsListProperty.addListener(new AccountChangeListener(connectionManager));
         });
 

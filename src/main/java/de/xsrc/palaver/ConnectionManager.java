@@ -1,11 +1,10 @@
 package de.xsrc.palaver;
 
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
 
@@ -21,10 +20,12 @@ public class ConnectionManager {
     private final ObservableExecutor executor;
     private final ObservableMap<Credentials, Connection> connections = FXCollections.observableMap(new ConcurrentHashMap<>());
 
-    public ConnectionManager(ObservableExecutor executor, ContactModel contactModel) {
+    public ConnectionManager(ObservableExecutor executor) {
         this.executor = executor;
-        final ConnectionEstablishedListener connectionEstablishedListener = new ConnectionEstablishedListener(contactModel);
-        connections.addListener(connectionEstablishedListener);
+    }
+
+    public void addConnectionEstablishedListener(ConnectionListener connectionListener){
+        connections.addListener(connectionListener);
     }
 
     public void connect(Credentials credentials) {
