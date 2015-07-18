@@ -9,7 +9,6 @@ import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
-import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -45,10 +44,10 @@ public class Main extends Application {
         Font.loadFont(Main.class.getResource("/font/Roboto-Bold.ttf").toExternalForm(), 24);
     }
 
-    private ApplicationContext applicationContext = ApplicationContext.getInstance();
-    private ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
-            ConcurrentHashMap<Credentials, XMPPTCPConnection>());
-    private ContactModel contactModel = new ContactModel();
+    private final ApplicationContext applicationContext = ApplicationContext.getInstance();
+    private final ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
+            ConcurrentHashMap<>());
+    private final ContactModel contactModel = new ContactModel();
 
     public static void main(String[] args) {
 
@@ -80,10 +79,8 @@ public class Main extends Application {
         Platform.runLater(() -> {
             accountProvider.retrieve();
             final ListProperty<Credentials> credentialsListProperty = accountProvider.getData();
-            AccountManager accountManager = new AccountManager(executor);
-            credentialsListProperty.addListener(new AccountChangeListener(accountManager));
-            final ConnectionEstablishedListener connectionEstablishedListener = new ConnectionEstablishedListener(contactModel);
-            connections.addListener(connectionEstablishedListener);
+            ConnectionManager connectionManager = new ConnectionManager(executor, contactModel);
+            credentialsListProperty.addListener(new AccountChangeListener(connectionManager));
         });
 
     }

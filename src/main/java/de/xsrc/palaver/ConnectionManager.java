@@ -1,12 +1,13 @@
 package de.xsrc.palaver;
 
 import de.xsrc.palaver.beans.Credentials;
+import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -14,16 +15,16 @@ import java.util.logging.Logger;
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 14.07.15.
  */
-public class AccountManager {
+public class ConnectionManager {
 
-    private ObservableExecutor executor;
-    private static final Logger logger = Logger.getLogger(AccountManager.class.getName());
+    private static final Logger logger = Logger.getLogger(ConnectionManager.class.getName());
+    private final ObservableExecutor executor;
+    private final ObservableMap<Credentials, Connection> connections = FXCollections.observableMap(new ConcurrentHashMap<>());
 
-    private final ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
-            ConcurrentHashMap<Credentials, XMPPTCPConnection>());
-
-    public AccountManager(ObservableExecutor executor) {
+    public ConnectionManager(ObservableExecutor executor, ContactModel contactModel) {
         this.executor = executor;
+        final ConnectionEstablishedListener connectionEstablishedListener = new ConnectionEstablishedListener(contactModel);
+        connections.addListener(connectionEstablishedListener);
     }
 
     public void connect(Credentials credentials) {
@@ -37,8 +38,7 @@ public class AccountManager {
 
     public void disconnect(Credentials credentials) {
         if (connections.containsKey(credentials)) {
-            final XMPPTCPConnection xmpptcpConnection = connections.get(credentials);
-            executor.submit(new DisconnectTask(xmpptcpConnection));
+            executor.submit(new DisconnectTask(credentials, connections));
             connections.remove(credentials);
         } else {
             logger.severe("Connection for credentials " + credentials.getJid() + " does not exist");

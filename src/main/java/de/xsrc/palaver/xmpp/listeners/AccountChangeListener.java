@@ -1,13 +1,8 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.AccountManager;
+import de.xsrc.palaver.ConnectionManager;
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.xmpp.task.ConnectTask;
-import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableMap;
-import org.datafx.concurrent.ObservableExecutor;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.List;
 
@@ -16,13 +11,11 @@ import java.util.List;
  */
 public class AccountChangeListener implements ListChangeListener<Credentials> {
 
-    private ObservableExecutor executor;
-    private ObservableMap<Credentials, XMPPTCPConnection> connectionMap;
-    private AccountManager accountManager;
+    private final ConnectionManager connectionManager;
 
-    public AccountChangeListener(AccountManager accountManager) {
+    public AccountChangeListener(ConnectionManager connectionManager) {
 
-        this.accountManager = accountManager;
+        this.connectionManager = connectionManager;
     }
 
     @Override
@@ -31,16 +24,14 @@ public class AccountChangeListener implements ListChangeListener<Credentials> {
             if (c.getAddedSize() > 0) {
                 List<? extends Credentials> list = c.getAddedSubList();
                 for (Credentials credentials : list) {
-                    accountManager.connect(credentials);
+                    connectionManager.connect(credentials);
                     credentials.credentialsChangedProperty().addChangeListener(evt -> {
-                        accountManager.disconnect(credentials);
-                        accountManager.connect(credentials);
+                        connectionManager.disconnect(credentials);
+                        connectionManager.connect(credentials);
                     });
                 }
             } else if (c.wasRemoved()) {
-                for (Credentials credentials : c.getRemoved()) {
-                    accountManager.disconnect(credentials);
-                }
+                c.getRemoved().forEach(connectionManager::disconnect);
 
             }
         }
