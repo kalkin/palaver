@@ -1,5 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
+import de.xsrc.palaver.AbstractTest;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 01.07.15.
  */
-public class ContactModelTest extends AbstractTaskTest {
+public class ContactModelTest extends AbstractTest {
 
     private ListProperty<Credentials> credentialsList;
     private Credentials julia;
@@ -34,7 +35,7 @@ public class ContactModelTest extends AbstractTaskTest {
     @Before
     public void setUp() throws Exception {
         new JFXPanel();
-        credentialsList = getMockAccounts(3);
+        credentialsList = createMockAccounts(3);
         final ObservableList<Credentials> accountsList = this.credentialsList.get();
         julia = accountsList.get(0);
         initializeJuliasRoster(accountsList);
@@ -105,6 +106,6 @@ public class ContactModelTest extends AbstractTaskTest {
             connection.disconnect();
         }
 
-        removeMockAccounts(credentialsList);
+        deleteMockAccount(credentialsList);
     }
 }

@@ -1,5 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
+import de.xsrc.palaver.AbstractTest;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
@@ -13,7 +14,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
 
-public class CreateAccountTaskTest extends AbstractTaskTest {
+public class CreateAccountTaskTest extends AbstractTest {
 
     private Credentials credentials;
     private Connection connection;
@@ -26,7 +27,7 @@ public class CreateAccountTaskTest extends AbstractTaskTest {
     @Before
     public void createAccount() throws ConnectionFailedException, AccountCreationException {
         new JFXPanel(); // Initialize JFX :)
-        credentials = getMockAccount();
+        credentials = getMockCredentials();
         final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         connection = createAccountTask.call();
     }

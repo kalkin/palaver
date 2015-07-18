@@ -1,5 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
+import de.xsrc.palaver.AbstractTest;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
@@ -13,7 +14,7 @@ import org.junit.*;
 
 import static org.junit.Assert.assertTrue;
 
-public class ConnectTaskTest extends AbstractTaskTest {
+public class ConnectTaskTest extends AbstractTest {
 
 
     private static final Credentials CREDENTIALS = getAccount("alice.open.test@xsrc.de", "password");
@@ -70,6 +71,7 @@ public class ConnectTaskTest extends AbstractTaskTest {
     }
 
     @Test
+    @Ignore
     public void streamManagementEnabled() {
         assertTrue("Stream Management should be available", connection.xmpptcpConnection.isSmAvailable());
         assertTrue("Stream Management should be enabled", connection.xmpptcpConnection.isSmEnabled());

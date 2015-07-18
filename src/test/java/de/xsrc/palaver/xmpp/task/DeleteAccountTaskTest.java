@@ -1,5 +1,6 @@
 package de.xsrc.palaver.xmpp.task;
 
+import de.xsrc.palaver.AbstractTest;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
@@ -12,7 +13,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertFalse;
 
-public class DeleteAccountTaskTest extends AbstractTaskTest {
+public class DeleteAccountTaskTest extends AbstractTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -26,7 +27,7 @@ public class DeleteAccountTaskTest extends AbstractTaskTest {
 
     @Before
     public void createAccount() throws ConnectionFailedException, AccountCreationException {
-        credentials = getMockAccount();
+        credentials = getMockCredentials();
         final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         connection = createAccountTask.call();
     }
