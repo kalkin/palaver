@@ -106,6 +106,6 @@ public class ContactModelTest extends AbstractTest {
             connection.disconnect();
         }
 
-        deleteMockAccount(credentialsList);
+        removeMockAccounts(credentialsList);
     }
 }

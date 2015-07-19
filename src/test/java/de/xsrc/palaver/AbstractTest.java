@@ -46,7 +46,7 @@ public class AbstractTest {
     }
 
 
-    protected static void deleteMockAccount(ListProperty<Credentials> credentialsList) {
+    protected static void removeMockAccounts(ListProperty<Credentials> credentialsList) {
         credentialsList.forEach(de.xsrc.palaver.AbstractTest::removeMockAccount);
     }
 
