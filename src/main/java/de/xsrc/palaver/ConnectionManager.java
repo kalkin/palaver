@@ -4,7 +4,6 @@ import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
 
@@ -33,6 +32,7 @@ public class ConnectionManager {
             executor.submit(new ConnectTask(credentials, connections));
         } else {
             logger.severe("Connection for credentials " + credentials.getJid() + " already exists");
+            throw new RuntimeException("Duplicate Connection");
         }
 
     }
@@ -40,9 +40,9 @@ public class ConnectionManager {
     public void disconnect(Credentials credentials) {
         if (connections.containsKey(credentials)) {
             executor.submit(new DisconnectTask(credentials, connections));
-            connections.remove(credentials);
         } else {
             logger.severe("Connection for credentials " + credentials.getJid() + " does not exist");
+            throw new RuntimeException("Connection does not exist");
         }
     }
 }
