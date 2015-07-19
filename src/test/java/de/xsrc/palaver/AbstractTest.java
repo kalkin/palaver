@@ -1,5 +1,6 @@
 package de.xsrc.palaver;
 
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
@@ -70,5 +71,19 @@ public class AbstractTest {
 
     protected static ObservableMap<Credentials, Connection> getObservableMap() {
         return FXCollections.observableMap(new ConcurrentHashMap<>());
+    }
+
+    protected static Contact getMockContact(){
+        Credentials juliaCredentials = getMockCredentials();
+        Credentials romeoCredentials = getMockCredentials();
+        return getMockContact(romeoCredentials.getJid(), juliaCredentials.getJid());
+    }
+
+    protected static Contact getMockContact(String account, String jid) {
+        final Contact contact = new Contact();
+        contact.setAccount(account);
+        contact.setJid(jid);
+        contact.setConference(false);
+        return contact;
     }
 }
