@@ -24,7 +24,7 @@ public class Contact {
     }
 
     public void setJid(String jid) {
-        this.jid.set(jid);
+        this.jid.set(jid.toLowerCase());
     }
 
     public String getAccount() {
@@ -32,7 +32,7 @@ public class Contact {
     }
 
     public void setAccount(String account) {
-        this.account.set(account);
+        this.account.set(account.toLowerCase());
     }
 
     public String getName() {

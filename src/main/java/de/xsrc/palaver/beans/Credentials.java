@@ -50,7 +50,7 @@ public class Credentials implements EntityWithId<String> {
     }
 
     public void setJid(String jid) {
-        this.jid.set(jid);
+        this.jid.set(jid.toLowerCase());
     }
 
     public String toString() {
