@@ -236,7 +236,8 @@ public class Connection {
      * Closes the protocol session
      */
     public void close() {
-        this.xmpptcpConnection.disconnect();
+        if (xmpptcpConnection != null)
+            this.xmpptcpConnection.disconnect();
     }
 
     public ChatManager getChatManager() {
