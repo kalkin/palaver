@@ -26,6 +26,7 @@ public class ChatInput extends TextArea {
                 final HistoryEntry historyEntry = new HistoryEntry();
                 historyEntry.setBody(msg);
                 historyEntry.setFrom(conversation.getAccount());
+                historyEntry.setSendState(false);
                 conversation.history.addEntry(historyEntry);
                 this.clear();
                 event.consume();
