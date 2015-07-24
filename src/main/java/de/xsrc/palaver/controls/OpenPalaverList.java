@@ -2,7 +2,7 @@ package de.xsrc.palaver.controls;
 
 import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.controller.PalaverCell;
-import de.xsrc.palaver.models.PalaverModel;
+import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.utils.UiUtils;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXML;
@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
+import org.datafx.controller.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -23,7 +24,8 @@ public class OpenPalaverList extends BorderPane {
 
     private static final String OPEN_PALAVER_LIST_FXML = "/fxml/OpenPalaverList.fxml";
 
-    private PalaverModel model = PalaverModel.getInstance();
+    private ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject(ConversationManager
+            .class);
 
 
     @FXML
@@ -47,7 +49,7 @@ public class OpenPalaverList extends BorderPane {
 
     @FXML
     private void initialize() {
-        openPalaversList.setItems(model.getOpenPalavers());
+        openPalaversList.setItems(conversationManager.getOpenConversations());
         MultipleSelectionModel<Conversation> selModel = openPalaversList
                 .getSelectionModel();
         selModel.setSelectionMode(SelectionMode.SINGLE);
