@@ -6,6 +6,7 @@ import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -45,5 +46,9 @@ public class ConnectionManager {
             logger.severe("Connection for credentials " + credentials.getJid() + " does not exist");
             throw new RuntimeException("Connection does not exist");
         }
+    }
+
+    public XMPPTCPConnection getConnection(String from) {
+        return connections.get(from).xmpptcpConnection;
     }
 }

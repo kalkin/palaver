@@ -5,10 +5,14 @@ import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.provider.PalaverProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
+import de.xsrc.palaver.xmpp.Sender;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
+import de.xsrc.palaver.xmpp.listeners.ConnectionRegistrationListener;
 import de.xsrc.palaver.xmpp.listeners.ContactSynchronisationListener;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -36,8 +40,7 @@ import java.util.logging.Logger;
 
 public class Main extends Application {
 
-    private static final Logger logger = Logger.getLogger(Main.class
-            .getName());
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     static {
         Font.loadFont(FontAwesome.class.getResource("/font/fontawesome-webfont.ttf").toExternalForm(), 24);
@@ -58,12 +61,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws FlowException {
         AccountProvider accountProvider = new AccountProvider();
-
-        applicationContext.register(accountProvider);
         final ObservableExecutor executor = new ObservableExecutor();
+        final ConversationManager conversationManager = new ConversationManager(new PalaverProvider());
+        final ConnectionManager connectionManager = new ConnectionManager(executor);
+        final Sender sender = new Sender(connectionManager, conversationManager);
+        applicationContext.register(accountProvider);
         applicationContext.register(executor);
         applicationContext.register(connections);
         applicationContext.register(contactModel);
+        applicationContext.register(conversationManager);
 
 
         Flow flow = new Flow(MainController.class);
@@ -80,8 +86,9 @@ public class Main extends Application {
         Platform.runLater(() -> {
             accountProvider.retrieve();
             final ContactSynchronisationListener contactSynchronisationListener = new ContactSynchronisationListener(contactModel);
-            ConnectionManager connectionManager = new ConnectionManager(executor);
+            final ConnectionRegistrationListener connectionRegistrationListener = new ConnectionRegistrationListener(conversationManager);
             connectionManager.addConnectionEstablishedListener(contactSynchronisationListener);
+            connectionManager.addConnectionEstablishedListener(connectionRegistrationListener);
 
             final ListProperty<Credentials> credentialsListProperty = accountProvider.getData();
             credentialsListProperty.addListener(new AccountChangeListener(connectionManager));
