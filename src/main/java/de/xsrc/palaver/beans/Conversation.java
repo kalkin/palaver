@@ -8,9 +8,11 @@ import org.datafx.util.EntityWithId;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.logging.Logger;
 
 @XmlRootElement(name = "conversation")
 public class Conversation implements EntityWithId<String> {
+    private static final Logger logger = Logger.getLogger(Conversation.class.getName());
 
     private static final long serialVersionUID = 1L;
     @XmlElement(name = "history", type = History.class)
@@ -63,13 +65,13 @@ public class Conversation implements EntityWithId<String> {
         return account.get();
     }
 
-    public void setAccount(String s) {
-        account.set(s);
-    }
-
     public void setAccount(Credentials a) {
         account.set(a.getId());
 
+    }
+
+    public void setAccount(String s) {
+        account.set(s);
     }
 
     @Override
@@ -125,4 +127,18 @@ public class Conversation implements EntityWithId<String> {
     public int hashCode() {
         return this.getId().hashCode() * 23;
     }
+
+    /**
+     * Appends a message to the history.
+     *
+     * @param body      Text of the message
+     * @param sendState If true this message does not need to be send. (Probably received over network, or carbon copy)
+     */
+    public void addMessage(String fromJid, String body, boolean sendState) {
+        final HistoryEntry historyEntry = new HistoryEntry(fromJid, body);
+        historyEntry.setSendState(sendState);
+        this.history.addEntry(historyEntry);
+        this.setClosed(false);
+    }
+
 }
