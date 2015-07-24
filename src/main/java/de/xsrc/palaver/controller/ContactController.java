@@ -4,8 +4,8 @@ import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.models.ConversationManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,7 +52,8 @@ public class ContactController {
     @ActionTrigger("startPalaverButton")
     private Button startPalaverButton;
 
-    private PalaverModel palaverModel = PalaverModel.getInstance();
+    private ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject
+            (ConversationManager.class);
 
     @FXML
     private TextField searchInput;
@@ -119,7 +120,7 @@ public class ContactController {
         Contact buddy = contactListView.getSelectionModel().getSelectedItems().get(0);
         if (buddy != null) {
             logger.fine("Starting palaver with " + buddy.getJid());
-            palaverModel.openPalaver(buddy);
+            conversationManager.openConversation(buddy);
         }
     }
 
