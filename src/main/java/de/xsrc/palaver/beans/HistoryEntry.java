@@ -71,6 +71,10 @@ public class HistoryEntry implements EntityWithId<String> {
         return sendState.get();
     }
 
+    public BooleanProperty sendStateProperty() {
+        return sendState;
+    }
+
     public void setSendState(boolean sendState) {
         this.sendState.set(sendState);
     }
