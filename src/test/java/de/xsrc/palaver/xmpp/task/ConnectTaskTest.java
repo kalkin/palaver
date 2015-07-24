@@ -8,7 +8,6 @@ import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import javafx.collections.ObservableMap;
 import javafx.embed.swing.JFXPanel;
-import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.junit.*;
 
@@ -50,12 +49,6 @@ public class ConnectTaskTest extends AbstractTest {
     public void connectionEstablishedAndAuthenticated() {
         assertTrue("Connection to server is established", connection.xmpptcpConnection.isConnected());
         assertTrue("Connection to server is authenticated", connection.xmpptcpConnection.isAuthenticated());
-    }
-
-    @Test
-    public void connectionHasChatManager(){
-        ChatManager chatManager = connection.getChatManager();
-        assertTrue("There should be a chat Manager", chatManager != null);
     }
 
     @Test
