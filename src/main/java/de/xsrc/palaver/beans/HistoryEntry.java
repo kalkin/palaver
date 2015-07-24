@@ -1,9 +1,6 @@
 package de.xsrc.palaver.beans;
 
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import org.datafx.util.EntityWithId;
 
@@ -19,6 +16,7 @@ public class HistoryEntry implements EntityWithId<String> {
     private LongProperty receivedAt;
     private StringProperty body;
     private StringProperty from;
+    private BooleanProperty sendState;
 
     public HistoryEntry() {
         this(null, null);
@@ -29,8 +27,7 @@ public class HistoryEntry implements EntityWithId<String> {
         this.receivedAt = new SimpleLongProperty(System.currentTimeMillis());
         this.from = new SimpleStringProperty(from);
         this.body = new SimpleStringProperty(body);
-
-
+        this.sendState = new SimpleBooleanProperty(false);
     }
 
     @Override
@@ -70,4 +67,11 @@ public class HistoryEntry implements EntityWithId<String> {
         return body;
     }
 
+    public boolean getSendState() {
+        return sendState.get();
+    }
+
+    public void setSendState(boolean sendState) {
+        this.sendState.set(sendState);
+    }
 }
