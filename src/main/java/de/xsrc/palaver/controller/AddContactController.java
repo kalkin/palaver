@@ -2,7 +2,7 @@ package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.models.PalaverModel;
+import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
@@ -57,9 +57,9 @@ public class AddContactController {
 
         Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
         final ContactModel contactModel = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
-		contactModel.subscribe(credentials, jid.getText());
-        PalaverModel palaverModel = PalaverModel.getInstance();
-		palaverModel.openPalaver(credentials, jid.getText());
+        contactModel.subscribe(credentials, jid.getText());
+        final ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject(ConversationManager.class);
+        conversationManager.openConversation(credentials.getJid(), jid.getText(), false);
         close();
     }
 

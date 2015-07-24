@@ -3,7 +3,6 @@ package de.xsrc.palaver.controller;
 import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.controls.HistoryControl;
 import de.xsrc.palaver.controls.OpenPalaverList;
-import de.xsrc.palaver.models.PalaverModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -45,7 +44,6 @@ public class MainController {
     @FXML
     private OpenPalaverList palaverListControl;
     private HashMap<Conversation, HistoryControl> historyMap = new HashMap<>();
-    private PalaverModel model = PalaverModel.getInstance();
 
     @FXML
     private void initialize() {

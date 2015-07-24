@@ -115,6 +115,12 @@ public class ConversationManager extends ListDataProvider<Conversation>{
         return getConversation(contact.getAccount(), contact.getJid(), contact.isConference());
     }
 
+
+    public Conversation openConversation(String accountJid, String jid, boolean conference) {
+        return getConversation(accountJid, jid, conference);
+
+    }
+
     /**
      * Helper method to calculate the id of an Conversation. See also {@link Conversation#getId()}.
      *
@@ -125,7 +131,6 @@ public class ConversationManager extends ListDataProvider<Conversation>{
     private String getConversationId(String accountJid, String recipientJid) {
         return accountJid + ":" + recipientJid;
     }
-
 
     /**
      * Creates a new {@link Conversation}
