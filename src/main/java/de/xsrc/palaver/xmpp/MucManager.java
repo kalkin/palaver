@@ -1,5 +1,8 @@
 package de.xsrc.palaver.xmpp;
 
+/**
+ * TODO Rework as normal Object and not a Singleton
+ */
 public class MucManager {
 
 //	private static final Logger logger = Logger

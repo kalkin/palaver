@@ -8,10 +8,8 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class PalaverRosterListener implements RosterListener {
@@ -21,13 +19,13 @@ public class PalaverRosterListener implements RosterListener {
 
     private Account account;
     private ContactModel contacts;
-    private ConcurrentHashMap<String, XMPPTCPConnection> connections;
+    private Roster roster;
 
 
-    public PalaverRosterListener(Account account, ContactModel contacts, ConcurrentHashMap<String, XMPPTCPConnection> connections) {
+    public PalaverRosterListener(Account account, ContactModel contactModel, Roster roster) {
         this.account = account;
-        this.contacts = contacts;
-        this.connections = connections;
+        this.contacts = contactModel;
+        this.roster = roster;
         logger.fine(String.format("Created %s", account.getJid()));
     }
 
@@ -67,7 +65,7 @@ public class PalaverRosterListener implements RosterListener {
 
 
     private Contact getContact(String address) {
-        RosterEntry entry = Roster.getInstanceFor(connections.get(this.account.getJid())).getEntry(address);
+        RosterEntry entry = roster.getEntry(address);
         if (entry == null) {
             return null;
         }

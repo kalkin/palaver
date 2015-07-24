@@ -1,14 +1,11 @@
 package de.xsrc.palaver.controls;
 
 import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.xmpp.ConnectionManager;
-import de.xsrc.palaver.xmpp.PalaverManager;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import org.datafx.controller.context.ApplicationContext;
 
 import java.util.logging.Logger;
 
@@ -24,10 +21,11 @@ public class ChatInput extends TextArea {
         this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             String msg = this.getText().trim();
             if (ENTER.match(event) && !msg.isEmpty()) { // on enter send
-                ConnectionManager connections = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
-                PalaverManager.sendMsg(this.palaver, msg, connections);
-                this.clear();
-                event.consume();
+//                TODO Fix msg sending
+//                ConnectionManager connections = ApplicationContext.getInstance().getRegisteredObject(ObservableMap.);
+//                PalaverManager.sendMsg(this.palaver, msg, connections);
+//                this.clear();
+//                event.consume();
             } else if (SHIFT_ENTER.match(event)) { // add a new line.
                 this.deleteText(this.getSelection());
                 this.insertText(this.getCaretPosition(), "\n");

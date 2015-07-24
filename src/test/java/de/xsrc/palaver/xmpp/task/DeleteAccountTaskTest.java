@@ -5,6 +5,7 @@ import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.*;
@@ -26,11 +27,11 @@ public class DeleteAccountTaskTest extends AbstractConnectionTest {
 
     @Before
     public void createAccount() throws ConnectionFailedException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account);
+        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
         try {
             connection = createAccountTask.call();
         } catch (AccountCreationException e) {
-            connection = (new ConnectTask(account)).call();
+            connection = (new ConnectTask(account, getObservableMap())).call();
         }
     }
 
@@ -45,7 +46,7 @@ public class DeleteAccountTaskTest extends AbstractConnectionTest {
         final DeleteAccountTask task = new DeleteAccountTask(connection);
         task.call();
         exception.expect(AuthenticationFailedException.class);
-        (new ConnectTask(account)).call();
+        (new ConnectTask(account, getObservableMap())).call();
     }
 
     @Test

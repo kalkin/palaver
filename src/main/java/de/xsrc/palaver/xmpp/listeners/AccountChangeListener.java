@@ -4,11 +4,11 @@ import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.xmpp.task.ConnectTask;
 import de.xsrc.palaver.xmpp.task.DisconnectTask;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableMap;
 import org.datafx.concurrent.ObservableExecutor;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 28.06.15.
@@ -16,9 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AccountChangeListener implements ListChangeListener<Account> {
 
     private ObservableExecutor executor;
-    private ConcurrentHashMap<String, XMPPTCPConnection> connectionMap;
+    private ObservableMap<Account, XMPPTCPConnection> connectionMap;
 
-    public AccountChangeListener(ObservableExecutor executor, ConcurrentHashMap connectionMap) {
+    public AccountChangeListener(ObservableExecutor executor, ObservableMap<Account, XMPPTCPConnection> connectionMap) {
         this.executor = executor;
         this.connectionMap = connectionMap;
     }
@@ -45,7 +45,7 @@ public class AccountChangeListener implements ListChangeListener<Account> {
 
     }
 
-    private ConnectTask getConnectTask(Account account, ConcurrentHashMap<String, XMPPTCPConnection> connectionMap) {
+    private ConnectTask getConnectTask(Account account, ObservableMap<Account, XMPPTCPConnection> connectionMap) {
         return new ConnectTask(account, connectionMap);
     }
 }

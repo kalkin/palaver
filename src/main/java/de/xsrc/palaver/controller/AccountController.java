@@ -83,7 +83,7 @@ public class AccountController {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.show();
         } catch (FxmlLoadException e) {
-            // TODO Auto-generated catch block
+            // Auto-generated catch block
             e.printStackTrace();
         }
     }

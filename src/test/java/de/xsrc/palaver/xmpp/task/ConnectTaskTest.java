@@ -4,6 +4,8 @@ import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.carbons.CarbonManager;
@@ -17,13 +19,13 @@ public class ConnectTaskTest extends AbstractConnectionTest {
 
 
     static final Account account = getAccount("alice.connect.test@xsrc.de", "password");
-    private ConcurrentHashMap<String, XMPPTCPConnection> connectionMap;
+    private ObservableMap<Account, XMPPTCPConnection> connectionMap;
     private XMPPTCPConnection connection;
 
     @BeforeClass
     public static void createAccount() throws AccountCreationException {
         new JFXPanel(); // Initialize JFX :)
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account);
+        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
         createAccountTask.call().disconnect();
 
     }
@@ -36,7 +38,7 @@ public class ConnectTaskTest extends AbstractConnectionTest {
 
     @Before
     public void connect() throws ConnectionFailedException {
-        connectionMap = new ConcurrentHashMap<>();
+        connectionMap = getObservableMap();
         connection = (new ConnectTask(account, connectionMap)).call();
     }
 
@@ -55,8 +57,8 @@ public class ConnectTaskTest extends AbstractConnectionTest {
 
     @Test
     public void connectionIsManaged() throws ConnectionFailedException {
-        XMPPTCPConnection connection2 = connectionMap.get(account.getJid());
-        assertTrue("ConnectionManager Map contains appropriate connection", connection == connection2);
+        XMPPTCPConnection connection2 = connectionMap.get(account);
+        assertTrue("ObservableMap contains appropriate connection", connection == connection2);
     }
 
     @Test
@@ -67,6 +69,8 @@ public class ConnectTaskTest extends AbstractConnectionTest {
 
     @Test
     public void streamManagementEnabled() throws ConnectionFailedException {
+        assertTrue("Stream Management should be available", connection
+                .isSmAvailable());
         assertTrue("Stream Management should be enabled", connection.isSmEnabled());
     }
 

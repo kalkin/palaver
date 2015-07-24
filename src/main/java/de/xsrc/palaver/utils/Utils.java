@@ -1,6 +1,5 @@
 package de.xsrc.palaver.utils;
 
-import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Palaver;
 import javafx.scene.Scene;
@@ -14,7 +13,6 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -62,7 +60,7 @@ public class Utils {
      * @throws IOException
      */
     public static File getFile(Class<?> c) throws IOException {
-        return getFile(workingDirectory(), c);
+        return getFile(getConfigDirectory(), c);
     }
 
     public static File getFile(String workingDir, Class<?> c) throws IOException {
@@ -78,9 +76,9 @@ public class Utils {
     /**
      * Tries to find User Home and create the config dir
      *
-     * @return
+     * @return Path to config directory
      */
-    private static String workingDirectory() {
+    public static String getConfigDirectory() {
         String os = System.getProperty("os.name").toUpperCase();
         String workingDirectory;
         if (os.contains("WIN")) {
@@ -107,14 +105,6 @@ public class Utils {
         return getJoinedMucs().get(palaver.getId());
     }
 
-    public static DirectoryRosterStore getRosterStore(Account account) {
-        File dir = new File(Utils.workingDirectory() + "/roster/" + account.getJid());
-        if (!dir.exists()) {
-            dir.mkdirs();
-            return DirectoryRosterStore.init(dir);
-        }
-        return DirectoryRosterStore.open(dir);
-    }
 
     public static Contact createContact(String account, String jid, String name, Boolean conference) {
         Contact contact = new Contact();

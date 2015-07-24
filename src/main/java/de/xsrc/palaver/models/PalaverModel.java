@@ -1,5 +1,6 @@
 package de.xsrc.palaver.models;
 
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.HistoryEntry;
 import de.xsrc.palaver.beans.Palaver;
@@ -15,7 +16,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 /**
- * This should be the crosspoint between disk and xmpp
+ * This should be the crosspoint between disk and XMPP
+ * TODO: Refactor it as normal Object and not a Singleton
  */
 public class PalaverModel {
 
@@ -70,6 +72,10 @@ public class PalaverModel {
 
     public Palaver openPalaver(Contact contact) {
         return openPalaver(contact.getAccount(), contact.getJid(), contact.isConference());
+    }
+
+    public Palaver openPalaver(Account account, String jid){
+        return openPalaver(account.getJid(), jid, false);
     }
 
     public synchronized Palaver openPalaver(String accountJid, String recipientJid, boolean conference) {

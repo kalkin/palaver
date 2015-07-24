@@ -1,17 +1,16 @@
 package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.beans.Account;
-import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
+import de.xsrc.palaver.xmpp.ConnectionSetupFactory;
 import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.carbons.CarbonManager;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
@@ -19,13 +18,9 @@ public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
     private static final Logger logger = Logger.getLogger(ConnectTask.class
             .getName());
     private final Account account;
-    private ConcurrentHashMap<String, XMPPTCPConnection> connectionMap;
+    private ObservableMap<Account, XMPPTCPConnection> connectionMap;
 
-    public ConnectTask(Account account) {
-        this(account, new ConcurrentHashMap<String, XMPPTCPConnection>());
-    }
-
-    public ConnectTask(Account account, ConcurrentHashMap<String, XMPPTCPConnection> connectionMap) {
+     public ConnectTask(Account account, ObservableMap<Account, XMPPTCPConnection> connectionMap) {
         super();
         this.account = account;
         this.connectionMap = connectionMap;
@@ -37,45 +32,24 @@ public class ConnectTask extends AbstractConnectionTask<XMPPTCPConnection> {
     protected XMPPTCPConnection call() throws ConnectionFailedException {
         logger.finer("Connecting to account " + account);
         final String jid = account.getJid();
-        final String username = XmppStringUtils.parseLocalpart(jid);
-        final String password = account.getPassword();
         final String serviceName = XmppStringUtils.parseDomain(jid);
 
         XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(serviceName);
-        builder.setUsernameAndPassword(username, password);
-
-//		DirectoryRosterStore directoryRosterStore = Utils.getRosterStore(account);
-//		config.setRosterStore(directoryRosterStore);
-        // TODO: move this logic some where else
 
         XMPPTCPConnection connection = new XMPPTCPConnection(builder.build());
-//		connection.addConnectionListener(new PalaverConnectionListener());
-        connection.setUseStreamManagement(true);
         try {
             connection.connect();
+            logger.fine(String.format("Connection to serviceName %s " +
+                    "successful", serviceName));
         } catch (SmackException | IOException | XMPPException e) {
-            final String message = String.format("Connection to account %s failed", account);
+            final String message = String.format("Connection to serviceName %s failed", serviceName);
             logger.severe(message);
             throw new ConnectionFailedException(message, e);
         }
 
-        try {
-            connection.login();
-            connectionMap.put(account.getJid(), connection);
-        } catch (XMPPException | IOException | SmackException e) {
-            final String message = String.format("Authentication for account %s failed", account);
-            logger.severe(message);
-            throw new AuthenticationFailedException(message, e);
-        }
+        connection = ConnectionSetupFactory.setupConnection(connection, account);
 
-        final CarbonManager carbonManager = CarbonManager.getInstanceFor(connection);
-        try {
-            carbonManager.setCarbonsEnabled(true);
-        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException e) {
-            e.printStackTrace();
-        }
-
-
+        connectionMap.put(account, connection);
         return connection;
 
 //        Roster.getInstanceFor(connection).addRosterListener(new PalaverRosterListener(account));

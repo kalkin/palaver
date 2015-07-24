@@ -1,9 +1,11 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Palaver;
+import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.logging.Logger;
 
@@ -12,7 +14,7 @@ public class PalaverManager {
     private static final Logger logger = Logger
             .getLogger(PalaverManager.class.getName());
 
-    public static void sendMsg(Palaver palaver, String body, ConnectionManager connections) {
+    public static void sendMsg(Palaver palaver, String body, ObservableMap<String, XMPPTCPConnection> connections) {
         logger.finest(String.format("Sending msg from %s to %s: %s", palaver.getAccount(), palaver.getRecipient(), body));
 
 

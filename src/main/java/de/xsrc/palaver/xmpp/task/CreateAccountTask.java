@@ -1,7 +1,9 @@
 package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.xmpp.ConnectionSetupFactory;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
+import javafx.collections.ObservableMap;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
@@ -18,9 +20,11 @@ public class CreateAccountTask extends AbstractConnectionTask<XMPPTCPConnection>
             .getName());
 
     private Account account;
+    private ObservableMap<Account, XMPPTCPConnection> connections;
 
-    public CreateAccountTask(Account account) {
+    public CreateAccountTask(Account account, ObservableMap<Account, XMPPTCPConnection> connections) {
         this.account = account;
+        this.connections = connections;
     }
 
     @Override
@@ -32,8 +36,9 @@ public class CreateAccountTask extends AbstractConnectionTask<XMPPTCPConnection>
             connection.connect();
             final AccountManager accountManager = AccountManager.getInstance(connection);
             accountManager.createAccount(XmppStringUtils.parseLocalpart(account.getJid()), account.getPassword());
-            connection.login(XmppStringUtils.parseLocalpart(account.getJid()), account.getPassword());
-            return connection;
+            XMPPTCPConnection c = ConnectionSetupFactory.setupConnection(connection, account);
+            connections.put(account, c);
+            return c;
         } catch (Exception e) {
             throw new AccountCreationException("Account creation failed", e);
         }

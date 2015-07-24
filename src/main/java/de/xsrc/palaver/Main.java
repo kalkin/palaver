@@ -1,15 +1,20 @@
 package de.xsrc.palaver;
 
 
+import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
+import de.xsrc.palaver.xmpp.listeners.ConnectionEstablishedListener;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -24,7 +29,9 @@ import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.action.FlowActionChain;
 import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.action.FlowMethodAction;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class Main extends Application {
@@ -36,11 +43,12 @@ public class Main extends Application {
         Font.loadFont(FontAwesome.class.getResource("/font/fontawesome-webfont.ttf").toExternalForm(), 24);
         Font.loadFont(Main.class.getResource("/font/Roboto-Regular.ttf").toExternalForm(), 24);
         Font.loadFont(Main.class.getResource("/font/Roboto-Bold.ttf").toExternalForm(), 24);
-
     }
 
     private ApplicationContext applicationContext = ApplicationContext.getInstance();
-    private ConnectionManager connections = new ConnectionManager();
+    private ObservableMap<Account, XMPPTCPConnection> connections = FXCollections.observableMap(new
+            ConcurrentHashMap<Account, XMPPTCPConnection>());
+    private ContactModel contactModel = new ContactModel();
 
     public static void main(String[] args) {
 
@@ -49,13 +57,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws FlowException {
-        AccountProvider accounts = new AccountProvider();
+        AccountProvider accountProvider = new AccountProvider();
 
-
-        applicationContext.register(accounts);
+        applicationContext.register(accountProvider);
         final ObservableExecutor executor = new ObservableExecutor();
         applicationContext.register(executor);
         applicationContext.register(connections);
+        applicationContext.register(contactModel);
 
 
         Flow flow = new Flow(MainController.class);
@@ -70,8 +78,11 @@ public class Main extends Application {
 //		showDebug();
         primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
         Platform.runLater(() -> {
-            accounts.retrieve();
-            accounts.getData().addListener(new AccountChangeListener(executor, connections));
+            accountProvider.retrieve();
+            final ListProperty<Account> accounts = accountProvider.getData();
+            accounts.addListener(new AccountChangeListener(executor, connections));
+            final ConnectionEstablishedListener connectionEstablishedListener = new ConnectionEstablishedListener(contactModel);
+            connections.addListener(connectionEstablishedListener);
         });
 
     }

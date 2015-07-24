@@ -57,7 +57,7 @@ public class MainController {
                     HistoryControl history = new HistoryControl(newValue);
                     historyMap.put(newValue, history);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
+                    // Auto-generated catch block
                     e.printStackTrace();
                 }
             }

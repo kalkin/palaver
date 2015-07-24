@@ -2,6 +2,7 @@ package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.After;
@@ -30,7 +31,7 @@ public class CreateAccountTaskTest extends AbstractConnectionTest {
 
     @Test
     public void testAccountCreationSuccess() throws AccountCreationException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(account);
+        final CreateAccountTask createAccountTask = new CreateAccountTask(account, getObservableMap());
         final XMPPTCPConnection connection = createAccountTask.call();
         assertTrue(connection.isConnected());
         assertTrue(connection.isAuthenticated());
@@ -42,7 +43,8 @@ public class CreateAccountTaskTest extends AbstractConnectionTest {
      */
     @Test(expected = AccountCreationException.class)
     public void testAccountCreationFailure() throws AccountCreationException {
-        final CreateAccountTask createAccountTask = new CreateAccountTask(getAccount("alice.test@example.invalid", "password"));
+        final CreateAccountTask createAccountTask = new CreateAccountTask(getAccount("alice.test@example.invalid",
+                "password"), getObservableMap());
         createAccountTask.call();
     }
 }

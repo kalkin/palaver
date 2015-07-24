@@ -1,6 +1,8 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Account;
+import de.xsrc.palaver.beans.Contact;
+import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.PalaverModel;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.beans.property.ListProperty;
@@ -55,10 +57,10 @@ public class AddContactController {
             XMPPException {
 
         Account account = accountChoice.getSelectionModel().getSelectedItem();
-//		TODO Fix adding contacts
-//		Contact contact = ContactModel.getInstance().addContact(account, jid.getText());
+        final ContactModel contactModel = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
+		contactModel.subscribe(account, jid.getText());
         PalaverModel palaverModel = PalaverModel.getInstance();
-//		palaverModel.openPalaver(contact);
+		palaverModel.openPalaver(account, jid.getText());
         close();
     }
 
