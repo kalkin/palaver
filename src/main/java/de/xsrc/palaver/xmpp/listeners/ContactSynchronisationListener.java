@@ -2,7 +2,6 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.ConnectionListener;
-import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.RosterEntriesImporter;
@@ -47,26 +46,25 @@ public class ContactSynchronisationListener implements ConnectionListener {
         roster.setRosterStore(rosterStore);
     }
 
-    public static void setupRosterEntriesSynchronisation(Credentials credentials, Roster roster, ContactModel contactModel) {
-        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(credentials, contactModel);
-        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(credentials, contactModel, roster);
-        contactModel.registerRoster(credentials, roster);
+    public static void setupRosterEntriesSynchronisation(String jid, Roster roster, ContactModel contactModel) {
+        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(jid, contactModel);
+        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(jid, contactModel, roster);
+        contactModel.registerRoster(jid, roster);
         roster.getEntriesAndAddListener(palaverRosterListener, rosterEntriesImporter);
     }
 
     @Override
-    public void onChanged(MapChangeListener.Change<? extends Credentials, ? extends Connection> c) {
+    public void onChanged(MapChangeListener.Change<? extends String, ? extends Connection> c) {
         if (c.wasAdded()) {
             final XMPPConnection connection = c.getValueAdded().xmpptcpConnection;
-            final Credentials credentials = c.getKey();
+            final String jid = c.getKey();
             final Roster roster = Roster.getInstanceFor(connection);
-            final String jid = credentials.getJid();
             try {
                 setupRosterStore(WORKING_DIRECTORY + jid, roster);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            setupRosterEntriesSynchronisation(credentials, roster, contactModel);
+            setupRosterEntriesSynchronisation(jid, roster, contactModel);
 
         }
     }

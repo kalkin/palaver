@@ -69,7 +69,7 @@ public class AbstractTest {
         return credentials;
     }
 
-    protected static ObservableMap<Credentials, Connection> getObservableMap() {
+    protected static ObservableMap<String, Connection> getObservableMap() {
         return FXCollections.observableMap(new ConcurrentHashMap<>());
     }
 

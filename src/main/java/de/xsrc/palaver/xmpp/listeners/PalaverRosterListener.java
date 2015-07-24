@@ -1,6 +1,5 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.utils.Utils;
@@ -17,22 +16,22 @@ public class PalaverRosterListener implements RosterListener {
     private static final Logger logger = Logger.getLogger(PalaverRosterListener.class
             .getName());
 
-    private final Credentials credentials;
+    private final String jid;
     private final ContactModel contacts;
     private final Roster roster;
 
 
-    public PalaverRosterListener(Credentials credentials, ContactModel contactModel, Roster roster) {
-        this.credentials = credentials;
+    public PalaverRosterListener(String jid, ContactModel contactModel, Roster roster) {
+        this.jid = jid;
         this.contacts = contactModel;
         this.roster = roster;
-        logger.fine(String.format("Created RosterListener for %s", credentials.getJid()));
+        logger.fine(String.format("Created RosterListener for %s", jid));
     }
 
     @Override
     public void entriesAdded(Collection<String> addresses) {
         for (String address : addresses) {
-            logger.finer(String.format("Roster %s add %s", credentials.getJid(), address));
+            logger.finer(String.format("Roster %s add %s", jid, address));
             Contact contact = getContact(address);
             contacts.addContact(contact);
         }
@@ -46,7 +45,7 @@ public class PalaverRosterListener implements RosterListener {
     @Override
     public void entriesDeleted(Collection<String> addresses) {
         for (String address : addresses) {
-            logger.finer(String.format("Roster %s delete %s", credentials.getJid(), address));
+            logger.finer(String.format("Roster %s delete %s", jid, address));
             Contact contact = getContact(address);
             if (contact == null) {
                 return;
@@ -67,6 +66,6 @@ public class PalaverRosterListener implements RosterListener {
         if (entry == null) {
             return null;
         }
-        return Utils.createContact(credentials.getJid(), address, entry.getName(), false);
+        return Utils.createContact(jid, address, entry.getName(), false);
     }
 }

@@ -39,11 +39,11 @@ public class ContactModelTest extends AbstractTest {
         final ObservableList<Credentials> accountsList = this.credentialsList.get();
         julia = accountsList.get(0);
         initializeJuliasRoster(accountsList);
-        connection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
+            connection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         juliasRoster = Roster.getInstanceFor(connection);
 
         contactModel = new ContactModel();
-        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia, juliasRoster, contactModel);
+        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia.getJid(), juliasRoster, contactModel);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ContactModelTest extends AbstractTest {
         final ObservableList<Contact> data = contactModel.getData();
         final XMPPTCPConnection newConnection = (new ConnectTask(julia, getObservableMap())).call().xmpptcpConnection;
         final Roster roster = Roster.getInstanceFor(newConnection);
-        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia, roster, contactModel);
+        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia.getJid(), roster, contactModel);
         assertEquals(juliasRoster.getEntryCount(), data.size());
     }
 

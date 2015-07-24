@@ -12,9 +12,9 @@ import javafx.collections.ObservableMap;
 class CreateAccountTask extends org.datafx.concurrent.DataFxTask<Connection> {
 
     private final Credentials credentials;
-    private final ObservableMap<Credentials, Connection> connectionMap;
+    private final ObservableMap<String, Connection> connectionMap;
 
-    public CreateAccountTask(Credentials credentials, ObservableMap<Credentials, Connection> connectionMap) {
+    public CreateAccountTask(Credentials credentials, ObservableMap<String, Connection> connectionMap) {
         this.credentials = credentials;
         this.connectionMap = connectionMap;
     }
@@ -23,7 +23,7 @@ class CreateAccountTask extends org.datafx.concurrent.DataFxTask<Connection> {
     protected Connection call() throws AccountCreationException, ConnectionFailedException {
         Connection connection = new Connection(credentials);
         connection.register();
-        connectionMap.put(credentials, connection);
+        connectionMap.put(credentials.getJid(), connection);
         return connection;
     }
 }

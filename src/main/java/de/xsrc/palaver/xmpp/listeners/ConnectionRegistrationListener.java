@@ -2,7 +2,6 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.ConnectionListener;
-import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ConversationManager;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 
@@ -20,7 +19,7 @@ public class ConnectionRegistrationListener implements ConnectionListener {
 
 
     @Override
-    public void onChanged(Change<? extends Credentials, ? extends Connection> change) {
+    public void onChanged(Change<? extends String, ? extends Connection> change) {
         if(change.wasAdded()){
             final Connection connection = change.getValueAdded();
             connection.xmpptcpConnection.addSyncStanzaListener(new MsgListener(connection, conversationManager),

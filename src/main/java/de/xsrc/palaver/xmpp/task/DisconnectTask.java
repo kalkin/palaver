@@ -13,12 +13,12 @@ public class DisconnectTask extends DataFxTask {
             .getName());
     private final XMPPTCPConnection connection;
     private final Credentials credentials;
-    private final ObservableMap<Credentials, Connection> connections;
+    private final ObservableMap<String, Connection> connections;
 
-    public DisconnectTask(Credentials credentials, ObservableMap<Credentials, Connection> connections) {
+    public DisconnectTask(Credentials credentials, ObservableMap<String, Connection> connections) {
         this.credentials = credentials;
         this.connections = connections;
-        this.connection = connections.get(credentials).xmpptcpConnection;
+        this.connection = connections.get(credentials.getJid()).xmpptcpConnection;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class DisconnectTask extends DataFxTask {
         if (!connection.isConnected()) {
             logger.info("Successfully disconnected " + connection.getUser());
         }
-        connections.remove(credentials);
+        connections.remove(credentials.getJid());
         return connection.isConnected();
     }
 }

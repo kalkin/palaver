@@ -22,7 +22,7 @@ public class ContactModel {
 
     private final ObservableList<Contact> data = FXCollections.observableList(new CopyOnWriteArrayList<>());
 
-    private final ObservableMap<Credentials, Roster> rosterMap = FXCollections.observableMap(new
+    private final ObservableMap<String, Roster> rosterMap = FXCollections.observableMap(new
             ConcurrentHashMap<>());
 
     public ObservableList<Contact> getData() {
@@ -42,20 +42,20 @@ public class ContactModel {
         data.remove(contact);
     }
 
-    public void registerRoster(Credentials credentials, Roster roster) {
-        rosterMap.put(credentials, roster);
+    public void registerRoster(String jid, Roster roster) {
+        rosterMap.put(jid, roster);
     }
 
     public void subscribe(Credentials credentials, String jid) throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
         logger.finer("Adding " + jid + " to " + credentials.getJid() + "account");
-        final Roster roster = rosterMap.get(credentials);
+        final Roster roster = rosterMap.get(credentials.getJid());
         roster.createEntry(jid, XmppStringUtils.parseLocalpart(jid), null);
     }
 
     public void unsubscribe(Credentials credentials, String jid) throws SmackException.NotLoggedInException, XMPPException
             .XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
         logger.finer("Removing " + jid + " from " + credentials.getJid() + "account");
-        final Roster roster = rosterMap.get(credentials);
+        final Roster roster = rosterMap.get(credentials.getJid());
         final RosterEntry entry = roster.getEntry(jid);
         roster.removeEntry(entry);
     }

@@ -17,7 +17,7 @@ public class ConnectTaskTest extends AbstractTest {
 
 
     private static final Credentials CREDENTIALS = getAccount("alice.open.test@xsrc.de", "password");
-    private ObservableMap<Credentials, Connection> connectionMap;
+    private ObservableMap<String, Connection> connectionMap;
     private Connection connection;
 
     @BeforeClass
@@ -53,7 +53,7 @@ public class ConnectTaskTest extends AbstractTest {
 
     @Test
     public void connectionIsManaged() {
-        Connection connection2 = connectionMap.get(CREDENTIALS);
+        Connection connection2 = connectionMap.get(CREDENTIALS.getJid());
         assertTrue("ObservableMap contains appropriate connection", connection == connection2);
     }
 

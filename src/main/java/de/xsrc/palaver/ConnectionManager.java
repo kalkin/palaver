@@ -17,7 +17,8 @@ public class ConnectionManager {
 
     private static final Logger logger = Logger.getLogger(ConnectionManager.class.getName());
     private final ObservableExecutor executor;
-    private final ObservableMap<Credentials, Connection> connections = FXCollections.observableMap(new ConcurrentHashMap<>());
+    private final ObservableMap<String, Connection> connections = FXCollections.observableMap(new ConcurrentHashMap<>
+            ());
 
     public ConnectionManager(ObservableExecutor executor) {
         this.executor = executor;
