@@ -7,7 +7,7 @@ import de.xsrc.palaver.controller.MainController;
 import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
-import de.xsrc.palaver.provider.PalaverProvider;
+import de.xsrc.palaver.provider.ConversationProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.xmpp.Sender;
@@ -62,7 +62,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws FlowException {
         AccountProvider accountProvider = new AccountProvider();
         final ObservableExecutor executor = new ObservableExecutor();
-        final ConversationManager conversationManager = new ConversationManager(new PalaverProvider());
+        final ConversationManager conversationManager = new ConversationManager(new ConversationProvider());
         final ConnectionManager connectionManager = new ConnectionManager(executor);
         final Sender sender = new Sender(connectionManager, conversationManager);
         applicationContext.register(accountProvider);

@@ -13,11 +13,11 @@ import org.datafx.writer.WriteBackHandler;
 
 import java.util.logging.Logger;
 
-public class PalaverProvider extends ListDataProvider<Conversation> {
-    private static final Logger logger = Logger.getLogger(PalaverProvider.class
+public class ConversationProvider extends ListDataProvider<Conversation> {
+    private static final Logger logger = Logger.getLogger(ConversationProvider.class
             .getName());
 
-    public PalaverProvider() {
+    public ConversationProvider() {
         super(null, null, null);
         AppDataSource<Conversation> dr = new AppDataSource<>(Conversation.class);
         this.setDataReader(dr);
@@ -44,7 +44,7 @@ public class PalaverProvider extends ListDataProvider<Conversation> {
                     conversation.closedProperty().addListener((observable, oldValue, newValue) -> {
                         if (oldValue != newValue)
                             save();
-                    } );
+                    });
 
                     final ObservableList<HistoryEntry> historyEntries = conversation.history.entryListProperty();
                     // save when new message is added to the history
