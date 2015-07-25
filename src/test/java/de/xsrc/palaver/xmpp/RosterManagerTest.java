@@ -6,6 +6,7 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.xmpp.exception.ConnectionException;
+import de.xsrc.palaver.xmpp.exception.GeneralXmppException;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -60,7 +61,9 @@ public class RosterManagerTest extends AbstractTest {
      * @throws XMPPException.XMPPErrorException
      * @throws SmackException.NotConnectedException
      */
-    private void addMockRosterEntries(ObservableList<Credentials> accountsList) throws ConnectionException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
+    private void addMockRosterEntries(ObservableList<Credentials> accountsList) throws ConnectionException,
+            SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException,
+            SmackException.NoResponseException {
         final Connection c = new Connection(julia);
         c.open();
         final XMPPTCPConnection connection = c.xmpptcpConnection;
@@ -82,7 +85,7 @@ public class RosterManagerTest extends AbstractTest {
     }
 
     @Test
-    public void addContactNotInRoster() throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException, InterruptedException {
+    public void addContactNotInRoster() throws ConnectionException, GeneralXmppException, InterruptedException {
         String nurse = "nurse@example.com";
         rosterManager.subscribe(julia, nurse);
         Thread.sleep(100);

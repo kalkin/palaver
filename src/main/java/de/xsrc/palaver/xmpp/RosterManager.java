@@ -5,6 +5,7 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.xmpp.exception.ConnectionException;
+import de.xsrc.palaver.xmpp.exception.GeneralXmppException;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -65,12 +66,10 @@ public class RosterManager {
      *
      * @param credentials
      * @param jid
-     * @throws SmackException.NotLoggedInException
-     * @throws XMPPException.XMPPErrorException
-     * @throws SmackException.NotConnectedException
-     * @throws SmackException.NoResponseException
+     * @throws ConnectionException  if not logged in, not connected or no response from server
+     * @throw GeneralXmppException  if an XMPP exception occurs
      */
-    public void subscribe(Credentials credentials, String jid) throws ConnectionException {
+    public void subscribe(Credentials credentials, String jid) throws ConnectionException, GeneralXmppException {
         logger.finer("Adding " + jid + " to " + credentials.getJid() + "account");
         final Roster roster = rosterMap.get(credentials.getJid());
         try {
@@ -78,7 +77,7 @@ public class RosterManager {
         } catch (SmackException.NotLoggedInException | SmackException.NoResponseException | SmackException.NotConnectedException e) {
             throw new ConnectionException(e);
         } catch (XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
+            throw new GeneralXmppException(e);
         }
     }
 
@@ -86,19 +85,22 @@ public class RosterManager {
      * Removes a roster entry from the roster.
      *
      * @param contact
-     * @throws SmackException.NotLoggedInException
-     * @throws XMPPException.XMPPErrorException
-     * @throws SmackException.NotConnectedException
-     * @throws SmackException.NoResponseException
+     * @throws ConnectionException  if not logged in, not connected or no response from server
+     * @throw GeneralXmppException  if an XMPP exception occurs
      */
-    public void unsubscribe(Contact contact) throws SmackException.NotLoggedInException,
-            XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    public void unsubscribe(Contact contact) throws ConnectionException, GeneralXmppException {
         final String accountJid = contact.getAccount();
         final String jid = contact.getJid();
         logger.finer("Removing " + jid + " from " + accountJid + "account");
         final Roster roster = rosterMap.get(accountJid);
         final RosterEntry entry = roster.getEntry(jid);
-        roster.removeEntry(entry);
+        try {
+            roster.removeEntry(entry);
+        } catch (SmackException.NotLoggedInException | SmackException.NoResponseException | SmackException.NotConnectedException e) {
+            throw new ConnectionException(e);
+        } catch (XMPPException.XMPPErrorException e) {
+            throw new GeneralXmppException(e);
+        }
         contactManager.removeContact(contact);
     }
 

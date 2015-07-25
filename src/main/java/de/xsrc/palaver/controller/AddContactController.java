@@ -11,6 +11,7 @@ import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
 import de.xsrc.palaver.xmpp.exception.ConnectionException;
+import de.xsrc.palaver.xmpp.exception.GeneralXmppException;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,8 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jxmpp.util.XmppStringUtils;
 
@@ -60,7 +59,7 @@ public class AddContactController {
     }
 
     @FXML
-    private void addContactAction() throws ConnectionException, BookmarkException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    private void addContactAction() throws ConnectionException, BookmarkException, GeneralXmppException {
 
         final Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
         final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);

@@ -1,6 +1,8 @@
 package de.xsrc.palaver.utils;
 
 import de.xsrc.palaver.beans.Conversation;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
+import de.xsrc.palaver.xmpp.exception.GeneralXmppException;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -95,10 +97,25 @@ public class Utils {
     }
 
 
-    public static boolean isMuc(XMPPConnection xmpptcpConnection, String jid) throws SmackException.NotConnectedException,
-            XMPPException.XMPPErrorException, SmackException.NoResponseException {
+    /**
+     * Checks if the given jid is a Multi User Conference
+     *
+     * @param xmpptcpConnection
+     * @param jid
+     * @return
+     * @throws ConnectionException if not logged in, not connected or no response from server
+     * @throw GeneralXmppException  if an XMPP exception occurs
+     */
+    public static boolean isMuc(XMPPConnection xmpptcpConnection, String jid) throws ConnectionException, GeneralXmppException {
         final ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(xmpptcpConnection);
-        final DiscoverInfo info = discoManager.discoverInfo(XmppStringUtils.parseDomain(jid));
+        final DiscoverInfo info;
+        try {
+            info = discoManager.discoverInfo(XmppStringUtils.parseDomain(jid));
+        } catch (SmackException.NoResponseException | SmackException.NotConnectedException e) {
+            throw new ConnectionException(e);
+        } catch (XMPPException.XMPPErrorException e) {
+            throw new GeneralXmppException(e);
+        }
         return info.containsFeature("http://jabber.org/protocol/muc");
     }
 

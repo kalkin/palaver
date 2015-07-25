@@ -11,6 +11,7 @@ import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
 import de.xsrc.palaver.xmpp.exception.ConnectionException;
+import de.xsrc.palaver.xmpp.exception.GeneralXmppException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,9 +31,6 @@ import org.datafx.controller.flow.action.ActionTrigger;
 import org.datafx.controller.flow.action.BackAction;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.util.VetoException;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.logging.Logger;
@@ -122,7 +120,7 @@ public class ContactController {
 
     @FXML
     @ActionMethod("startPalaverAction")
-    public void startPalaverAction() throws VetoException, FlowException, XMPPException.XMPPErrorException, SmackException {
+    public void startPalaverAction() {
         Contact buddy = contactListView.getSelectionModel().getSelectedItems().get(0);
         if (buddy != null) {
             logger.fine("Starting palaver with " + buddy.getJid());
@@ -141,7 +139,7 @@ public class ContactController {
     }
 
     @FXML
-    private void deleteContactAction() throws SmackException, XMPPException, ConnectionException, BookmarkException {
+    private void deleteContactAction() throws ConnectionException, GeneralXmppException, BookmarkException {
         final Contact contact = contactListView.getSelectionModel().getSelectedItems().get(0);
         final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
         final String account = contact.getAccount();
