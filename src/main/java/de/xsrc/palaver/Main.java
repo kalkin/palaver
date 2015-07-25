@@ -72,7 +72,7 @@ public class Main extends Application {
         applicationContext.register(accountProvider);
         applicationContext.register(executor);
         applicationContext.register(connections);
-        applicationContext.register(rosterManager);
+        applicationContext.register(contactManager);
         applicationContext.register(conversationManager);
 
 
