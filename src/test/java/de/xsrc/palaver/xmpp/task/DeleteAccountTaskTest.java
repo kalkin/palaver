@@ -3,10 +3,9 @@ package de.xsrc.palaver.xmpp.task;
 import de.xsrc.palaver.AbstractTest;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.xmpp.exception.AccountCreationException;
-import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.*;
+import de.xsrc.palaver.xmpp.exception.AuthenticationException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.embed.swing.JFXPanel;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -26,7 +25,7 @@ public class DeleteAccountTaskTest extends AbstractTest {
     }
 
     @Before
-    public void createAccount() throws ConnectionFailedException, AccountCreationException {
+    public void createAccount() throws ConnectionException, AccountCreationException {
         credentials = getMockCredentials();
         final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         connection = createAccountTask.call();
@@ -39,14 +38,14 @@ public class DeleteAccountTaskTest extends AbstractTest {
     }
 
     @Test
-    public void testDeletion() throws AccountDeletionException, ConnectionFailedException {
+    public void testDeletion() throws AccountDeletionException, ConnectionException {
         new DeleteAccountTask(credentials).call();
-        exception.expect(AuthenticationFailedException.class);
+        exception.expect(AuthenticationException.class);
         (new ConnectTask(credentials, getObservableMap())).call();
     }
 
     @Test
-    public void connectionShouldBeDisconnected() throws AccountDeletionException, ConnectionFailedException {
+    public void connectionShouldBeDisconnected() throws AccountDeletionException, ConnectionException {
         new DeleteAccountTask(connection).call();
         assertFalse("The connection should be disconnected", connection.xmpptcpConnection.isConnected());
 

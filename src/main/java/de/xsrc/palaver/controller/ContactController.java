@@ -10,7 +10,7 @@ import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -141,7 +141,7 @@ public class ContactController {
     }
 
     @FXML
-    private void deleteContactAction() throws SmackException, XMPPException, ConnectionFailedException, BookmarkException {
+    private void deleteContactAction() throws SmackException, XMPPException, ConnectionException, BookmarkException {
         final Contact contact = contactListView.getSelectionModel().getSelectedItems().get(0);
         final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
         final String account = contact.getAccount();

@@ -4,6 +4,7 @@ import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -16,7 +17,6 @@ import org.jivesoftware.smack.roster.rosterstore.DirectoryRosterStore;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -45,14 +45,14 @@ public class RosterManager {
      *
      * @param path path to directory where data is/should be stored
      */
-    protected void setupRosterStore(String path, Roster roster) throws IOException {
+    protected void setupRosterStore(String path, Roster roster) {
         final File dir = new File(path);
         final DirectoryRosterStore rosterStore;
         if (!dir.exists()) {
             if (dir.mkdirs()) {
                 rosterStore = DirectoryRosterStore.init(dir);
             } else {
-                throw new IOException("Could not create roster directory");
+                throw new RuntimeException("Can't create DirectoryRoster store in path " + path);
             }
         } else {
             rosterStore = DirectoryRosterStore.open(dir);
@@ -70,11 +70,16 @@ public class RosterManager {
      * @throws SmackException.NotConnectedException
      * @throws SmackException.NoResponseException
      */
-    public void subscribe(Credentials credentials, String jid) throws SmackException.NotLoggedInException,
-            XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    public void subscribe(Credentials credentials, String jid) throws ConnectionException {
         logger.finer("Adding " + jid + " to " + credentials.getJid() + "account");
         final Roster roster = rosterMap.get(credentials.getJid());
-        roster.createEntry(jid, XmppStringUtils.parseLocalpart(jid), null);
+        try {
+            roster.createEntry(jid, XmppStringUtils.parseLocalpart(jid), null);
+        } catch (SmackException.NotLoggedInException | SmackException.NoResponseException | SmackException.NotConnectedException e) {
+            throw new ConnectionException(e);
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -110,11 +115,8 @@ public class RosterManager {
         final Roster roster = Roster.getInstanceFor(xmppConnection);
         final String jid = credentials.getJid();
         final String rosterPath = this.path + credentials.getJid();
-        try {
             setupRosterStore(rosterPath, roster);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create DirectoryRoster store in path " + rosterPath, e);
-        }
+
         final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(jid, contactManager);
         final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(jid, contactManager, roster);
         rosterMap.put(credentials.getJid(), roster);

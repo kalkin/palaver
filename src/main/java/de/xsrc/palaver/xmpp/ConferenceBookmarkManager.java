@@ -5,7 +5,7 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -38,10 +38,10 @@ public class ConferenceBookmarkManager {
      * Add conference bookmark to the server and to {@link ContactManager}
      *
      * @param contact  Conference to add
-     * @throws ConnectionFailedException is thrown when connection is not authenticated
+     * @throws ConnectionException is thrown when connection is not authenticated
      * @throws BookmarkException is thrown when something else gone wrong, probably server side
      */
-    public void addBookmark(Contact contact) throws ConnectionFailedException, BookmarkException {
+    public void addBookmark(Contact contact) throws ConnectionException, BookmarkException {
         logger.fine("Add conference bookmark " + contact);
         if(!contact.isConference())
             throw new BookmarkException("Contact not a conference " + contact);
@@ -68,10 +68,10 @@ public class ConferenceBookmarkManager {
      * Registers a {@link Connection} so the {@link BookmarkManager} starts synchronisation and is able to add and
      * remove bookmarked conferences for this {@link Connection#credentials}.
      * @param connection
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      * @throws BookmarkException
      */
-    public void registerConnection(Connection connection) throws ConnectionFailedException, BookmarkException {
+    public void registerConnection(Connection connection) throws ConnectionException, BookmarkException {
         logger.finer("Register connection " + connection.getCredentials().getJid());
         final XMPPTCPConnection xmpptcpConnection = connection.xmpptcpConnection;
         final Credentials credentials = connection.getCredentials();
@@ -85,10 +85,10 @@ public class ConferenceBookmarkManager {
      *
      * @param jid
      * @param xmpptcpConnection
-     * @throws ConnectionFailedException is thrown when connection is not authenticated
+     * @throws ConnectionException is thrown when connection is not authenticated
      * @throws BookmarkException is thrown when something else gone wrong, probably server side
      */
-    protected void syncBookmarks(String jid, XMPPTCPConnection xmpptcpConnection) throws ConnectionFailedException, BookmarkException {
+    protected void syncBookmarks(String jid, XMPPTCPConnection xmpptcpConnection) throws ConnectionException, BookmarkException {
         logger.finer("Sync conference bookmarks for " + jid);
         final BookmarkManager bookmarkManager = getBookmarkManager(xmpptcpConnection);
         final List<BookmarkedConference> bookmarkedConferences;
@@ -116,15 +116,15 @@ public class ConferenceBookmarkManager {
      *
      * @param xmpptcpConnection
      * @return BookmarkManager for the given connection
-     * @throws ConnectionFailedException is thrown when connection is not authenticated
+     * @throws ConnectionException is thrown when connection is not authenticated
      * @throws BookmarkException is thrown when something else gone wrong, probably server side
      */
-    private BookmarkManager getBookmarkManager(XMPPTCPConnection xmpptcpConnection) throws ConnectionFailedException, BookmarkException {
+    private BookmarkManager getBookmarkManager(XMPPTCPConnection xmpptcpConnection) throws ConnectionException, BookmarkException {
         BookmarkManager bookmarkManager;
         try {
             bookmarkManager = BookmarkManager.getBookmarkManager(xmpptcpConnection);
         } catch (SmackException e) {
-            throw new ConnectionFailedException("Connection " + xmpptcpConnection + " not authenticated", e);
+            throw new ConnectionException("Connection " + xmpptcpConnection + " not authenticated", e);
         } catch (XMPPException e) {
             throw new BookmarkException(e);
         }
@@ -135,10 +135,10 @@ public class ConferenceBookmarkManager {
      * Delete conference bookmark on the server and remove from {@link ContactManager}
      *
      * @param contact The conference to delete
-     * @throws ConnectionFailedException is thrown when connection is not registered
+     * @throws ConnectionException is thrown when connection is not registered
      * @throws BookmarkException is thrown when something else gone wrong, probably server side
      */
-    public void deleteBookmark(Contact contact) throws ConnectionFailedException, BookmarkException {
+    public void deleteBookmark(Contact contact) throws ConnectionException, BookmarkException {
         logger.fine("Delete conference bookmark " + contact);
         if(!contact.isConference())
             throw new BookmarkException("Contact not a conference " + contact);
@@ -146,7 +146,7 @@ public class ConferenceBookmarkManager {
         final String conferenceJid = contact.getJid();
         final XMPPTCPConnection xmppConnection = connectionMap.get(accountJid);
         if (xmppConnection == null)
-            throw new ConnectionFailedException(accountJid + " is not connected");
+            throw new ConnectionException(accountJid + " is not connected");
 
         try {
             final BookmarkManager bookmarkManager = getBookmarkManager(xmppConnection);

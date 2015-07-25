@@ -10,7 +10,7 @@ import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -60,7 +60,7 @@ public class AddContactController {
     }
 
     @FXML
-    private void addContactAction() throws ConnectionFailedException, BookmarkException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
+    private void addContactAction() throws ConnectionException, BookmarkException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
 
         final Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
         final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);

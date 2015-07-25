@@ -15,7 +15,7 @@ import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.Sender;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
 import de.xsrc.palaver.xmpp.listeners.ConnectionRegistrationListener;
 import de.xsrc.palaver.xmpp.listeners.RosterSynchronisationListener;
@@ -80,7 +80,7 @@ public class Main extends Application {
             if (change.wasAdded()) {
                 try {
                     conferenceBookmarkManager.registerConnection(change.getValueAdded());
-                } catch (ConnectionFailedException | BookmarkException e) {
+                } catch (ConnectionException | BookmarkException e) {
                     e.printStackTrace();
                 }
             }

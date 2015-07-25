@@ -4,7 +4,7 @@ import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -23,7 +23,7 @@ public class AbstractTest {
             final Credentials credentials = getMockCredentials();
             try {
                 registerMockAccount(credentials);
-            } catch (ConnectionFailedException | AccountCreationException e) {
+            } catch (ConnectionException | AccountCreationException e) {
                 e.printStackTrace();
                 // Clean up
                 removeMockAccounts(credentialsList);
@@ -34,7 +34,7 @@ public class AbstractTest {
         return credentialsList;
     }
 
-    protected static void registerMockAccount(Credentials credentials) throws ConnectionFailedException,
+    protected static void registerMockAccount(Credentials credentials) throws ConnectionException,
             AccountCreationException {
         final Connection connection = new Connection(credentials);
         connection.register();
@@ -55,7 +55,7 @@ public class AbstractTest {
         final Connection connection = new Connection(credentials);
         try {
             connection.delete();
-        } catch (AccountDeletionException | ConnectionFailedException e) {
+        } catch (AccountDeletionException | ConnectionException e) {
             e.printStackTrace();
         } finally {
             connection.close();

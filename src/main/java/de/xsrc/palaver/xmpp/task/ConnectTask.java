@@ -2,7 +2,7 @@ package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.collections.ObservableMap;
 
 public class ConnectTask extends org.datafx.concurrent.DataFxTask<Connection> {
@@ -19,7 +19,7 @@ public class ConnectTask extends org.datafx.concurrent.DataFxTask<Connection> {
 
 
     @Override
-    protected Connection call() throws ConnectionFailedException {
+    protected Connection call() throws ConnectionException {
         Connection connection = new Connection(credentials);
         connection.open();
         connectionMap.put(credentials.getJid(), connection);

@@ -8,7 +8,7 @@ import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -32,7 +32,7 @@ public class ConferenceBookmarkManagerTest extends AbstractTest {
     private ConferenceBookmarkManager conferenceBookmarkManager;
 
     @Before
-    public void setUp() throws XMPPException, ConnectionFailedException, SmackException, BookmarkException {
+    public void setUp() throws XMPPException, ConnectionException, SmackException, BookmarkException {
         contactManager = new ContactManager();
         conferenceBookmarkManager = new ConferenceBookmarkManager(contactManager);
         credentials = createMockAccounts(1).get(0);
@@ -56,7 +56,7 @@ public class ConferenceBookmarkManagerTest extends AbstractTest {
      * This tests if all bookmarked conferences are synced to {@link de.xsrc.palaver.models.ContactManager} properly.
      */
     @Test
-    public void addConferenceBookmark() throws ConnectionFailedException, BookmarkException, XMPPException, SmackException {
+    public void addConferenceBookmark() throws ConnectionException, BookmarkException, XMPPException, SmackException {
         conferenceBookmarkManager.addBookmark(getMockConferenceContact());
         final BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection.xmpptcpConnection);
 //        Thread.sleep(1000);
@@ -65,7 +65,7 @@ public class ConferenceBookmarkManagerTest extends AbstractTest {
     }
 
     @Test
-    public void removeConferenceBookmark() throws ConnectionFailedException, BookmarkException, XMPPException, SmackException {
+    public void removeConferenceBookmark() throws ConnectionException, BookmarkException, XMPPException, SmackException {
         final Contact contact = contactManager.getData().stream().findFirst().get();
         conferenceBookmarkManager.deleteBookmark(contact);
         assertEquals(AMOUNT_BOOKMARKED_CONFERENCES - 1, contactManager.getData().size());
@@ -75,7 +75,7 @@ public class ConferenceBookmarkManagerTest extends AbstractTest {
 
 
 
-    private void createBookmarks(Credentials credentials, int amount) throws ConnectionFailedException, XMPPException, SmackException {
+    private void createBookmarks(Credentials credentials, int amount) throws ConnectionException, XMPPException, SmackException {
         final Connection connection = new Connection(credentials);
         connection.open();
         final XMPPTCPConnection xmpptcpConnection = connection.xmpptcpConnection;
@@ -100,7 +100,7 @@ public class ConferenceBookmarkManagerTest extends AbstractTest {
     }
 
     @After
-    public void tearDown() throws ConnectionFailedException, AccountDeletionException {
+    public void tearDown() throws ConnectionException, AccountDeletionException {
         connection.delete();
     }
 }

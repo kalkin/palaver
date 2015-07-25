@@ -5,7 +5,7 @@ import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.junit.After;
@@ -20,12 +20,12 @@ public class CreateAccountTaskTest extends AbstractTest {
     private Connection connection;
 
     @After
-    public void cleanUpAccounts() throws ConnectionFailedException, AccountDeletionException {
+    public void cleanUpAccounts() throws ConnectionException, AccountDeletionException {
         connection.delete();
     }
 
     @Before
-    public void createAccount() throws ConnectionFailedException, AccountCreationException {
+    public void createAccount() throws ConnectionException, AccountCreationException {
         new JFXPanel(); // Initialize JFX :)
         credentials = getMockCredentials();
         final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
@@ -33,7 +33,7 @@ public class CreateAccountTaskTest extends AbstractTest {
     }
 
     @Test
-    public void testAccountCreationSuccess() throws AccountCreationException, ConnectionFailedException {
+    public void testAccountCreationSuccess() throws AccountCreationException, ConnectionException {
         XMPPTCPConnection xmpptcpConnection = connection.xmpptcpConnection;
         assertTrue(xmpptcpConnection.isConnected());
         assertTrue(xmpptcpConnection.isAuthenticated());
@@ -43,7 +43,7 @@ public class CreateAccountTaskTest extends AbstractTest {
      * Expects AccountCreationException to be thrown
      */
     @Test(expected = AccountCreationException.class)
-    public void testAccountCreationFailure() throws AccountCreationException, ConnectionFailedException {
+    public void testAccountCreationFailure() throws AccountCreationException, ConnectionException {
         final CreateAccountTask createAccountTask = new CreateAccountTask(credentials, getObservableMap());
         createAccountTask.call();
     }

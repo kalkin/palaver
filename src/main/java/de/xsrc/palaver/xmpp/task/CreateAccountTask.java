@@ -3,7 +3,7 @@ package de.xsrc.palaver.xmpp.task;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.collections.ObservableMap;
 
 /**
@@ -20,7 +20,7 @@ class CreateAccountTask extends org.datafx.concurrent.DataFxTask<Connection> {
     }
 
     @Override
-    protected Connection call() throws AccountCreationException, ConnectionFailedException {
+    protected Connection call() throws AccountCreationException, ConnectionException {
         Connection connection = new Connection(credentials);
         connection.register();
         connectionMap.put(credentials.getJid(), connection);

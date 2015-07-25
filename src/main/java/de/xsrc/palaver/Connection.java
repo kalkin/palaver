@@ -3,8 +3,8 @@ package de.xsrc.palaver;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.AuthenticationFailedException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.AuthenticationException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -43,7 +43,7 @@ public class Connection {
     }
 
     private static XMPPTCPConnectionConfiguration.Builder getConfigurationBuilder(String serviceName) throws
-            ConnectionFailedException {
+            ConnectionException {
         final XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
         SSLContext context;
         try {
@@ -53,7 +53,7 @@ public class Connection {
             builder.setResource("palaver");
             return builder;
         } catch (SSLException e) {
-            throw new ConnectionFailedException(e.getMessage(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
 
 
@@ -97,9 +97,9 @@ public class Connection {
      *
      * @param serviceName XMPP Server to open to
      * @return configured {@link XMPPTCPConnection}
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      */
-    private XMPPTCPConnection getConnection(String serviceName) throws ConnectionFailedException {
+    private XMPPTCPConnection getConnection(String serviceName) throws ConnectionException {
         XMPPTCPConnectionConfiguration.Builder builder = getConfigurationBuilder(serviceName);
         final XMPPTCPConnectionConfiguration configuration = builder.build();
         XMPPTCPConnection xmppConnection = new XMPPTCPConnection(configuration);
@@ -109,7 +109,7 @@ public class Connection {
         } catch (SmackException | IOException | XMPPException e) {
             final String message = String.format("Connection to serviceName %s failed", serviceName);
             logger.severe(message);
-            throw new ConnectionFailedException(message, e);
+            throw new ConnectionException(message, e);
         }
         return xmppConnection;
     }
@@ -117,9 +117,9 @@ public class Connection {
     /**
      * Opens protocol session
      *
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      */
-    public void open() throws ConnectionFailedException {
+    public void open() throws ConnectionException {
         final String serviceName = getServiceName();
         XMPPTCPConnection xmppConnection = getConnection(serviceName);
         establishConnection(this.credentials, xmppConnection);
@@ -133,10 +133,10 @@ public class Connection {
     /**
      * Registers an account on the remote server
      *
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      * @throws AccountCreationException
      */
-    public void register() throws AccountCreationException, ConnectionFailedException {
+    public void register() throws AccountCreationException, ConnectionException {
         final String serviceName = getServiceName();
         XMPPTCPConnection xmppConnection = getConnection(serviceName);
         logger.finer("Registering account for " + credentials.getJid());
@@ -153,10 +153,10 @@ public class Connection {
      * Deletes an account on the remote server. If successful or connection was closed previously it will close the
      * disconnect from server
      *
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      * @throws AccountDeletionException
      */
-    public void delete() throws ConnectionFailedException, AccountDeletionException {
+    public void delete() throws ConnectionException, AccountDeletionException {
         boolean wasClosed = false;
         logger.fine("Deleting account for " + credentials.getJid());
         if (xmpptcpConnection == null) {
@@ -181,10 +181,10 @@ public class Connection {
     /**
      * Enables Stream Management, authenticates the user and enables Carbons.
      *
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      */
     private void establishConnection(Credentials credentials, XMPPTCPConnection xmppConnection) throws
-            ConnectionFailedException {
+            ConnectionException {
         enableSM(xmppConnection);
         login(credentials, xmppConnection);
         enableCarbons(xmppConnection);
@@ -214,7 +214,7 @@ public class Connection {
         }
     }
 
-    private void login(Credentials credentials, XMPPTCPConnection xmppConnection) throws AuthenticationFailedException {
+    private void login(Credentials credentials, XMPPTCPConnection xmppConnection) throws AuthenticationException {
         final String username = XmppStringUtils.parseLocalpart(credentials.getJid());
         final String password = credentials.getPassword();
         try {
@@ -225,7 +225,7 @@ public class Connection {
         } catch (XMPPException | IOException | SmackException e) {
             final String message = String.format("Authentication for account %s failed", credentials);
             logger.severe(message);
-            throw new AuthenticationFailedException(message, e);
+            throw new AuthenticationException(message, e);
         }
     }
 

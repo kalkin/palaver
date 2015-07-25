@@ -5,7 +5,7 @@ import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -54,13 +54,13 @@ public class RosterManagerTest extends AbstractTest {
      * Adds mock roster entries to julias roster.
      *
      * @param accountsList Accounts to add to juliasRoster
-     * @throws ConnectionFailedException
+     * @throws ConnectionException
      * @throws SmackException.NotLoggedInException
      * @throws SmackException.NoResponseException
      * @throws XMPPException.XMPPErrorException
      * @throws SmackException.NotConnectedException
      */
-    private void addMockRosterEntries(ObservableList<Credentials> accountsList) throws ConnectionFailedException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
+    private void addMockRosterEntries(ObservableList<Credentials> accountsList) throws ConnectionException, SmackException.NotLoggedInException, SmackException.NoResponseException, XMPPException.XMPPErrorException, SmackException.NotConnectedException {
         final Connection c = new Connection(julia);
         c.open();
         final XMPPTCPConnection connection = c.xmpptcpConnection;

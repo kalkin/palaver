@@ -3,7 +3,7 @@ package de.xsrc.palaver.xmpp.task;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 28.06.15.
@@ -22,7 +22,7 @@ class DeleteAccountTask extends org.datafx.concurrent.DataFxTask<Connection> {
     }
 
     @Override
-    protected Connection call() throws AccountDeletionException, ConnectionFailedException {
+    protected Connection call() throws AccountDeletionException, ConnectionException {
         connection.delete();
         return connection;
     }

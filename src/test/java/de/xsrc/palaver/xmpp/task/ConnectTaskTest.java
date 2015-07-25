@@ -5,7 +5,7 @@ import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.xmpp.exception.AccountCreationException;
 import de.xsrc.palaver.xmpp.exception.AccountDeletionException;
-import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
+import de.xsrc.palaver.xmpp.exception.ConnectionException;
 import javafx.collections.ObservableMap;
 import javafx.embed.swing.JFXPanel;
 import org.jivesoftware.smackx.carbons.CarbonManager;
@@ -21,7 +21,7 @@ public class ConnectTaskTest extends AbstractTest {
     private Connection connection;
 
     @BeforeClass
-    public static void createAccount() throws AccountCreationException, ConnectionFailedException {
+    public static void createAccount() throws AccountCreationException, ConnectionException {
         new JFXPanel(); // Initialize JFX :)
         final CreateAccountTask createAccountTask = new CreateAccountTask(CREDENTIALS, getObservableMap());
         createAccountTask.call().close();
@@ -29,13 +29,13 @@ public class ConnectTaskTest extends AbstractTest {
     }
 
     @AfterClass
-    public static void deleteAccount() throws AccountDeletionException, ConnectionFailedException {
+    public static void deleteAccount() throws AccountDeletionException, ConnectionException {
         DeleteAccountTask task = new DeleteAccountTask(CREDENTIALS);
         task.call();
     }
 
     @Before
-    public void connect() throws ConnectionFailedException {
+    public void connect() throws ConnectionException {
         connectionMap = getObservableMap();
         connection = (new ConnectTask(CREDENTIALS, connectionMap)).call();
     }
@@ -71,10 +71,10 @@ public class ConnectTaskTest extends AbstractTest {
     }
 
     /**
-     * Expects ConnectionFailedException to be thrown
+     * Expects ConnectionException to be thrown
      */
-    @Test(expected = ConnectionFailedException.class)
-    public void testConnectionFailed() throws AccountCreationException, ConnectionFailedException {
+    @Test(expected = ConnectionException.class)
+    public void testConnectionFailed() throws AccountCreationException, ConnectionException {
         final CreateAccountTask createAccountTask = new CreateAccountTask(getAccount("alice.create.test@example" +
                 ".invalid", "password"), getObservableMap());
         createAccountTask.call();
