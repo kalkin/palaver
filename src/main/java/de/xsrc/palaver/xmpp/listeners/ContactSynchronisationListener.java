@@ -2,7 +2,7 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.ConnectionListener;
-import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.RosterEntriesImporter;
 import javafx.collections.MapChangeListener;
@@ -19,10 +19,10 @@ import java.io.IOException;
 public class ContactSynchronisationListener implements ConnectionListener {
 
     private static final String WORKING_DIRECTORY = Utils.getConfigDirectory() + "/roster/";
-    private final ContactModel contactModel;
+    private final ContactManager contactManager;
 
-    public ContactSynchronisationListener(ContactModel contactModel) {
-        this.contactModel = contactModel;
+    public ContactSynchronisationListener(ContactManager contactManager) {
+        this.contactManager = contactManager;
     }
 
     /**
@@ -46,10 +46,10 @@ public class ContactSynchronisationListener implements ConnectionListener {
         roster.setRosterStore(rosterStore);
     }
 
-    public static void setupRosterEntriesSynchronisation(String jid, Roster roster, ContactModel contactModel) {
-        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(jid, contactModel);
-        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(jid, contactModel, roster);
-        contactModel.registerRoster(jid, roster);
+    public static void setupRosterEntriesSynchronisation(String jid, Roster roster, ContactManager contactManager) {
+        final RosterEntriesImporter rosterEntriesImporter = new RosterEntriesImporter(jid, contactManager);
+        final PalaverRosterListener palaverRosterListener = new PalaverRosterListener(jid, contactManager, roster);
+        contactManager.registerRoster(jid, roster);
         roster.getEntriesAndAddListener(palaverRosterListener, rosterEntriesImporter);
     }
 
@@ -64,7 +64,7 @@ public class ContactSynchronisationListener implements ConnectionListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            setupRosterEntriesSynchronisation(jid, roster, contactModel);
+            setupRosterEntriesSynchronisation(jid, roster, contactManager);
 
         }
     }

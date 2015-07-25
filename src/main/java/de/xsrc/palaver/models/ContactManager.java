@@ -18,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 // Crosspoint between view, smack and ContactProvider (file backend)
-public class ContactModel {
-    private static final Logger logger = Logger.getLogger(ContactModel.class
+public class ContactManager {
+    private static final Logger logger = Logger.getLogger(ContactManager.class
             .getName());
 
     private final ObservableSet<Contact> data = FXCollections.observableSet(new HashSet<>());

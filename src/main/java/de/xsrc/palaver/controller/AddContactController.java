@@ -1,7 +1,7 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
 import javafx.beans.property.ListProperty;
@@ -56,8 +56,8 @@ public class AddContactController {
             XMPPException {
 
         Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
-        final ContactModel contactModel = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
-        contactModel.subscribe(credentials, jid.getText());
+        final ContactManager contactManager = ApplicationContext.getInstance().getRegisteredObject(ContactManager.class);
+        contactManager.subscribe(credentials, jid.getText());
         final ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject(ConversationManager.class);
         conversationManager.openConversation(credentials.getJid(), jid.getText(), false);
         close();

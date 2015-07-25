@@ -23,12 +23,12 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Bahtiar `kalkin-` Gadimov on 01.07.15.
  */
-public class ContactModelTest extends AbstractTest {
+public class ContactManagerTest extends AbstractTest {
 
     private ListProperty<Credentials> credentialsList;
     private Credentials julia;
     private Roster juliasRoster;
-    private ContactModel contactModel;
+    private ContactManager contactManager;
     private XMPPTCPConnection xmpptcpConnection;
 
     @Before
@@ -43,8 +43,8 @@ public class ContactModelTest extends AbstractTest {
         initializeJuliasRoster(accountsList);
         juliasRoster = Roster.getInstanceFor(xmpptcpConnection);
 
-        contactModel = new ContactModel();
-        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia.getJid(), juliasRoster, contactModel);
+        contactManager = new ContactManager();
+        ContactSynchronisationListener.setupRosterEntriesSynchronisation(julia.getJid(), juliasRoster, contactManager);
     }
 
     /**
@@ -71,19 +71,19 @@ public class ContactModelTest extends AbstractTest {
     }
 
     /**
-     * Test if the ContactModel adds all the initial RosterEntries, added on the server side
+     * Test if the ContactManager adds all the initial RosterEntries, added on the server side
      */
     @Test
     public void initialRosterEntriesSynchronisation() {
-        assertEquals(juliasRoster.getEntryCount(), contactModel.getData().size());
+        assertEquals(juliasRoster.getEntryCount(), contactManager.getData().size());
     }
 
     @Test
     public void addContactNotInRoster() throws SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException, InterruptedException {
         String nurse = "nurse@example.com";
-        contactModel.subscribe(julia, nurse);
+        contactManager.subscribe(julia, nurse);
         Thread.sleep(100);
-        final ObservableList<Contact> data = contactModel.getData();
+        final ObservableList<Contact> data = contactManager.getData();
         assertEquals(data.size(), juliasRoster.getEntryCount());
     }
 

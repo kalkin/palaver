@@ -4,7 +4,7 @@ package de.xsrc.palaver;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
-import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ConversationProvider;
@@ -51,7 +51,7 @@ public class Main extends Application {
     private final ApplicationContext applicationContext = ApplicationContext.getInstance();
     private final ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
             ConcurrentHashMap<>());
-    private final ContactModel contactModel = new ContactModel();
+    private final ContactManager contactManager = new ContactManager();
 
     public static void main(String[] args) {
 
@@ -68,7 +68,7 @@ public class Main extends Application {
         applicationContext.register(accountProvider);
         applicationContext.register(executor);
         applicationContext.register(connections);
-        applicationContext.register(contactModel);
+        applicationContext.register(contactManager);
         applicationContext.register(conversationManager);
 
 
@@ -85,7 +85,7 @@ public class Main extends Application {
         primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
         Platform.runLater(() -> {
             accountProvider.retrieve();
-            final ContactSynchronisationListener contactSynchronisationListener = new ContactSynchronisationListener(contactModel);
+            final ContactSynchronisationListener contactSynchronisationListener = new ContactSynchronisationListener(contactManager);
             final ConnectionRegistrationListener connectionRegistrationListener = new ConnectionRegistrationListener(conversationManager);
             connectionManager.addConnectionEstablishedListener(contactSynchronisationListener);
             connectionManager.addConnectionEstablishedListener(connectionRegistrationListener);
