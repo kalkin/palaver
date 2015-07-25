@@ -1,4 +1,4 @@
-package de.xsrc.palaver.xmpp;
+package de.xsrc.palaver.models;
 
 import de.svenjacobs.loremipsum.LoremIpsum;
 import de.xsrc.palaver.AbstractTest;
