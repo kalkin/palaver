@@ -68,7 +68,7 @@ public class MsgListener implements StanzaListener {
             receiverJid = fromJid;
         }
 
-        return conversationManager.getConversation(accountJid, receiverJid, false);
+        return conversationManager.openConversation(accountJid, receiverJid, false);
     }
 
 

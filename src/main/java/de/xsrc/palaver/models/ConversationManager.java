@@ -94,7 +94,7 @@ public class ConversationManager extends ListDataProvider<Conversation>{
      * @param conference   true if conference
      * @return A new or restored {@link Conversation}
      */
-    public Conversation getConversation(String accountJid, String recipientJid, boolean conference) {
+    public Conversation openConversation(String accountJid, String recipientJid, boolean conference) {
         String id = getConversationId(accountJid, recipientJid);
         if (contains(id)) {
             logger.fine(String.format("Restoring conversation for %s ", id));
@@ -111,15 +111,15 @@ public class ConversationManager extends ListDataProvider<Conversation>{
         }
     }
 
+    /**
+     * Restores an already existing {@link Conversation} or creates a new.
+     * @param contact with whom to start a conversation
+     * @return
+     */
     public Conversation openConversation(Contact contact) {
-        return getConversation(contact.getAccount(), contact.getJid(), contact.isConference());
+        return openConversation(contact.getAccount(), contact.getJid(), contact.isConference());
     }
 
-
-    public Conversation openConversation(String accountJid, String jid, boolean conference) {
-        return getConversation(accountJid, jid, conference);
-
-    }
 
     /**
      * Helper method to calculate the id of an Conversation. See also {@link Conversation#getId()}.
