@@ -27,6 +27,20 @@ public class ContactManager {
     private final ObservableMap<String, Roster> rosterMap = FXCollections.observableMap(new
             ConcurrentHashMap<>());
 
+    public static Contact createContact(String account, String jid, String name, Boolean conference) {
+        Contact contact = new Contact();
+        contact.setAccount(account);
+        contact.setJid(jid);
+        if (name != null && name.length() > 0) {
+            contact.setName(name);
+        } else {
+            contact.setName(XmppStringUtils.parseLocalpart(contact.getJid()));
+        }
+        if (conference) {
+            contact.setConference(true);
+        }
+        return contact;
+    }
     public ObservableList<Contact> getData() {
         final LinkedList<Contact> contactLinkedList = new LinkedList<>(data);
         return FXCollections.observableList(contactLinkedList);

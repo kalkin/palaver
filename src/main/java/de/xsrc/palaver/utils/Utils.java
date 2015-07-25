@@ -1,6 +1,5 @@
 package de.xsrc.palaver.utils;
 
-import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Conversation;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -103,22 +102,6 @@ public class Utils {
 
     public static MultiUserChat getMuc(Conversation conversation) {
         return getJoinedMucs().get(conversation.getId());
-    }
-
-
-    public static Contact createContact(String account, String jid, String name, Boolean conference) {
-        Contact contact = new Contact();
-        contact.setAccount(account);
-        contact.setJid(jid);
-        if (name != null && name.length() > 0) {
-            contact.setName(name);
-        } else {
-            contact.setName(XmppStringUtils.parseLocalpart(contact.getJid()));
-        }
-        if (conference) {
-            contact.setConference(true);
-        }
-        return contact;
     }
 
     public static ConcurrentHashMap<String, MultiUserChat> getJoinedMucs() {

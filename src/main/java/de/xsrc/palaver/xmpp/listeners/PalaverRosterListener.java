@@ -2,7 +2,6 @@ package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactManager;
-import de.xsrc.palaver.utils.Utils;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -66,6 +65,6 @@ public class PalaverRosterListener implements RosterListener {
         if (entry == null) {
             return null;
         }
-        return Utils.createContact(jid, address, entry.getName(), false);
+        return ContactManager.createContact(jid, address, entry.getName(), false);
     }
 }

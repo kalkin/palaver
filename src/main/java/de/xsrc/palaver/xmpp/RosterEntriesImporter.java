@@ -2,7 +2,6 @@ package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactManager;
-import de.xsrc.palaver.utils.Utils;
 import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.Collection;
@@ -23,7 +22,7 @@ public class RosterEntriesImporter implements org.jivesoftware.smack.roster.Rost
     @Override
     public void rosterEntires(Collection<RosterEntry> rosterEntries) {
         for (RosterEntry entry: rosterEntries) {
-            Contact contact = Utils.createContact(jid, entry.getUser(), entry.getName(), false);
+            Contact contact = ContactManager.createContact(jid, entry.getUser(), entry.getName(), false);
             contactManager.addContact(contact);
         }
     }
