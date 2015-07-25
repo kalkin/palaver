@@ -1,9 +1,10 @@
 package de.xsrc.palaver.controller;
 
+import de.xsrc.palaver.ConnectionManager;
 import de.xsrc.palaver.beans.Credentials;
-import de.xsrc.palaver.models.ContactModel;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.xmpp.RosterManager;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +15,7 @@ import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ApplicationContext;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
@@ -56,10 +58,14 @@ public class AddContactController {
             XMPPException {
 
         Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
-        final ContactModel contactModel = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
-        contactModel.subscribe(credentials, jid.getText());
+
+        final RosterManager rosterManager = ApplicationContext.getInstance().getRegisteredObject(RosterManager.class);
+        final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
+        final XMPPTCPConnection xmpptcpConnection = connectionManager.getConnection(credentials.getJid());
+        final String jidToAdd = jid.getText();
+        rosterManager.subscribe(credentials, jidToAdd);
         final ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject(ConversationManager.class);
-        conversationManager.openConversation(credentials.getJid(), jid.getText(), false);
+        conversationManager.openConversation(credentials.getJid(), jidToAdd, false);
         close();
     }
 

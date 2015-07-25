@@ -4,16 +4,18 @@ package de.xsrc.palaver;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.controller.ContactController;
 import de.xsrc.palaver.controller.MainController;
-import de.xsrc.palaver.models.ContactModel;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
 import de.xsrc.palaver.provider.ConversationProvider;
 import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.Sender;
 import de.xsrc.palaver.xmpp.listeners.AccountChangeListener;
 import de.xsrc.palaver.xmpp.listeners.ConnectionRegistrationListener;
-import de.xsrc.palaver.xmpp.listeners.ContactSynchronisationListener;
+import de.xsrc.palaver.xmpp.listeners.RosterSynchronisationListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -51,7 +53,8 @@ public class Main extends Application {
     private final ApplicationContext applicationContext = ApplicationContext.getInstance();
     private final ObservableMap<Credentials, XMPPTCPConnection> connections = FXCollections.observableMap(new
             ConcurrentHashMap<>());
-    private final ContactModel contactModel = new ContactModel();
+    private final ContactManager contactManager = new ContactManager();
+    private static final String WORKING_DIRECTORY = Utils.getConfigDirectory() + "/roster/";
 
     public static void main(String[] args) {
 
@@ -64,11 +67,12 @@ public class Main extends Application {
         final ObservableExecutor executor = new ObservableExecutor();
         final ConversationManager conversationManager = new ConversationManager(new ConversationProvider());
         final ConnectionManager connectionManager = new ConnectionManager(executor);
+        final RosterManager rosterManager = new RosterManager(contactManager, WORKING_DIRECTORY);
         final Sender sender = new Sender(connectionManager, conversationManager);
         applicationContext.register(accountProvider);
         applicationContext.register(executor);
         applicationContext.register(connections);
-        applicationContext.register(contactModel);
+        applicationContext.register(rosterManager);
         applicationContext.register(conversationManager);
 
 
@@ -85,9 +89,9 @@ public class Main extends Application {
         primaryStage.focusedProperty().addListener((ond, old, n) -> Notifications.setEnabled(!n));
         Platform.runLater(() -> {
             accountProvider.retrieve();
-            final ContactSynchronisationListener contactSynchronisationListener = new ContactSynchronisationListener(contactModel);
+            final RosterSynchronisationListener rosterSynchronisationListener = new RosterSynchronisationListener(rosterManager);
             final ConnectionRegistrationListener connectionRegistrationListener = new ConnectionRegistrationListener(conversationManager);
-            connectionManager.addConnectionEstablishedListener(contactSynchronisationListener);
+            connectionManager.addConnectionEstablishedListener(rosterSynchronisationListener);
             connectionManager.addConnectionEstablishedListener(connectionRegistrationListener);
 
             final ListProperty<Credentials> credentialsListProperty = accountProvider.getData();

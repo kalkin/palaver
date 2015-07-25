@@ -3,9 +3,9 @@ package de.xsrc.palaver.controller;
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
+import de.xsrc.palaver.utils.Utils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,11 +65,11 @@ public class ContactController {
     @ActionTrigger("contactListView")
     private ListView<Contact> contactListView;
 
-    private ContactModel model;
+    private ContactManager model;
 
     @FXML
     private void initialize() {
-        model = ApplicationContext.getInstance().getRegisteredObject(ContactModel.class);
+        model = ApplicationContext.getInstance().getRegisteredObject(ContactManager.class);
         AwesomeDude.setIcon(back, AwesomeIcon.CHEVRON_LEFT, "24");
 
         HBox hbox = new HBox();

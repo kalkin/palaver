@@ -1,8 +1,7 @@
 package de.xsrc.palaver.xmpp.listeners;
 
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.models.ContactManager;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -17,13 +16,13 @@ public class PalaverRosterListener implements RosterListener {
             .getName());
 
     private final String jid;
-    private final ContactModel contacts;
+    private final ContactManager contacts;
     private final Roster roster;
 
 
-    public PalaverRosterListener(String jid, ContactModel contactModel, Roster roster) {
+    public PalaverRosterListener(String jid, ContactManager contactManager, Roster roster) {
         this.jid = jid;
-        this.contacts = contactModel;
+        this.contacts = contactManager;
         this.roster = roster;
         logger.fine(String.format("Created RosterListener for %s", jid));
     }
@@ -66,6 +65,6 @@ public class PalaverRosterListener implements RosterListener {
         if (entry == null) {
             return null;
         }
-        return Utils.createContact(jid, address, entry.getName(), false);
+        return ContactManager.createContact(jid, address, entry.getName(), false);
     }
 }
