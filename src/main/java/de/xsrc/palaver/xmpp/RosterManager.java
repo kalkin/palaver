@@ -1,6 +1,7 @@
 package de.xsrc.palaver.xmpp;
 
 import de.xsrc.palaver.Connection;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.xmpp.listeners.PalaverRosterListener;
@@ -79,19 +80,21 @@ public class RosterManager {
     /**
      * Removes a roster entry from the roster.
      *
-     * @param credentials
-     * @param jid
+     * @param contact
      * @throws SmackException.NotLoggedInException
      * @throws XMPPException.XMPPErrorException
      * @throws SmackException.NotConnectedException
      * @throws SmackException.NoResponseException
      */
-    public void unsubscribe(Credentials credentials, String jid) throws SmackException.NotLoggedInException,
+    public void unsubscribe(Contact contact) throws SmackException.NotLoggedInException,
             XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
-        logger.finer("Removing " + jid + " from " + credentials.getJid() + "account");
-        final Roster roster = rosterMap.get(credentials.getJid());
+        final String accountJid = contact.getAccount();
+        final String jid = contact.getJid();
+        logger.finer("Removing " + jid + " from " + accountJid + "account");
+        final Roster roster = rosterMap.get(accountJid);
         final RosterEntry entry = roster.getEntry(jid);
         roster.removeEntry(entry);
+        contactManager.removeContact(contact);
     }
 
     /**

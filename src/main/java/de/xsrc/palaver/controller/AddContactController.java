@@ -1,10 +1,16 @@
 package de.xsrc.palaver.controller;
 
 import de.xsrc.palaver.ConnectionManager;
+import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.beans.Credentials;
+import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.provider.AccountProvider;
+import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
 import de.xsrc.palaver.xmpp.RosterManager;
+import de.xsrc.palaver.xmpp.exception.BookmarkException;
+import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -54,18 +60,24 @@ public class AddContactController {
     }
 
     @FXML
-    private void addContactAction() throws SmackException,
-            XMPPException {
+    private void addContactAction() throws ConnectionFailedException, BookmarkException, SmackException.NotLoggedInException, XMPPException.XMPPErrorException, SmackException.NotConnectedException, SmackException.NoResponseException {
 
-        Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
-
-        final RosterManager rosterManager = ApplicationContext.getInstance().getRegisteredObject(RosterManager.class);
+        final Credentials credentials = accountChoice.getSelectionModel().getSelectedItem();
         final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
-        final XMPPTCPConnection xmpptcpConnection = connectionManager.getConnection(credentials.getJid());
+        final XMPPTCPConnection connection = connectionManager.getConnection(credentials.getJid());
         final String jidToAdd = jid.getText();
-        rosterManager.subscribe(credentials, jidToAdd);
         final ConversationManager conversationManager = ApplicationContext.getInstance().getRegisteredObject(ConversationManager.class);
-        conversationManager.openConversation(credentials.getJid(), jidToAdd, false);
+
+        if (Utils.isMuc(connection, jidToAdd)) {
+            final ConferenceBookmarkManager conferenceBookmarkManager = ApplicationContext.getInstance().getRegisteredObject(ConferenceBookmarkManager.class);
+            final Contact contact = ContactManager.createContact(credentials.getJid(), jidToAdd, null, true);
+            conferenceBookmarkManager.addBookmark(contact);
+            conversationManager.openConversation(credentials.getJid(), jidToAdd, true);
+        } else {
+            final RosterManager rosterManager = ApplicationContext.getInstance().getRegisteredObject(RosterManager.class);
+            rosterManager.subscribe(credentials, jidToAdd);
+            conversationManager.openConversation(credentials.getJid(), jidToAdd, false);
+        }
         close();
     }
 

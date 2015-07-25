@@ -94,9 +94,11 @@ public class Utils {
         return workingDirectory;
     }
 
-    public static boolean isMuc(XMPPConnection connection, String jid) throws SmackException.NotConnectedException, XMPPException.XMPPErrorException, SmackException.NoResponseException {
-        ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(connection);
-        DiscoverInfo info = discoManager.discoverInfo(XmppStringUtils.parseDomain(jid));
+
+    public static boolean isMuc(XMPPConnection xmpptcpConnection, String jid) throws SmackException.NotConnectedException,
+            XMPPException.XMPPErrorException, SmackException.NoResponseException {
+        final ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(xmpptcpConnection);
+        final DiscoverInfo info = discoManager.discoverInfo(XmppStringUtils.parseDomain(jid));
         return info.containsFeature("http://jabber.org/protocol/muc");
     }
 

@@ -2,10 +2,15 @@ package de.xsrc.palaver.controller;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
 import de.jensd.fx.fontawesome.AwesomeIcon;
+import de.xsrc.palaver.ConnectionManager;
 import de.xsrc.palaver.beans.Contact;
 import de.xsrc.palaver.models.ContactManager;
 import de.xsrc.palaver.models.ConversationManager;
 import de.xsrc.palaver.utils.Utils;
+import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
+import de.xsrc.palaver.xmpp.RosterManager;
+import de.xsrc.palaver.xmpp.exception.BookmarkException;
+import de.xsrc.palaver.xmpp.exception.ConnectionFailedException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +33,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.util.VetoException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import java.util.logging.Logger;
 
@@ -135,10 +141,21 @@ public class ContactController {
     }
 
     @FXML
-    private void deleteContactAction() {
-        Contact contact = contactListView.getSelectionModel().getSelectedItems().get(0);
-        logger.info("Removing " + contact.getJid());
-        model.removeContact(contact);
+    private void deleteContactAction() throws SmackException, XMPPException, ConnectionFailedException, BookmarkException {
+        final Contact contact = contactListView.getSelectionModel().getSelectedItems().get(0);
+        final ConnectionManager connectionManager = ApplicationContext.getInstance().getRegisteredObject(ConnectionManager.class);
+        final String account = contact.getAccount();
+        final String jid = contact.getJid();
+        final XMPPTCPConnection connection = connectionManager.getConnection(account);
+
+        if (Utils.isMuc(connection, jid)) {
+            final ConferenceBookmarkManager conferenceBookmarkManager = ApplicationContext.getInstance().getRegisteredObject(ConferenceBookmarkManager.class);
+            conferenceBookmarkManager.deleteBookmark(contact);
+        } else {
+            final RosterManager rosterManager = ApplicationContext.getInstance().getRegisteredObject(RosterManager
+                    .class);
+            rosterManager.unsubscribe(contact);
+        }
     }
 
 }

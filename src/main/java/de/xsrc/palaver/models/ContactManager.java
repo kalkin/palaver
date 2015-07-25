@@ -4,6 +4,7 @@ import de.xsrc.palaver.beans.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import org.jxmpp.util.XmppStringUtils;
 
 import java.util.HashSet;
@@ -16,6 +17,19 @@ public class ContactManager {
             .getName());
 
     private final ObservableSet<Contact> data = FXCollections.observableSet(new HashSet<>());
+    private final ObservableList<Contact> contactList = FXCollections.observableList(new LinkedList<>());
+
+    public ContactManager() {
+        data.addListener((SetChangeListener<Contact>) change -> {
+            if (change.wasAdded()) {
+                final Contact contact = change.getElementAdded();
+                contactList.add(contact);
+            } else {
+                final Contact contact = change.getElementRemoved();
+                contactList.remove(contact);
+            }
+        });
+    }
 
     public static Contact createContact(String account, String jid, String name, Boolean conference) {
         Contact contact = new Contact();
@@ -32,8 +46,7 @@ public class ContactManager {
         return contact;
     }
     public ObservableList<Contact> getData() {
-        final LinkedList<Contact> contactLinkedList = new LinkedList<>(data);
-        return FXCollections.observableList(contactLinkedList);
+        return FXCollections.unmodifiableObservableList(contactList);
     }
 
 
