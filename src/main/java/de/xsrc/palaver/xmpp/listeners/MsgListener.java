@@ -3,6 +3,7 @@ package de.xsrc.palaver.xmpp.listeners;
 import de.xsrc.palaver.Connection;
 import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.models.ConversationManager;
+import de.xsrc.palaver.utils.Notifications;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.Message;
@@ -52,6 +53,7 @@ public class MsgListener implements StanzaListener {
         // msg does not need to be send if it's carbon copy or send not by me
         final boolean sendState = (carbonReceived || !sendByMe);
         conversation.addMessage(fromJid, body, sendState);
+        Notifications.notify(fromJid, body);
 
     }
 
