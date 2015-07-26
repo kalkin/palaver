@@ -107,7 +107,7 @@ public class Conversation implements EntityWithId<String> {
         return unread;
     }
 
-    public Boolean getConference() {
+    public boolean getConference() {
         return conference.get();
     }
 
@@ -119,7 +119,7 @@ public class Conversation implements EntityWithId<String> {
         return getConference();
     }
 
-    public void setConference(Boolean conference) {
+    public void setConference(boolean conference) {
         this.conference.set(conference);
     }
 
