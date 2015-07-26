@@ -12,6 +12,7 @@ import de.xsrc.palaver.utils.Notifications;
 import de.xsrc.palaver.utils.UiUtils;
 import de.xsrc.palaver.utils.Utils;
 import de.xsrc.palaver.xmpp.ConferenceBookmarkManager;
+import de.xsrc.palaver.xmpp.MucManager;
 import de.xsrc.palaver.xmpp.RosterManager;
 import de.xsrc.palaver.xmpp.Sender;
 import de.xsrc.palaver.xmpp.exception.BookmarkException;
@@ -64,6 +65,7 @@ public class Main extends Application {
         final ObservableExecutor executor = new ObservableExecutor();
         final ConversationManager conversationManager = new ConversationManager(new ConversationProvider());
         final ConnectionManager connectionManager = new ConnectionManager(executor);
+        final MucManager mucManager = new MucManager(conversationManager, executor);
         final ConferenceBookmarkManager conferenceBookmarkManager = new ConferenceBookmarkManager(contactManager);
         final RosterManager rosterManager = new RosterManager(contactManager, WORKING_DIRECTORY);
         final Sender sender = new Sender(connectionManager, conversationManager);
@@ -78,8 +80,10 @@ public class Main extends Application {
         applicationContext.register(conversationManager);
         connectionManager.addConnectionEstablishedListener(change -> {
             if (change.wasAdded()) {
+                final Connection connection = change.getValueAdded();
+                mucManager.registerConnection(connection);
                 try {
-                    conferenceBookmarkManager.registerConnection(change.getValueAdded());
+                    conferenceBookmarkManager.registerConnection(connection);
                 } catch (ConnectionException | BookmarkException e) {
                     e.printStackTrace();
                 }

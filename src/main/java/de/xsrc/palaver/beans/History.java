@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @XmlRootElement
 public class History {
@@ -16,7 +17,7 @@ public class History {
 
     public History() {
         entryList = new SimpleListProperty<>(
-                FXCollections.observableArrayList());
+                FXCollections.observableList(new CopyOnWriteArrayList<>()));
     }
 
     public List<HistoryEntry> getEntryList() {
