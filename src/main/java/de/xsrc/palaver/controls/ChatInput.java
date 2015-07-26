@@ -22,12 +22,11 @@ public class ChatInput extends TextArea {
         this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             String msg = this.getText().trim();
             if (ENTER.match(event) && !msg.isEmpty()) { // on enter send
-//                TODO Fix msg sending
                 final HistoryEntry historyEntry = new HistoryEntry();
                 historyEntry.setBody(msg);
                 historyEntry.setFrom(conversation.getAccount());
                 historyEntry.setSendState(false);
-                conversation.history.addEntry(historyEntry);
+                conversation.add(historyEntry);
                 this.clear();
                 event.consume();
             } else if (SHIFT_ENTER.match(event)) { // add a new line.
