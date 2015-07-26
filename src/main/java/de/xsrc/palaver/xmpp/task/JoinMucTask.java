@@ -1,9 +1,14 @@
 package de.xsrc.palaver.xmpp.task;
 
 import de.xsrc.palaver.beans.Conversation;
+import de.xsrc.palaver.xmpp.listeners.MucListener;
 import org.datafx.concurrent.DataFxTask;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
@@ -25,31 +30,21 @@ public class JoinMucTask extends DataFxTask {
 
     @Override
     protected MultiUserChat call() {
-// TODO Fix Muc Connection
-//		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
-//		try {
-//			muc.createOrJoin(XmppStringUtils.parseLocalpart(palaver.getAccount()));
-//			muc.addMessageListener(new MucListener(palaver));
-//			// TODO Implement Subject fetching and setting as Contact name
-//			Utils.getJoinedMucs().put(palaver.getId(), muc);
-//			logger.info(String.format("Joined %s with account %s", palaver.getRecipient(), palaver.getAccount()));
-//			try {
-//				BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
-//				for (BookmarkedConference bookmarkedConference : bookmarkManager.getBookmarkedConferences()) {
-//					if (bookmarkedConference.getJid().equals(palaver.getRecipient()) && !bookmarkedConference.isAutoJoin()) {
-//						bookmarkManager.addBookmarkedConference(XmppStringUtils.parseLocalpart(palaver.getRecipient()), palaver.getRecipient(), true, XmppStringUtils.parseLocalpart(palaver.getAccount()), null);
-//					}
-//				}
-//
-//			} catch (XMPPException e) {
-//				//	e.printStackTrace();
-//			}
-//			return muc;
-//		} catch (XMPPException.XMPPErrorException | SmackException e) {
-//			e.printStackTrace();
-//			logger.warning(String.format("Failed joining %s with account %s", palaver.getRecipient(), palaver.getAccount()));
-//			return null;
-//		}
-        return null;
+        final String conferenceJid = conversation.getRecipient();
+        final String accountJid = conversation.getAccount();
+        final String nickname = XmppStringUtils.parseLocalpart(accountJid);
+
+        final MultiUserChat muc = MultiUserChatManager.getInstanceFor(connection).getMultiUserChat(conferenceJid);
+
+        try {
+            muc.createOrJoin(nickname);
+            muc.addMessageListener(new MucListener(conversation));
+            logger.finer(String.format("Joined %s with account %s", conferenceJid, accountJid));
+            return muc;
+        } catch (XMPPException.XMPPErrorException | SmackException e) {
+            e.printStackTrace();
+            logger.severe(String.format("Failed joining %s with account %s", conferenceJid, accountJid));
+            return null;
+        }
     }
 }
