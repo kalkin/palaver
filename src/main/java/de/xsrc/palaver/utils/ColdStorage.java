@@ -30,90 +30,90 @@ import java.util.logging.Logger;
  */
 public class ColdStorage {
 
-	private static final Logger logger = Logger.getLogger(ColdStorage.class
-					.getName());
+    private static final Logger logger = Logger.getLogger(ColdStorage.class
+            .getName());
 
-	/**
-	 * Reads the beans data from xml file
-	 *
-	 * @param <T>
-	 * @param c
-	 * @return
-	 * @throws IOException
-	 */
-	public static <T extends EntityWithId<?>> LinkedList<T> get(Class<?> c) {
-		logger.finer("Reading XML file for beans" + c.getSimpleName());
-		LinkedList<T> result = new LinkedList<T>();
-		XmlDataSource<T> source;
-		try {
-			source = new XmlDataSource<T>(c);
+    /**
+     * Reads the beans data from xml file
+     *
+     * @param <T>
+     * @param c
+     * @return
+     * @throws IOException
+     */
+    public static <T extends EntityWithId<?>> LinkedList<T> get(Class<?> c) {
+        logger.finer("Reading XML file for beans" + c.getSimpleName());
+        LinkedList<T> result = new LinkedList<T>();
+        XmlDataSource<T> source;
+        try {
+            source = new XmlDataSource<T>(c);
 
-			while (source.next()) {
-				T tmp = source.get();
-				result.add(tmp);
-			}
+            while (source.next()) {
+                T tmp = source.get();
+                result.add(tmp);
+            }
 
-		} catch (IOException e) {
-			return result;
-		}
-		return result;
-	}
+        } catch (IOException e) {
+            return result;
+        }
+        return result;
+    }
 
-	/**
-	 * Saves a list of models to xml file. It overwrites it's previous content!
-	 *
-	 * @param clazz
-	 * @param list
-	 */
-	public static <T extends EntityWithId<?>> void save(Class<T> clazz,
-	                                                    List<T> list) {
-		Service service = new Service() {
-			@Override
-			protected Task createTask() {
-				Task task = new Task() {
-					@Override
-					protected Object call() throws ParserConfigurationException,
-									JAXBException, ClassNotFoundException, InstantiationException,
-									IllegalAccessException, ClassCastException, IOException {
+    /**
+     * Saves a list of models to xml file. It overwrites it's previous content!
+     *
+     * @param clazz
+     * @param list
+     */
+    public static <T extends EntityWithId<?>> void save(Class<T> clazz,
+                                                        List<T> list) {
+        Service service = new Service() {
+            @Override
+            protected Task createTask() {
+                Task task = new Task() {
+                    @Override
+                    protected Object call() throws ParserConfigurationException,
+                            JAXBException, ClassNotFoundException, InstantiationException,
+                            IllegalAccessException, ClassCastException, IOException {
 
-						logger.finer("Saving XML file for beans" + clazz.getSimpleName());
-						Document doc = DocumentBuilderFactory.newInstance()
-										.newDocumentBuilder().newDocument();
+                        logger.finer("Saving XML file for beans" + clazz.getSimpleName());
+                        Document doc = DocumentBuilderFactory.newInstance()
+                                .newDocumentBuilder().newDocument();
 
-						// Create wrapper root element to wrap the beans iE
-						// Account -> Accounts
-						Element rootElement = doc.createElement(clazz.getSimpleName()
-										.toLowerCase() + "s");
-						Marshaller m = JAXBContext.newInstance(clazz).createMarshaller();
-						doc.appendChild(rootElement);
-						m.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
-										Boolean.TRUE);
+                        // Create wrapper root element to wrap the beans iE
+                        // Account -> Accounts
+                        Element rootElement = doc.createElement(clazz.getSimpleName()
+                                .toLowerCase() + "s");
+                        Marshaller m = JAXBContext.newInstance(clazz).createMarshaller();
+                        doc.appendChild(rootElement);
+                        m.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT,
+                                Boolean.TRUE);
 
-						for (T t : list) {
-							// attach all nodes to the root wrapper
-							m.marshal(t, doc.getFirstChild());
-						}
+                        for (T t : list) {
+                            // attach all nodes to the root wrapper
+                            m.marshal(t, doc.getFirstChild());
+                        }
 
-						DOMImplementationRegistry registry = DOMImplementationRegistry
-										.newInstance();
+                        DOMImplementationRegistry registry = DOMImplementationRegistry
+                                .newInstance();
 
-						DOMImplementationLS impl = (DOMImplementationLS) registry
-										.getDOMImplementation("LS");
+                        DOMImplementationLS impl = (DOMImplementationLS) registry
+                                .getDOMImplementation("LS");
 
-						LSSerializer writer = impl.createLSSerializer();
-						writer.getDomConfig().setParameter("format-pretty-print",
-										Boolean.TRUE);
-						LSOutput output = impl.createLSOutput();
-						File file = Utils.getFile(clazz);
-						output.setByteStream(new FileOutputStream(file));
-						return writer.write(doc, output);
+                        LSSerializer writer = impl.createLSSerializer();
+                        writer.getDomConfig().setParameter("format-pretty-print",
+                                Boolean.TRUE);
+                        LSOutput output = impl.createLSOutput();
+                        File file = Utils.getFile(clazz);
+                        output.setByteStream(new FileOutputStream(file));
+                        return writer.write(doc, output);
 
-					}
-				};
-				return task;
-			}
-		};
-		service.start();
+                    }
+                };
+                return task;
+            }
+        };
+        service.start();
 
-	}
+    }
 }

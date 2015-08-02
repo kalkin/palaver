@@ -1,149 +1,117 @@
 package de.xsrc.palaver.controller;
 
-import de.jensd.fx.fontawesome.AwesomeDude;
-import de.jensd.fx.fontawesome.AwesomeIcon;
-import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.provider.PalaverProvider;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
-import javafx.beans.value.ObservableValue;
+import de.xsrc.palaver.beans.Conversation;
+import de.xsrc.palaver.controls.HistoryControl;
+import de.xsrc.palaver.controls.OpenPalaverList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
-import org.datafx.concurrent.ObservableExecutor;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.ViewFactory;
-import org.datafx.controller.context.ApplicationContext;
-import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.LinkAction;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
-import org.jivesoftware.smackx.bookmarks.BookmarkedConference;
-import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jxmpp.util.XmppStringUtils;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 @FXMLController("/fxml/MainView.fxml")
 public class MainController {
-	private static final Logger logger = Logger.getLogger(MainController.class.getName());
+    private static final Logger logger = Logger.getLogger(MainController.class.getName());
+    private static final int STEP_WIDTH = 64;
 
-	@FXML
-	@LinkAction(AccountController.class)
-	private Button showAccountsButton;
+    @FXML
+    @LinkAction(AccountController.class)
+    private Button showAccountsButton;
 
-	@FXML
-	@LinkAction(ContactController.class)
-	private Button showBuddyListButton;
+    @FXML
+    private BorderPane barPane;
 
-	@FXML
-	private ListView<Palaver> palaverListView;
+    @FXML
+    @LinkAction(ContactController.class)
+    private Button showBuddyListButton;
 
-	private HashMap<Palaver, ViewContext<HistoryController>> historyMap = new HashMap<Palaver, ViewContext<HistoryController>>();
+    @FXML
+    private BorderPane historyPane;
 
-	@FXML
-	private BorderPane borderPane;
+    @FXML
+    private BorderPane titlePane;
 
-	@FXML
-	private Button hidePalaverButton;
+    @FXML
+    private Button showOpenPalaverButton;
 
-	private Node palaverListTmp;
+    @FXML
+    private OpenPalaverList palaverListControl;
+    private HashMap<Conversation, HistoryControl> historyMap = new HashMap<>();
 
-	@FXML
-	private void initialize() {
+    @FXML
+    private void initialize() {
 
-		PalaverProvider provider = ApplicationContext.getInstance()
-						.getRegisteredObject(PalaverProvider.class);
-		palaverListView.setItems(provider.getData());
-		palaverListView
-						.setCellFactory(listView -> new PalaverCell());
+        palaverListControl.selectedPalaver().addListener((observable, oldValue, newValue) -> {
+            if (!historyMap.containsKey(newValue)) {
+                try {
 
-		MultipleSelectionModel<Palaver> selModel = palaverListView
-						.getSelectionModel();
+                    HistoryControl history = new HistoryControl(newValue);
+                    historyMap.put(newValue, history);
+                } catch (Exception e) {
+                    // Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
 
-		selModel.setSelectionMode(SelectionMode.SINGLE);
+            historyPane.setCenter(historyMap.get(newValue));
 
-		selModel.selectedItemProperty().addListener(
-						(ObservableValue<? extends Palaver> observable, Palaver oldValue,
-						 Palaver newValue) -> {
-							if (newValue != null) {
-								newValue.setUnread(false);
-								if (!historyMap.containsKey(newValue)) {
-									try {
-										ViewContext<HistoryController> context = ViewFactory
-														.getInstance().createByController(HistoryController.class);
-										context.getController().setPalaver(newValue);
-										historyMap.put(newValue, context);
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
+        });
 
-								borderPane.setCenter(historyMap.get(newValue).getRootNode());
-								historyMap.get(newValue).getController().requestFocus();
-							}
-						});
-		AwesomeDude.setIcon(showAccountsButton, AwesomeIcon.GEAR, "24");
-		AwesomeDude.setIcon(hidePalaverButton, AwesomeIcon.CHEVRON_LEFT, "24");
-		AwesomeDude.setIcon(showBuddyListButton, AwesomeIcon.USERS, "24");
+        showOpenPalaverButton.visibleProperty().bind(palaverListControl.visibleProperty().not());
+        showOpenPalaverButton.managedProperty().bind(palaverListControl.managedProperty().not());
+        showOpenPalaverButton.cancelButtonProperty().bind(palaverListControl.visibleProperty().not());
+        palaverListControl.visibleProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                Conversation p = palaverListControl.selectedPalaver().get();
+                Text text = new Text(XmppStringUtils.parseLocalpart(p.getRecipient()));
+                text.getStyleClass().add("title");
+                titlePane.setCenter(text);
+                historyPane.setMaxWidth(1024);
+            } else {
+                Text text = new Text("Palavers");
+                text.getStyleClass().add("title");
+                titlePane.setCenter(text);
+                historyPane.setMaxWidth(768);
+            }
+        });
+        Platform.runLater(() ->
+                palaverListControl.getScene().getWindow().widthProperty().addListener((observable, oldValue, newValue) -> resize(newValue)));
+    }
 
-	}
+    private void resize(Number newValue) {
+        int t = newValue.intValue() / 64;
+        int width = t * 64;
+        if (width > 1024) {
+            width = 1024;
+            t = 16;
+        }
+        logger.fine(String.format("WIDTH: %d", width));
+        barPane.setMaxWidth(width);
+        StackPane parent = (StackPane) palaverListControl.getParent();
+        parent.setMaxWidth(width);
 
-	@FXML
-	private void hidePalaverList() {
-		if (palaverListTmp == null) {
-			palaverListTmp = borderPane.getLeft();
-			borderPane.setLeft(null);
-			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_RIGHT, "24"));
-		} else {
-			borderPane.setLeft(palaverListTmp);
-			palaverListTmp = null;
-			hidePalaverButton.setGraphic(AwesomeDude
-							.createIconLabel(AwesomeIcon.CHEVRON_LEFT, "24"));
-		}
-	}
 
-	@FXML
-	private void removeAction() {
-		Palaver p = palaverListView.getSelectionModel().getSelectedItem();
-		ObservableExecutor executor = ApplicationContext.getInstance().getRegisteredObject(ObservableExecutor.class);
-		if (p.getConference()) {
-			executor.submit(() -> {
-				MultiUserChat muc = Utils.getMuc(p);
-				try {
-					muc.leave();
-				} catch (SmackException.NotConnectedException e) {
-					e.printStackTrace();
-				}
-			});
-			executor.submit(() -> {
-				XMPPConnection connection = ConnectionManager.getConnection(p.getAccount());
-				try {
-					Collection<BookmarkedConference> bookmarkedConferences = BookmarkManager.getBookmarkManager(connection).getBookmarkedConferences();
-					for (BookmarkedConference bookmarkedConference : bookmarkedConferences) {
-						if (bookmarkedConference.getJid().equals(p.getRecipient()) && bookmarkedConference.isAutoJoin()) {
-							BookmarkManager.getBookmarkManager(connection).addBookmarkedConference(bookmarkedConference.getName(), bookmarkedConference.getJid(), false, bookmarkedConference.getNickname(), bookmarkedConference.getPassword()
-							);
-						}
-					}
+        if (t >= 11) {
+            palaverListControl.hide(false);
+            historyPane.setMaxWidth((t - 4) * STEP_WIDTH);
+        } else {
+            palaverListControl.hide(true);
+            historyPane.setMaxWidth(t * 64);
+        }
 
-				} catch (XMPPException | SmackException e) {
-					e.printStackTrace();
-					logger.warning(String.format("Disabling autojoin on %s failed", p.getRecipient()));
-				}
-			});
-		}
-		palaverListView.getItems().remove(p);
-		historyMap.remove(p);
-		p.setClosed(true);
-	}
+
+    }
+
+    @FXML
+    private void showAction() {
+        palaverListControl.hide(false);
+
+    }
 }

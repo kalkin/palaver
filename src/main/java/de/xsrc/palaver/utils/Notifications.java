@@ -7,21 +7,21 @@ import javafx.application.Platform;
  */
 public class Notifications {
 
-	private static boolean enabled = true;
+    private static boolean enabled = true;
 
-	public static synchronized void setEnabled(boolean b) {
-		enabled = b;
-	}
+    public static synchronized void setEnabled(boolean b) {
+        enabled = b;
+    }
 
-	public static void notify(String from, String body) {
-		if (Notifications.enabled) {
+    public static void notify(String from, String body) {
+        if (Notifications.enabled) {
 
-			Platform.runLater(() -> {
-				org.controlsfx.control.Notifications.create()
-								.title(from)
-								.text(body)
-								.showInformation();
-			});
-		}
-	}
+            Platform.runLater(() -> {
+                org.controlsfx.control.Notifications.create()
+                        .title(from)
+                        .text(body)
+                        .showInformation();
+            });
+        }
+    }
 }

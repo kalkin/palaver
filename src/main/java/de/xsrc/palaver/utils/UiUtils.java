@@ -1,10 +1,11 @@
 package de.xsrc.palaver.utils;
 
+import de.jensd.fx.fontawesome.AwesomeIcon;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.datafx.controller.flow.Flow;
@@ -17,41 +18,47 @@ import java.util.ResourceBundle;
 
 public class UiUtils {
 
-	public static StackPane getAvatar(String name) {
-		int modena_colors[] = {0xf3622d, 0xfba71b, 0xFF673ab7, 0x41a9c9, 0x9a42c8,
-						0xc84164, 0xFF00bcd4, 0x888888};
-		int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
-		String hexcolor = String.format("#%06X", (0xFFFFFF & color));
-		Rectangle r = new Rectangle(64, 64);
-		r.setFill(Paint.valueOf(hexcolor));
-		r.setArcHeight(5);
-		r.setArcWidth(5);
-		r.setStrokeType(StrokeType.INSIDE);
-		r.setStroke(Paint.valueOf("BLACK"));
-		StackPane sp = new StackPane();
-		Text t = new Text(name.substring(0, 1).toUpperCase());
-		t.setFont(Font.font(60));
-		sp.getChildren().add(r);
-		sp.getChildren().add(t);
-		return sp;
-	}
+    public static StackPane getAvatar(String name) {
+        int modena_colors[] = {0xe51c23, 0xe91e63, 0x9c27b0, 0x673ab7, 0x5677fc, 0x03e9f4, 0x00bcd4, 0x009688, 0x259b24,
+                0xcddc39, 0xffeb3b, 0xffc107, 0xff9800, 0xff5722, 0x795548, 0x9e9e9e, 0x607d8b};
+        int color = modena_colors[(int) ((name.hashCode() & 0xffffffffl) % modena_colors.length)];
+        String hexcolor = String.format("#%06X", (0xFFFFFF & color));
+        Circle circle = new Circle(20, Color.web(hexcolor));
 
-	public static synchronized Scene prepareFlow(Flow f,
-	                                             ViewFlowContext flowContext) throws FlowException {
-		ResourceBundle b = ResourceBundle.getBundle("i18n.Palaver_en");
+        circle.setFill(Paint.valueOf(hexcolor));
 
-		DefaultFlowContainer container = new DefaultFlowContainer();
-		FlowHandler flowHandler;
-		if (flowContext != null) {
-			flowHandler = f.createHandler(flowContext);
-		} else {
-			flowHandler = f.createHandler();
-		}
-		flowHandler.getViewConfiguration().setResources(b);
-		flowHandler.start(container);
-		Scene scene = new Scene(container.getView());
-		scene.getStylesheets().add("application.css");
-		return scene;
-	}
+        StackPane sp = new StackPane();
+        Text t = new Text(AwesomeIcon.USER.toString());
+        Font f = Font.font("FontAwesome", 34);
+
+        t.setFont(f);
+        t.setFill(Paint.valueOf("white"));
+        sp.getChildren().add(circle);
+        sp.getChildren().add(t);
+        sp.getStyleClass().add("avatar");
+        return sp;
+    }
+
+    public static synchronized Scene prepareFlow(Flow f,
+                                                 ViewFlowContext flowContext) throws FlowException {
+        ResourceBundle b = getRessourceBundle();
+
+        DefaultFlowContainer container = new DefaultFlowContainer();
+        FlowHandler flowHandler;
+        if (flowContext != null) {
+            flowHandler = f.createHandler(flowContext);
+        } else {
+            flowHandler = f.createHandler();
+        }
+        flowHandler.getViewConfiguration().setResources(b);
+        flowHandler.start(container);
+        Scene scene = new Scene(container.getView());
+        scene.getStylesheets().add("application.css");
+        return scene;
+    }
+
+    public static ResourceBundle getRessourceBundle() {
+        return ResourceBundle.getBundle("i18n.Palaver");
+    }
 
 }

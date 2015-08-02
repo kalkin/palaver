@@ -1,70 +1,70 @@
 package de.xsrc.palaver.xmpp.listeners;
 
-import de.xsrc.palaver.beans.Account;
 import de.xsrc.palaver.beans.Contact;
-import de.xsrc.palaver.models.ContactModel;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
+import de.xsrc.palaver.models.ContactManager;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.Collection;
 import java.util.logging.Logger;
 
 public class PalaverRosterListener implements RosterListener {
 
-	private static final Logger logger = Logger.getLogger(PalaverRosterListener.class
-					.getName());
+    private static final Logger logger = Logger.getLogger(PalaverRosterListener.class
+            .getName());
 
-	private Account account;
-
-
-	public PalaverRosterListener(Account account) {
-		this.account = account;
-		logger.fine(String.format("Created %s", account.getJid()));
-	}
-
-	@Override
-	public void entriesAdded(Collection<String> addresses) {
-		logger.fine(String.format("Roster %s added %s", account.getJid(), addresses.toString()));
-
-		for (String address : addresses) {
-			Contact contact = getContact(address);
-			ContactModel.getInstance().addContact(contact);
-		}
-
-	}
-
-	@Override
-	public void entriesUpdated(Collection<String> addresses) {
-
-	}
-
-	@Override
-	public void entriesDeleted(Collection<String> addresses) {
-		logger.fine(String.format("Roster %s deleted %s", account.getJid(), addresses));
-		for (String address : addresses) {
-			Contact contact = getContact(address);
-			if (contact == null) {
-				return;
-			}
-			ContactModel.getInstance().removeContact(contact);
-		}
-
-	}
-
-	@Override
-	public void presenceChanged(Presence presence) {
-
-	}
+    private final String jid;
+    private final ContactManager contacts;
+    private final Roster roster;
 
 
-	private Contact getContact(String address) {
-		RosterEntry entry = ConnectionManager.getConnection(this.account).getRoster().getEntry(address);
-		if (entry == null) {
-			return null;
-		}
-		return Utils.createContact(account.getJid(), address, entry.getName(), false);
-	}
+    public PalaverRosterListener(String jid, ContactManager contactManager, Roster roster) {
+        this.jid = jid;
+        this.contacts = contactManager;
+        this.roster = roster;
+        logger.fine(String.format("Created RosterListener for %s", jid));
+    }
+
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+        for (String address : addresses) {
+            logger.finer(String.format("Roster %s add %s", jid, address));
+            Contact contact = getContact(address);
+            contacts.addContact(contact);
+        }
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+        for (String address : addresses) {
+            logger.finer(String.format("Roster %s delete %s", jid, address));
+            Contact contact = getContact(address);
+            if (contact == null) {
+                return;
+            }
+            contacts.removeContact(contact);
+        }
+
+    }
+
+    @Override
+    public void presenceChanged(Presence presence) {
+
+    }
+
+
+    private Contact getContact(String address) {
+        RosterEntry entry = roster.getEntry(address);
+        if (entry == null) {
+            return null;
+        }
+        return ContactManager.createContact(jid, address, entry.getName(), false);
+    }
 }

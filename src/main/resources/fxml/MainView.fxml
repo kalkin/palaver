@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.ScrollPane?>
-<?import org.controlsfx.control.ButtonBar?>
+<?import de.jensd.fx.fontawesome.AwesomeIcon?>
+<?import de.xsrc.palaver.controls.OpenPalaverList?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1024.0"
+            prefWidth="1280.0" styleClass="background"
+            xmlns="http://javafx.com/javafx/8">
+    <children>
+        <StackPane styleClass="bar,zdepth1" maxHeight="144.0" minHeight="64.0"
+                   prefHeight="144.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="640"
-	prefHeight="480" fx:id="borderPane">
-	<top>
-		<ButtonBar>
-			<buttons>
-				<Button fx:id="hidePalaverButton" onAction="#hidePalaverList"
-					cancelButton="true">
-					<tooltip>
-						<Tooltip text="%hide_palaver_list" />
-					</tooltip>
-				</Button>
-				<Button fx:id="showBuddyListButton">
-					<tooltip>
-						<Tooltip text="%budy_list" />
-					</tooltip>
-				</Button>
-				<Button fx:id="showAccountsButton">
-					<tooltip>
-						<Tooltip text="%account_managment" />
-					</tooltip>
-				</Button>
-			</buttons>
-			<padding>
-				<Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-			</padding>
-		</ButtonBar>
-	</top>
-	<left>
-		<ListView fx:id="palaverListView">
-			<contextMenu>
-				<ContextMenu>
-					<items>
-						<MenuItem text="%remove" onAction="#removeAction" />
-					</items>
-				</ContextMenu>
-			</contextMenu>
-		</ListView>
-	</left>
-</BorderPane>
-
+            <BorderPane maxWidth="1024" prefWidth="1024" fx:id="barPane">
+                <left>
+                    <BorderPane maxHeight="64" fx:id="titlePane">
+                        <left>
+                            <Button fx:id="showOpenPalaverButton"
+                                    onAction="#showAction"
+                                    styleClass="awesome-icon"
+                                    visible="false" managed="false">
+                                <text>
+                                    <AwesomeIcon fx:constant="CHEVRON_DOWN"/>
+                                </text>
+                                <tooltip>
+                                    <Tooltip text="%hide_palaver_list"/>
+                                </tooltip>
+                            </Button>
+                        </left>
+                        <center>
+                            <Text styleClass="title" text="Palavers"/>
+                        </center>
+                    </BorderPane>
+                </left>
+                <right>
+                    <Button fx:id="showAccountsButton"
+                            styleClass="action-overflow" maxWidth="64"
+                            maxHeight="64"/>
+                </right>
+            </BorderPane>
+        </StackPane>
+        <StackPane AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="64"
+                   AnchorPane.rightAnchor="0"
+                   AnchorPane.leftAnchor="0">
+            <children>
+                <StackPane maxWidth="1024">
+                    <children>
+                        <BorderPane StackPane.alignment="TOP_RIGHT"
+                                    styleClass="mainPaper" fx:id="historyPane"
+                                    maxWidth="768" style="-fx-padding:0;"/>
+                        <OpenPalaverList StackPane.alignment="TOP_LEFT"
+                                         fx:id="palaverListControl"/>
+                    </children>
+                </StackPane>
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>

@@ -1,81 +1,50 @@
 package de.xsrc.palaver.xmpp.task;
 
-import de.xsrc.palaver.beans.Palaver;
-import de.xsrc.palaver.utils.Utils;
-import de.xsrc.palaver.xmpp.ConnectionManager;
+import de.xsrc.palaver.beans.Conversation;
 import de.xsrc.palaver.xmpp.listeners.MucListener;
 import org.datafx.concurrent.DataFxTask;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.bookmarks.BookmarkManager;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.logging.Logger;
 
 
 public class JoinMucTask extends DataFxTask {
 
-	private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
+    private final static Logger logger = Logger.getLogger(JoinMucTask.class.getName());
 
-	private Palaver palaver;
-	private XMPPConnection connection;
+    private Conversation conversation;
+    private XMPPConnection connection;
 
-	public JoinMucTask(Palaver palaver, XMPPConnection connection) {
-		this.palaver = palaver;
-		this.connection = connection;
-		this.updateTitle("Joining Conference " + palaver.getRecipient());
+    public JoinMucTask(Conversation conversation, XMPPConnection connection) {
+        this.conversation = conversation;
+        this.connection = connection;
+        this.updateTitle("Joining Conference " + conversation.getRecipient());
 
-	}
-
-	public JoinMucTask(Palaver palaver) {
-		this.palaver = palaver;
-		this.updateTitle("Joining Conference " + palaver.getRecipient());
-		this.connection = ConnectionManager.getConnection(palaver.getAccount());
-	}
+    }
 
 
-	@Override
-	protected Boolean call() {
+    @Override
+    protected MultiUserChat call() {
+        final String conferenceJid = conversation.getRecipient();
+        final String accountJid = conversation.getAccount();
+        final String nickname = XmppStringUtils.parseLocalpart(accountJid);
 
-		MultiUserChat muc = new MultiUserChat(connection, palaver.getRecipient());
-		try {
-			muc.createOrJoin(StringUtils.parseName(palaver.getRecipient()));
-			muc.addMessageListener(new MucListener(palaver));
-			// TODO Implement Subject fetching and setting as Contact name
-			Utils.getJoinedMucs().put(palaver, muc);
-			logger.info(String.format("Joined %s with account %s", palaver.getRecipient(), palaver.getAccount()));
+        final MultiUserChat muc = MultiUserChatManager.getInstanceFor(connection).getMultiUserChat(conferenceJid);
 
-		} catch (XMPPException.XMPPErrorException | SmackException e) {
-			e.printStackTrace();
-			logger.warning(String.format("Failed joining %s with account %s", palaver.getRecipient(), palaver.getAccount()));
-			return false;
-		}
-
-		try {
-			BookmarkManager bookmarkManager = BookmarkManager.getBookmarkManager(connection);
-			String name;
-				if (muc.getSubject() != null) {
-					name = muc.getSubject();
-				} else {
-					name = StringUtils.parseName(palaver.getRecipient());
-				}
-				bookmarkManager.addBookmarkedConference(name, palaver.getRecipient(), true, StringUtils.parseName(palaver.getAccount()), null);
-			return true;
-
-
-		} catch (XMPPException e) {
-			logger.warning("Could not could not get bookmarks");
-
-		} catch (SmackException.NotConnectedException e) {
-			e.printStackTrace();
-		} catch (SmackException.NoResponseException e) {
-			 // Do nothing
-		} catch (SmackException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
+        try {
+            muc.createOrJoin(nickname);
+            muc.addMessageListener(new MucListener(conversation));
+            logger.finer(String.format("Joined %s with account %s", conferenceJid, accountJid));
+            return muc;
+        } catch (XMPPException.XMPPErrorException | SmackException e) {
+            e.printStackTrace();
+            logger.severe(String.format("Failed joining %s with account %s", conferenceJid, accountJid));
+            return null;
+        }
+    }
 }
