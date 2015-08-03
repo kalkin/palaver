@@ -32,7 +32,7 @@
                             </Button>
                         </left>
                         <center>
-                            <Text styleClass="title" text="Palavers"/>
+                            <Text styleClass="display1" text="Palavers"/>
                         </center>
                     </BorderPane>
                 </left>

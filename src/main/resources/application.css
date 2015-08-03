@@ -19,7 +19,6 @@
 }
 
 .bar .button {
-
     -fx-background-color: #009688;
 }
 
@@ -89,15 +88,17 @@
     -fx-background-color: transparent;
 }
 
-.title {
-    -fx-font-size: 34pt;
-    -fx-fill: white;
-    -fx-text-fill: white;
+.display1 {
+    -fx-font-size: 34pt
 }
 
 .bar {
     -fx-background-color: #009688;
+}
 
+.bar .display1 {
+    -fx-fill: white;
+    -fx-text-fill: white;
 }
 
 .text-area {
