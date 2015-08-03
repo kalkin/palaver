@@ -75,7 +75,7 @@ public class MainController {
                 titlePane.setCenter(text);
                 historyPane.setMaxWidth(1024);
             } else {
-                Text text = new Text("Palavers");
+                Text text = new Text("Palaver");
                 text.getStyleClass().add("display1");
                 titlePane.setCenter(text);
                 historyPane.setMaxWidth(768);
