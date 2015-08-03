@@ -46,9 +46,9 @@ public class Main extends Application {
 
     static {
         Font.loadFont(FontAwesome.class.getResource("/font/fontawesome-webfont.ttf").toExternalForm(), 24);
-        Font.loadFont(Main.class.getResource("/font/Roboto-Regular.ttf").toExternalForm(), 14);
-        Font.loadFont(Main.class.getResource("/font/Roboto-Bold.ttf").toExternalForm(), 14);
-        Font.loadFont(Main.class.getResource("/font/Roboto-Medium.ttf").toExternalForm(), 14);
+        Font.loadFont(Main.class.getResource("/font/roboto/Roboto-Regular.ttf").toExternalForm(), 14);
+        Font.loadFont(Main.class.getResource("/font/roboto/Roboto-Bold.ttf").toExternalForm(), 14);
+        Font.loadFont(Main.class.getResource("/font/roboto/Roboto-Medium.ttf").toExternalForm(), 14);
     }
 
     private final ApplicationContext applicationContext = ApplicationContext.getInstance();
