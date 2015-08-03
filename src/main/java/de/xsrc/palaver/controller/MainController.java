@@ -71,12 +71,12 @@ public class MainController {
             if (!newValue) {
                 Conversation p = palaverListControl.selectedPalaver().get();
                 Text text = new Text(XmppStringUtils.parseLocalpart(p.getRecipient()));
-                text.getStyleClass().add("title");
+                text.getStyleClass().add("display1");
                 titlePane.setCenter(text);
                 historyPane.setMaxWidth(1024);
             } else {
-                Text text = new Text("Palavers");
-                text.getStyleClass().add("title");
+                Text text = new Text("Palaver");
+                text.getStyleClass().add("display1");
                 titlePane.setCenter(text);
                 historyPane.setMaxWidth(768);
             }
