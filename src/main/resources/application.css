@@ -1,3 +1,11 @@
+* {
+    -fx-font-family: Roboto;
+    -fx-font-size: 14pt;
+    -fx-fill: rgba(0, 0, 0, 0.87);
+
+}
+
+
 .root {
     -fx-background-color: #f9f9f9;
     -fx-font-family: Roboto;
